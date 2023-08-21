@@ -1,0 +1,104 @@
+body {
+    /*background-color: lightblue !important;*/
+}
+
+/* Stylizacja radio buttons jak checkboxy */
+.custom-radio {
+    display: flex;
+    align-items: center;
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+.custom-radio input[type="radio"] {
+    opacity: 0;
+    cursor: pointer;
+}
+
+.custom-radio .checkmark {
+    width: 20px;
+    height: 20px;
+    background-color: transparent;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    margin-right: 5px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.custom-radio input[type="radio"]:checked + .checkmark {
+    background-color: #59ab6e; /* Nowy kolor tła dla zaznaczonego elementu */
+    border-color: #59ab6e; /* Nowy kolor obramowania dla zaznaczonego elementu */
+}
+
+.custom-radio .checkmark:after {
+    content: "";
+    display: none;
+}
+
+.custom-radio input[type="radio"]:checked + .checkmark:after {
+    display: block;
+}
+
+.custom-radio .checkmark:after {
+    content: "";
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+
+/* Stylizacja tabeli */
+.radio-table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.radio-table td {
+    border: 1px solid #ccc;
+    padding: 8px;
+}
+
+/* Stylizacja kontenera */
+.radio-container {
+    max-width: 50%;
+}
+
+/* Stylizacja tabeli */
+.radio-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.radio-table td {
+    padding: 8px;
+}
+
+/* Dodaj style dla ceny */
+.price-column {
+    text-align: right;
+}
+
+.radio-table td {
+    padding: 8px;
+}
+.radio-table td {
+    border: 1px solid #59ab6e;
+}
+.radio-table{
+    margin-bottom: 10px;
+}
+
+.bold-price {
+    font-weight: bold;
+}
+div.podsuma-koszyk{
+    text-align: right !important;
+    margin-left: 20px;
+}
+
+.card-body p.text-right {
+    text-align: right !important;
+}

@@ -1,0 +1,12 @@
+easy_admin:
+  entities:
+#    Kompozycje:
+#      class: App\Entity\Kompozycje
+#      label: Kompozycje
+#      form: App\Form\DynamicKompozycjeType
+      # ...
+    Hurtowe:
+      class: App\Entity\Hurtowe
+      edit:
+        # Nadpisujemy domyślny tekst przycisku edycji
+        btn_edit: 'Mój niestandardowy tekst'

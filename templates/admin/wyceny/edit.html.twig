@@ -1,0 +1,2249 @@
+{# @var ea \EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext #}
+{# @var entity \EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto #}
+{% extends ea.templatePath('layout') %}
+{% form_theme edit_form with ea.crud.formThemes only %}
+
+{% trans_default_domain ea.i18n.translationDomain %}
+
+{% block body_id 'ea-edit-' ~ entity.name ~ '-' ~ entity.primaryKeyValue %}
+{% block body_class 'ea-edit ea-edit-' ~ entity.name %}
+
+{% set ea_field_assets = ea.crud.fieldAssets(constant('EasyCorp\\Bundle\\EasyAdminBundle\\Config\\Crud::PAGE_EDIT')) %}
+
+{% block head_javascript %}
+    {{ parent() }}
+    <script src="{{ asset('form.js', ea.assets.defaultAssetPackageName) }}"></script>
+{% endblock head_javascript %}
+
+{% block configured_head_contents %}
+    {{ parent() }}
+    {% for htmlContent in ea_field_assets.headContents %}
+        {{ htmlContent|raw }}
+    {% endfor %}
+{% endblock %}
+
+{% block configured_body_contents %}
+    {{ parent() }}
+    {% for htmlContent in ea_field_assets.bodyContents %}
+        {{ htmlContent|raw }}
+    {% endfor %}
+{% endblock %}
+
+{% block configured_stylesheets %}
+    {{ parent() }}
+    {{ include('@EasyAdmin/includes/_css_assets.html.twig', { assets: ea_field_assets.cssAssets }, with_context = false) }}
+    {{ include('@EasyAdmin/includes/_encore_link_tags.html.twig', { assets: ea_field_assets.webpackEncoreAssets }, with_context = false) }}
+{% endblock %}
+
+{% block configured_javascripts %}
+    {{ parent() }}
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+
+    {{ include('@EasyAdmin/includes/_js_assets.html.twig', { assets: ea_field_assets.jsAssets }, with_context = false) }}
+    {{ include('@EasyAdmin/includes/_encore_script_tags.html.twig', { assets: ea_field_assets.webpackEncoreAssets }, with_context = false) }}
+
+    <script>
+        function calculateSumSolo() {
+            var sum_koszty = 0;
+            for (var i = 1; i <= 21; i++) {
+                var inputId = 'Wyceny_wartosc' + i;
+                var inputValue = $('#' + inputId).val();
+                if (inputValue) {
+                    var value = parseFloat(inputValue.replace('.', '').replace(',', '.'));
+                    if (!isNaN(value)) {
+                        sum_koszty += value;
+                    }
+                }
+            }
+
+            // koszt
+            $('#solo_koszt').text(sum_koszty.toLocaleString('pl-PL') + ' zł');
+
+            //marza pod kosztem
+            var marza_solo = 0;
+            var marza_solo_formatted=0;
+            const blokadaSolo = $('#Wyceny_blokujMarzaSolo').prop('checked');
+
+            var marza_solo =0;
+            if (!blokadaSolo) {
+                marza_solo = 0.3 * sum_koszty;
+                marza_solo = marza_solo.toFixed(2).replace('.', ',');
+                marza_solo_formatted = marza_solo.toLocaleString('pl-PL', {minimumFractionDigits: 2});
+                $('#Wyceny_marza_solo').val(marza_solo_formatted);
+            }else{
+                marza_solo = $("#Wyceny_marza_solo").val(); // Pobranie wartości pola tekstowego
+                marza_solo_formatted = marza_solo.toLocaleString('pl-PL', {minimumFractionDigits: 2});
+                $('#Wyceny_marza_solo').val(marza_solo_formatted);
+            }
+
+
+
+            //solo - góra
+            var total_solo = sum_koszty + parseFloat(marza_solo_formatted.replace(',', '.'));
+            $('#solo_wartosc').text(total_solo.toLocaleString('pl-PL') + ' zł');
+
+            //solo -dół
+            var total_solo = total_solo.toLocaleString('pl-PL', { minimumFractionDigits: 2 });
+            $('#Wyceny_cena_solo').val(total_solo);
+
+            //kpl - góra
+            setTimeout(function() {
+                var wartoscSolo = parseFloat($('#solo_wartosc').text().replace(',', '.'));
+                var wazonWartosc = parseFloat($('#wazon_wartosc').text().replace(',', '.'));
+
+                var kpl_total = (wartoscSolo + wazonWartosc).toFixed(2);
+                kpl_total = kpl_total.replace('.', ',');
+                $('#kpl_wartosc').text(kpl_total.toLocaleString('pl-PL') + ' zł');
+                $('#kpl_tytul, #kpl_wartosc').css({
+                    "background-color": "#C9E4C9",
+                    "font-weight": "bold"
+                });
+
+                var kpl_total_2w = (wartoscSolo + (wazonWartosc*2)).toFixed(2);
+                kpl_total_2w = kpl_total_2w.replace('.', ',');
+                $('#kpl_2w_wartosc').text(kpl_total_2w.toLocaleString('pl-PL') + ' zł');
+
+                //zapis
+                $('#Wyceny_cena_kpl').val(kpl_total);
+                $('.zielony-prawa, .zielony-prawa input, span.zielony').css({
+                    "background-color": "#C9E4C9",
+                    "font-weight": "bold",
+                });
+
+                $('#Wyceny_cena_kpl_2w').val(kpl_total_2w);
+
+            }, 50);
+        }
+
+        //ręcznie zmieniona marża w Solo
+        function calculateSumSoloMarza() {
+            var koszt = parseFloat($('#solo_koszt').text().replace(' zł', '').replace(',', '.'));
+            var marzaSolo = parseFloat($('#Wyceny_marza_solo').val().replace(',', '.'));
+
+            if (!isNaN(koszt) && !isNaN(marzaSolo)) {
+                var suma = koszt + marzaSolo;
+                var sumaFormatted = suma.toFixed(2).replace('.', ',');
+            }
+            //góra
+            $('#solo_wartosc').text(sumaFormatted.toLocaleString('pl-PL') + ' zł');
+
+            //dół
+            var formattedSuma = suma.toFixed(2);
+            formattedSuma = formattedSuma.replace('.', ',');
+            $('#Wyceny_cena_solo').val(formattedSuma.toLocaleString('pl-PL'));
+
+            //kpl - góra
+            setTimeout(function() {
+                var wartoscSolo = parseFloat($('#solo_wartosc').text().replace(',', '.'));
+                var wazonWartosc = parseFloat($('#wazon_wartosc').text().replace(',', '.'));
+
+                var kpl_total = (wartoscSolo + wazonWartosc).toFixed(2);
+                kpl_total = kpl_total.replace('.', ',');
+                $('#kpl_wartosc').text(kpl_total.toLocaleString('pl-PL') + ' zł');
+
+                var kpl_2w_total = (wartoscSolo + (wazonWartosc * 2)).toFixed(2);
+                kpl_2w_total = kpl_2w_total.replace('.', ',');
+                $('#kpl_2w_wartosc').text(kpl_2w_total.toLocaleString('pl-PL') + ' zł');
+
+                //zapis
+                $('#Wyceny_cena_kpl').val(kpl_total);
+                $('#Wyceny_cena_kpl_2w').val(kpl_2w_total);
+
+            }, 50);
+        }
+        //ręcznie zmieniona marża w Wazon
+        function calculateSumWazonMarza() {
+            var koszt = parseFloat($('#wazon_koszt').text().replace(' zł', '').replace(',', '.'));
+            var marzaWazon = parseFloat($('#Wyceny_marza_wazon').val().replace(',', '.'));
+
+            if (!isNaN(koszt) && !isNaN(marzaWazon)) {
+                var suma = koszt + marzaWazon;
+                var sumaFormatted = suma.toFixed(2).replace('.', ',');
+            }
+            //góra
+            $('#wazon_wartosc').text(sumaFormatted.toLocaleString('pl-PL') + ' zł');
+
+            //dół
+            var formattedSuma = suma.toFixed(2);
+            formattedSuma = formattedSuma.replace('.', ',');
+            $('#Wyceny_cena_wazon').val(formattedSuma.toLocaleString('pl-PL'));
+
+            //kpl - góra
+            setTimeout(function() {
+                var wartoscSolo = parseFloat($('#solo_wartosc').text().replace(',', '.'));
+                var wazonWartosc = parseFloat($('#wazon_wartosc').text().replace(',', '.'));
+
+                var kpl_total = (wartoscSolo + wazonWartosc).toFixed(2);
+                kpl_total = kpl_total.replace('.', ',');
+                $('#kpl_wartosc').text(kpl_total.toLocaleString('pl-PL') + ' zł');
+
+                var kpl_2w_total = (wartoscSolo + (wazonWartosc*2)).toFixed(2);
+                kpl_2w_total = kpl_2w_total.replace('.', ',');
+                $('#kpl_2w_wartosc').text(kpl_2w_total.toLocaleString('pl-PL') + ' zł');
+
+                //zapis
+                $('#Wyceny_cena_kpl').val(kpl_total);
+                $('#Wyceny_cena_kpl_2w').val(kpl_2w_total);
+
+            }, 50);
+        }
+
+
+        function calculateSumWazon() {
+            var sum_koszty = 0;
+            for (var i = 22; i <= 39; i++) {
+                var inputId = 'Wyceny_wartosc' + i;
+                var inputValue = $('#' + inputId).val();
+                if (inputValue) {
+                    var value = parseFloat(inputValue.replace('.', '').replace(',', '.'));
+                    if (!isNaN(value)) {
+                        sum_koszty += value;
+                    }
+                }
+            }
+
+            // koszt
+            $('#wazon_koszt').text(sum_koszty.toLocaleString('pl-PL') + ' zł');
+
+            //marza pod kosztem
+            // var marza_wazon = 0.3 * sum_koszty;
+            // marza_wazon = marza_wazon.toFixed(2).replace('.', ',');
+            // var marza_wazon_formatted = marza_wazon.toLocaleString('pl-PL', { minimumFractionDigits: 2 });
+            // $('#Wyceny_marza_wazon').val(marza_wazon_formatted);
+
+
+            var marza_wazon = 0;
+            var marza_wazon_formatted=0;
+            const blokadaWazon = $('#Wyceny_blokujMarzaWazon').prop('checked');
+            if (!blokadaWazon) {
+                marza_wazon = 0.3 * sum_koszty;
+                marza_wazon = marza_wazon.toFixed(2).replace('.', ',');
+                marza_wazon_formatted = marza_wazon.toLocaleString('pl-PL', {minimumFractionDigits: 2});
+                $('#Wyceny_marza_wazon').val(marza_wazon_formatted);
+            }else{
+                marza_wazon = $("#Wyceny_marza_wazon").val(); // Pobranie wartości pola tekstowego
+                marza_wazon_formatted = marza_wazon.toLocaleString('pl-PL', {minimumFractionDigits: 2});
+                $('#Wyceny_marza_wazon').val(marza_wazon_formatted);
+            }
+
+
+
+
+
+            //wazon - góra
+            var total_wazon = sum_koszty + parseFloat(marza_wazon_formatted.replace(',', '.'));
+            $('#wazon_wartosc').text(total_wazon.toLocaleString('pl-PL') + ' zł');
+
+            //wazon -dół
+            var total_wazon = total_wazon.toLocaleString('pl-PL', { minimumFractionDigits: 2 });
+            $('#Wyceny_cena_wazon').val(total_wazon);
+
+            //kpl - góra
+            setTimeout(function() {
+                var wartoscSolo = parseFloat($('#solo_wartosc').text().replace(',', '.'));
+                var wazonWartosc = parseFloat($('#wazon_wartosc').text().replace(',', '.'));
+
+                var kpl_total = (wartoscSolo + wazonWartosc).toFixed(2);
+                kpl_total = kpl_total.replace('.', ',');
+                $('#kpl_wartosc').text(kpl_total.toLocaleString('pl-PL') + ' zł');
+
+                var kpl_2w_total = (wartoscSolo + (wazonWartosc*2)).toFixed(2);
+                kpl_2w_total = kpl_2w_total.replace('.', ',');
+                $('#kpl_2w_wartosc').text(kpl_2w_total.toLocaleString('pl-PL') + ' zł');
+
+                //zapis
+                $('#Wyceny_cena_kpl').val(kpl_total);
+                $('#Wyceny_cena_kpl_2w').val(kpl_2w_total);
+
+            }, 50);
+        }
+
+        //kopiowanie wartosci
+        function copyValueToSkladowa29(selectElement) {
+            // var selectedValue = selectElement.value;
+            // var nazwa29Input = $('#Wyceny_nazwa29');
+            //
+            // if (nazwa29Input) {
+            //     nazwa29Input.val(selectedValue);
+            //     nazwa29Input.trigger('change');
+            // }
+        }
+
+
+        function copyValueToTarget(sourceElementId, targetElementId, targetSztuk, targetWartosc) {
+            var sourceElement = document.getElementById(sourceElementId);
+            var sourceValue = parseFloat(sourceElement.value.replace(',', '.'));
+            var targetElement = document.getElementById(targetElementId);
+            if (!isNaN(sourceValue)) {
+                var targetValue = sourceValue;
+
+                targetElement.value = targetValue.toFixed(2).replace('.', ',');
+            }
+
+
+            //ilość już z wazonu
+            var sourceElementIloscW = document.getElementById(targetSztuk);
+            var sourceValueIloscW = parseFloat(sourceElementIloscW.value.replace(',', '.'));
+
+            //jeśli jest ilość w wazonie, to wprowadz nową wartość
+            if (!isNaN(sourceValueIloscW)) {
+                var newWartosc = sourceValueIloscW * sourceValue;
+
+                var targetWartoscEl = document.getElementById(targetWartosc);
+                targetWartoscEl.value = newWartosc.toFixed(2).replace('.', ',');
+
+                //i przelicz sumę
+                calculateSumWazon();
+            }
+
+
+        }
+
+        function copyCustomNameToTarget(sourceElementId, targetElementId) {
+            var sourceElement = document.getElementById(sourceElementId);
+            var sourceValue = sourceElement.value;
+            var targetElement = document.getElementById(targetElementId);
+            targetElement.value = sourceValue;
+        }
+
+
+        $(document).ready(function() {
+
+
+
+
+            calculateSumSolo();
+            calculateSumWazon();
+
+            $('input[id^="Wyceny_wartosc"]').on('input', function() {
+                calculateSumSolo();
+                calculateSumWazon();
+            });
+
+            $('input[id^="Wyceny_marza_solo"]').on('input', function() {
+                calculateSumSoloMarza();
+            });
+
+            $('input[id^="Wyceny_marza_wazon"]').on('input', function() {
+                calculateSumWazonMarza();
+            });
+
+            document.getElementById('Wyceny_nazwa').addEventListener('input', function() {
+
+                var inputValue = this.value;
+                document.getElementById('tytul_wycena').textContent = inputValue;
+            });
+
+
+
+
+
+            document.getElementById('Wyceny_cena2').addEventListener('change', function() {
+                copyValueToTarget('Wyceny_cena2', 'Wyceny_cena23', 'Wyceny_sztuk23', 'Wyceny_wartosc23');
+            });
+
+            document.getElementById('Wyceny_cena3').addEventListener('change', function() {
+                copyValueToTarget('Wyceny_cena3', 'Wyceny_cena24', 'Wyceny_sztuk24', 'Wyceny_wartosc24');
+            });
+
+            document.getElementById('Wyceny_cena4').addEventListener('change', function() {
+                copyValueToTarget('Wyceny_cena4', 'Wyceny_cena25', 'Wyceny_sztuk25', 'Wyceny_wartosc25');
+            });
+
+            document.getElementById('Wyceny_cena5').addEventListener('change', function() {
+                copyValueToTarget('Wyceny_cena5', 'Wyceny_cena26', 'Wyceny_sztuk26', 'Wyceny_wartosc26');
+            });
+
+            document.getElementById('Wyceny_cena6').addEventListener('change', function() {
+                copyValueToTarget('Wyceny_cena6', 'Wyceny_cena27', 'Wyceny_sztuk27', 'Wyceny_wartosc27');
+            });
+
+            // document.getElementById('Wyceny_cena7').addEventListener('change', function() {
+            //     copyValueToTarget('Wyceny_cena7', 'Wyceny_cena28', 'Wyceny_sztuk28', 'Wyceny_wartosc28');
+            // });
+
+            document.getElementById('Wyceny_cena8').addEventListener('change', function() {
+                copyValueToTarget('Wyceny_cena8', 'Wyceny_cena29', 'Wyceny_sztuk29', 'Wyceny_wartosc29');
+            });
+            document.getElementById('Wyceny_nazwa8').addEventListener('change', function() {
+                copyCustomNameToTarget('Wyceny_nazwa8', 'Wyceny_nazwa29');
+            });
+
+            document.getElementById('Wyceny_cena9').addEventListener('change', function() {
+                copyValueToTarget('Wyceny_cena9', 'Wyceny_cena30', 'Wyceny_sztuk30', 'Wyceny_wartosc30');
+            });
+            document.getElementById('Wyceny_nazwa9').addEventListener('change', function() {
+                copyCustomNameToTarget('Wyceny_nazwa9', 'Wyceny_nazwa30');
+            });
+
+            document.getElementById('Wyceny_cena10').addEventListener('change', function() {
+                copyValueToTarget('Wyceny_cena10', 'Wyceny_cena31', 'Wyceny_sztuk31', 'Wyceny_wartosc31');
+            });
+            document.getElementById('Wyceny_nazwa10').addEventListener('change', function() {
+                copyCustomNameToTarget('Wyceny_nazwa10', 'Wyceny_nazwa31');
+            });
+
+            document.getElementById('Wyceny_cena11').addEventListener('change', function() {
+                copyValueToTarget('Wyceny_cena11', 'Wyceny_cena32', 'Wyceny_sztuk32', 'Wyceny_wartosc32');
+            });
+            document.getElementById('Wyceny_nazwa11').addEventListener('change', function() {
+                copyCustomNameToTarget('Wyceny_nazwa11', 'Wyceny_nazwa32');
+            });
+
+            document.getElementById('Wyceny_cena12').addEventListener('change', function() {
+                copyValueToTarget('Wyceny_cena12', 'Wyceny_cena33', 'Wyceny_sztuk33', 'Wyceny_wartosc33');
+            });
+            document.getElementById('Wyceny_nazwa12').addEventListener('change', function() {
+                copyCustomNameToTarget('Wyceny_nazwa12', 'Wyceny_nazwa33');
+            });
+
+            document.getElementById('Wyceny_cena13').addEventListener('change', function() {
+                copyValueToTarget('Wyceny_cena13', 'Wyceny_cena34', 'Wyceny_sztuk34', 'Wyceny_wartosc34');
+            });
+            document.getElementById('Wyceny_nazwa13').addEventListener('change', function() {
+                copyCustomNameToTarget('Wyceny_nazwa13', 'Wyceny_nazwa34');
+            });
+
+            document.getElementById('Wyceny_cena14').addEventListener('change', function() {
+                copyValueToTarget('Wyceny_cena14', 'Wyceny_cena35', 'Wyceny_sztuk35', 'Wyceny_wartosc35');
+            });
+            document.getElementById('Wyceny_nazwa14').addEventListener('change', function() {
+                copyCustomNameToTarget('Wyceny_nazwa14', 'Wyceny_nazwa35');
+            });
+
+            document.getElementById('Wyceny_cena15').addEventListener('change', function() {
+                copyValueToTarget('Wyceny_cena15', 'Wyceny_cena36', 'Wyceny_sztuk36', 'Wyceny_wartosc36');
+            });
+            document.getElementById('Wyceny_nazwa15').addEventListener('change', function() {
+                copyCustomNameToTarget('Wyceny_nazwa15', 'Wyceny_nazwa36');
+            });
+
+            document.getElementById('Wyceny_cena16').addEventListener('change', function() {
+                copyValueToTarget('Wyceny_cena16', 'Wyceny_cena37', 'Wyceny_sztuk37', 'Wyceny_wartosc37');
+            });
+            document.getElementById('Wyceny_nazwa16').addEventListener('change', function() {
+                copyCustomNameToTarget('Wyceny_nazwa16', 'Wyceny_nazwa37');
+            });
+
+            document.getElementById('Wyceny_cena17').addEventListener('change', function() {
+                copyValueToTarget('Wyceny_cena17', 'Wyceny_cena38', 'Wyceny_sztuk38', 'Wyceny_wartosc38');
+            });
+            document.getElementById('Wyceny_nazwa17').addEventListener('change', function() {
+                copyCustomNameToTarget('Wyceny_nazwa17', 'Wyceny_nazwa38');
+            });
+
+            document.getElementById('Wyceny_cena18').addEventListener('change', function() {
+                copyValueToTarget('Wyceny_cena18', 'Wyceny_cena39', 'Wyceny_sztuk39', 'Wyceny_wartosc39');
+            });
+            document.getElementById('Wyceny_nazwa18').addEventListener('change', function() {
+                copyCustomNameToTarget('Wyceny_nazwa18', 'Wyceny_nazwa39');
+            });
+
+//dodawanie do Półprodukty
+            var checkboxIds = [
+                8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21
+            ];
+
+            // Dla każdego numeru checkboxa
+            checkboxIds.forEach(function(checkboxId) {
+                var checkbox = document.getElementById('Wyceny_dodacPolprodukt' + checkboxId);
+                var inputField = document.getElementById('Wyceny_nazwa' + checkboxId);
+                var inputCena = document.getElementById('Wyceny_cena' + checkboxId);
+
+                checkbox.addEventListener('change', function() {
+                    if (this.checked) {
+                        var value = inputField.value;
+                        var cena = inputCena.value;
+                        cena = cena.replace(",", ".");
+                        if (value.trim() === '') {
+                            this.checked = false;
+                            alert('Pole nazwa jest puste!');
+                        }
+                        else if (cena.trim() === '') {
+                            this.checked = false;
+                            alert('Pole cena jest puste!');
+                        }
+                        else{
+
+                            const specificPriceUrl = '{{ path('app_insert_polprodukt', {'nazwa': '__skladowa1__', 'cena': '__skladowa2__'}) }}'
+                                .replace('__skladowa1__', value)
+                                .replace('__skladowa2__', cena);
+
+
+                            $.ajax({
+                                url: specificPriceUrl,
+                                type: 'POST',
+                                success: (data) => {
+
+                                    alert(data.message);
+                                }
+                            });
+
+
+                        }
+                    }
+                });
+            });
+
+
+            const checkbox = document.getElementById('Wyceny_blokujMarzaSolo');
+            checkbox.addEventListener('change', function() {
+                const isChecked = this.checked;
+                calculateSumSolo();
+            });
+
+            const checkboxWazon = document.getElementById('Wyceny_blokujMarzaWazon');
+            checkboxWazon.addEventListener('change', function() {
+                const isCheckedWazon = this.checked;
+                calculateSumWazon();
+            });
+
+        });
+
+
+
+
+        const sztukFields = document.querySelectorAll('[id^="Wyceny_sztuk"]');
+        const cenaFields = document.querySelectorAll('[id^="Wyceny_cena"]');
+        const wartoscFields = document.querySelectorAll('[id^="Wyceny_wartosc"]');
+
+
+        sztukFields.forEach((sztukField) => {
+            const where = sztukField.id.slice(-1);
+            const cenaField = document.getElementById(`Wyceny_cena${where}`);
+            const wartoscField = document.getElementById(`Wyceny_wartosc${where}`);
+
+            sztukField.addEventListener('input', () => {
+                const sztuk = parseFloat(sztukField.value);
+                console.log(sztuk);
+                const cena = parseFloat(cenaField.value);
+                const wartosc = sztuk * cena;
+                wartoscField.value = wartosc.toFixed(2);
+            });
+
+            cenaField.addEventListener('input', () => {
+                const sztuk = parseFloat(sztukField.value);
+                console.log(sztuk);
+                const cena = parseFloat(cenaField.value);
+                const wartosc = sztuk * cena;
+                wartoscField.value = wartosc.toFixed(2);
+            });
+        });
+
+        function fetchCena(element, where) {
+            const selectedOption = element.value;
+
+            const specificPriceUrl = '{{ path('app_get_cena', {'id': '__skladowa1__'}) }}'.replace('__skladowa1__', selectedOption);
+
+            const cenaFieldId = `Wyceny_cena${where}`;
+            const sztukFieldId = `Wyceny_sztuk${where}`;
+            const wartoscFieldId = `Wyceny_wartosc${where}`;
+
+            let whereWazon =null;
+            let cenaFieldIdWazon = null;
+            let sztukFieldIdWazon = null;
+            let wartoscFieldIdWazon = null;
+            let skladowaFieldIdWazon = null;
+
+            //kopiowanie do wazon
+            //8-18---->29-39
+            if (where >= 8 && where <= 18) {
+                whereWazon = where + 21;
+
+                cenaFieldIdWazon = `Wyceny_cena${whereWazon}`;
+                sztukFieldIdWazon = `Wyceny_sztuk${whereWazon}`;
+                wartoscFieldIdWazon = `Wyceny_wartosc${whereWazon}`;
+                skladowaFieldIdWazon = `Wyceny_skladowa${whereWazon}_autocomplete-ts-control .items-placeholder`;
+            }
+
+            $.ajax({
+                url: specificPriceUrl,
+                type: 'POST',
+                success: (data) => {
+
+                    $('#' + cenaFieldId).val(data.cena);
+
+                    var sztukValue = ($('#' + sztukFieldId).val().replace(',', '.')); // Parsowanie wartości do liczby zmiennoprzecinkowej
+                    var cena = parseFloat(data.cena);
+                    var newValue = (cena * sztukValue).toFixed(2);
+                    $('#' + wartoscFieldId).val(newValue);
+
+
+
+                    //wazon
+                    if (where >= 8 && where <= 18) {
+                        $('#' + cenaFieldIdWazon).val(data.cena);
+                        $('#' + sztukFieldIdWazon).val(1);
+                        $('#' + wartoscFieldIdWazon).val(data.cena);
+                        $('#' + skladowaFieldIdWazon).attr('placeholder', data.nazwa);
+                    }
+
+
+
+
+                    calculateSumSolo();
+                    calculateSumWazon();
+                }
+            });
+        };
+
+
+        function calculateWartosc(value, where) {
+            const sztuk = document.getElementById('Wyceny_sztuk' + where).value.replace(',', '.');
+            const cena = document.getElementById('Wyceny_cena' + where).value.replace(',', '.');
+            const wartosc = (sztuk * cena).toFixed(2);
+
+            document.getElementById('Wyceny_wartosc' + where).value = wartosc.toString().replace(/\./g, ',');
+            calculateSumSolo();
+            calculateSumWazon();
+        }
+    </script>
+{% endblock %}
+
+{% block content_title %}
+<div class="naglowek">
+    <div id="tytul_wycena" class="d-inline-block">
+        {%- apply spaceless -%}
+            {% set custom_page_title = ea.crud.customPageTitle(pageName, entity ? entity.instance : null, ea.i18n.translationParameters) %}
+            {{ custom_page_title is null
+            ? ea.crud.defaultPageTitle(null, null, ea.i18n.translationParameters)|trans|raw
+            : custom_page_title|trans|raw }}
+        {%- endapply -%}
+    </div>
+    <span class="pastel-fiolet">
+        <div class="d-inline-block pastel-fiolet">SOLO:</div>
+        <div id="solo_wartosc" class="d-inline-block pastel-fiolet border-5"></div>
+    </span>
+    <span class="pastel-yellow">
+        <div class="d-inline-block pastel-yellow">WAZON:</div>
+        <div id="wazon_wartosc" class="d-inline-block pastel-yellow"></div>
+    </span>
+    <span class="zielony">
+        <div id="kpl_tytul" class="d-inline-block"> KPL:</div>
+        <div id="kpl_wartosc" class="d-inline-block"></div>
+        <div class="d-inline-block">(2W:</div>
+        <div id="kpl_2w_wartosc" class="d-inline-block"></div>)
+    </span>
+
+</div>
+
+{% endblock %}
+
+{% block page_actions %}
+    {% for action in entity.actions %}
+        {{ include(action.templatePath, { action: action }, with_context = false) }}
+    {% endfor %}
+{% endblock %}
+
+{% block main %}
+
+    {% block edit_form %}
+        {{ form_start(edit_form) }}
+        <div class="my-custom-class-for-errors">
+            {{ form_errors(edit_form) }}
+        </div>
+        <div class="row">
+            <div class="col-md-9"> <!-- Kolumna po lewej stronie o szerokości 75% -->
+                <div class="col" id="some-custom-id">
+                    <div class="form-control">
+                        {{ form_label(edit_form.nazwa) }}
+                        {{ form_widget(edit_form.nazwa) }}
+
+                        <small>{{ form_help(edit_form.nazwa) }}</small>
+
+                        <div class="form-error">
+                            {{ form_errors(edit_form.nazwa) }}
+                        </div>
+                    </div>
+                </div>
+
+                <div id="wyceny-table" class="table-responsive">
+                    <table class="table table-striped" id="wyceny">
+                        <thead>
+                        <tr>
+                            <th scope="col">Składowa</th>
+                            <th scope="col">Sztuk</th>
+                            <th scope="col">Cena</th>
+                            <th scope="col">Wartość</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr class="pastel-fiolet">
+                            <td style="width: 50%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.skladowa1, {attr: {'onchange': 'fetchCena(this,1)'}})}}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.skladowa1) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.skladowa1) }}</div>
+                                </div>
+                            </td>
+                            <td style="width: 16.67%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.sztuk1, {attr:{'onchange': 'calculateWartosc(this, 1)'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.sztuk1) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.sztuk1) }}</div>
+                                </div>
+                            </td>
+                            <td style="width: 16.67%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.cena1, {attr:{'onchange': 'calculateWartosc(this, 1)'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.cena1) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.cena1) }}</div>
+                                </div>
+                            </td>
+                            <td style="width: 16.67%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.wartosc1, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.wartosc1) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.wartosc1) }}</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="pastel-fiolet">
+                            <td style="width: 50%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.skladowa2, {attr: {'onchange': 'fetchCena(this,2)'}})}}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.skladowa2) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.skladowa2) }}</div>
+                                </div>
+                            </td>
+                            <td style="width: 16.67%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.sztuk2, {attr:{'onchange': 'calculateWartosc(this, 2)'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.sztuk2) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.sztuk2) }}</div>
+                                </div>
+                            </td>
+                            <td style="width: 16.67%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.cena2, {attr:{'onchange': 'calculateWartosc(this, 2)'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.cena2) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.cena2) }}</div>
+                                </div>
+                            </td>
+                            <td style="width: 16.67%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.wartosc2, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.wartosc2) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.wartosc2) }}</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="pastel-fiolet">
+                            <td style="width: 50%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.skladowa3, {attr: {'onchange': 'fetchCena(this,3)'}})}}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.skladowa3) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.skladowa3) }}</div>
+                                </div>
+                            </td>
+                            <td style="width: 16.67%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.sztuk3, {attr:{'onchange': 'calculateWartosc(this, 3)'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.sztuk3) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.sztuk3) }}</div>
+                                </div>
+                            </td>
+                            <td style="width: 16.67%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.cena3, {attr:{'onchange': 'calculateWartosc(this, 3)'}}) }}
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.cena3) }}</div>
+                                </div>
+                            </td>
+                            <td style="width: 16.67%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.wartosc3, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.wartosc3) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.wartosc3) }}</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="pastel-fiolet">
+                            <td style="width: 50%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.skladowa4, {attr: {'onchange': 'fetchCena(this,4)'}})}}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.skladowa4) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.skladowa4) }}</div>
+                                </div>
+                            </td>
+                            <td style="width: 16.67%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.sztuk4, {attr:{'onchange': 'calculateWartosc(this, 4)'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.sztuk4) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.sztuk4) }}</div>
+                                </div>
+                            </td>
+                            <td style="width: 16.67%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.cena4, {attr:{'onchange': 'calculateWartosc(this, 4)'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.cena4) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.cena4) }}</div>
+                                </div>
+                            </td>
+                            <td style="width: 16.67%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.wartosc4, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.wartosc4) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.wartosc4) }}</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="pastel-fiolet">
+                            <td style="width: 50%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.skladowa5, {attr: {'onchange': 'fetchCena(this,5)'}})}}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.skladowa5) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.skladowa5) }}</div>
+                                </div>
+                            </td>
+                            <td style="width: 16.67%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.sztuk5, {attr:{'onchange': 'calculateWartosc(this, 5)'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.sztuk5) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.sztuk5) }}</div>
+                                </div>
+                            </td>
+                            <td style="width: 16.67%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.cena5, {attr:{'onchange': 'calculateWartosc(this, 5)'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.cena5) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.cena5) }}</div>
+                                </div>
+                            </td>
+                            <td style="width: 16.67%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.wartosc5, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.wartosc5) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.wartosc5) }}</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="pastel-fiolet">
+                            <td style="width: 50%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.skladowa6, {attr: {'onchange': 'fetchCena(this,6)'}})}}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.skladowa6) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.skladowa6) }}</div>
+                                </div>
+                            </td>
+                            <td style="width: 16.67%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.sztuk6, {attr:{'onchange': 'calculateWartosc(this, 6)'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.sztuk6) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.sztuk6) }}</div>
+                                </div>
+                            </td>
+                            <td style="width: 16.67%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.cena6, {attr:{'onchange': 'calculateWartosc(this, 6)'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.cena6) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.cena6) }}</div>
+                                </div>
+                            </td>
+                            <td style="width: 16.67%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.wartosc6, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.wartosc6) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.wartosc6) }}</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="pastel-fiolet">
+                            <td style="width: 50%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.skladowa7, {attr: {'onchange': 'fetchCena(this,7)'}})}}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.skladowa7) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.skladowa7) }}</div>
+
+                                    {{ form_widget(edit_form.nazwa7) }}
+                                    <small>{{ form_help(edit_form.nazwa7) }}</small>
+                                    <div class="form-error">
+                                        {{ form_errors(edit_form.nazwa7) }}
+                                    </div>
+                                </div>
+                            </td>
+                            <td style="width: 16.67%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.sztuk7, {attr:{'onchange': 'calculateWartosc(this, 7)'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.sztuk7) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.sztuk7) }}</div>
+                                </div>
+                            </td>
+                            <td style="width: 16.67%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.cena7, {attr:{'onchange': 'calculateWartosc(this, 7)'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.cena7) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.cena7) }}</div>
+                                </div>
+                            </td>
+                            <td style="width: 16.67%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.wartosc7, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.wartosc7) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.wartosc7) }}</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="pastel-fiolet">
+                            <td style="width: 50%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.skladowa8, {attr: {'onchange': 'fetchCena(this,8); copyValueToSkladowa29(this)'}})}}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.skladowa8) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.skladowa8) }}</div>
+
+                                    {{ form_widget(edit_form.nazwa8) }}
+                                    <small>{{ form_help(edit_form.nazwa8) }}</small>
+                                    <div class="form-error">
+                                        {{ form_errors(edit_form.nazwa8) }}
+                                    </div>
+                                </div>
+                            </td>
+                            <td style="width: 16.67%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.sztuk8, {attr:{'onchange': 'calculateWartosc(this, 8)'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.sztuk8) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.sztuk8) }}</div>
+                                </div>
+                                <div class="dodajPolprodukt">
+                                    {{ form_widget(edit_form.dodacPolprodukt8, {'attr': {'class': 'dodajPolprodukt'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.dodacPolprodukt8) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.dodacPolprodukt8) }}</div>
+                                </div>
+                            </td>
+                            <td style="width: 16.67%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.cena8, {attr:{'onchange': 'calculateWartosc(this, 8)'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.cena8) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.cena8) }}</div>
+                                </div>
+                            </td>
+                            <td style="width: 16.67%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.wartosc8, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.wartosc8) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.wartosc8) }}</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="pastel-fiolet">
+                            <td style="width: 50%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.skladowa9, {attr: {'onchange': 'fetchCena(this,9)'}})}}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.skladowa9) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.skladowa9) }}</div>
+
+                                    {{ form_widget(edit_form.nazwa9) }}
+                                    <small>{{ form_help(edit_form.nazwa9) }}</small>
+                                    <div class="form-error">
+                                        {{ form_errors(edit_form.nazwa9) }}
+                                    </div>
+                                </div>
+                            </td>
+                            <td style="width: 16.67%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.sztuk9, {attr:{'onchange': 'calculateWartosc(this, 9)'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.sztuk9) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.sztuk9) }}</div>
+                                </div>
+                                <div class="dodajPolprodukt">
+                                    {{ form_widget(edit_form.dodacPolprodukt9, {'attr': {'class': 'dodajPolprodukt'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.dodacPolprodukt9) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.dodacPolprodukt9) }}</div>
+                                </div>
+                            </td>
+                            <td style="width: 16.67%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.cena9, {attr:{'onchange': 'calculateWartosc(this, 9)'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.cena9) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.cena9) }}</div>
+                                </div>
+                            </td>
+                            <td style="width: 16.67%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.wartosc9, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.wartosc9) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.wartosc9) }}</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="pastel-fiolet">
+                            <td style="width: 50%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.skladowa10, {attr: {'onchange': 'fetchCena(this,10)'}})}}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.skladowa10) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.skladowa10) }}</div>
+
+                                    {{ form_widget(edit_form.nazwa10) }}
+                                    <small>{{ form_help(edit_form.nazwa10) }}</small>
+                                    <div class="form-error">
+                                        {{ form_errors(edit_form.nazwa10) }}
+                                    </div>
+                                </div>
+                            </td>
+                            <td style="width: 16.67%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.sztuk10, {attr:{'onchange': 'calculateWartosc(this, 10)'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.sztuk10) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.sztuk10) }}</div>
+                                </div>
+                                <div class="dodajPolprodukt">
+                                    {{ form_widget(edit_form.dodacPolprodukt10, {'attr': {'class': 'dodajPolprodukt'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.dodacPolprodukt10) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.dodacPolprodukt10) }}</div>
+                                </div>
+                            </td>
+                            <td style="width: 16.67%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.cena10, {attr:{'onchange': 'calculateWartosc(this, 10)'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.cena10) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.cena10) }}</div>
+                                </div>
+                            </td>
+                            <td style="width: 16.67%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.wartosc10, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.wartosc10) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.wartosc10) }}</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="pastel-fiolet">
+                            <td style="width: 50%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.skladowa11, {attr: {'onchange': 'fetchCena(this,11)'}})}}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.skladowa11) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.skladowa11) }}</div>
+
+                                    {{ form_widget(edit_form.nazwa11) }}
+                                    <small>{{ form_help(edit_form.nazwa11) }}</small>
+                                    <div class="form-error">
+                                        {{ form_errors(edit_form.nazwa11) }}
+                                    </div>
+                                </div>
+                            </td>
+                            <td style="width: 16.67%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.sztuk11, {attr:{'onchange': 'calculateWartosc(this, 11)'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.sztuk11) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.sztuk11) }}</div>
+                                </div>
+                                <div class="dodajPolprodukt">
+                                    {{ form_widget(edit_form.dodacPolprodukt11, {'attr': {'class': 'dodajPolprodukt'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.dodacPolprodukt11) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.dodacPolprodukt11) }}</div>
+                                </div>
+                            </td>
+                            <td style="width: 16.67%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.cena11, {attr:{'onchange': 'calculateWartosc(this, 11)'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.cena11) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.cena11) }}</div>
+                                </div>
+                            </td>
+                            <td style="width: 16.67%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.wartosc11, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.wartosc11) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.wartosc11) }}</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="pastel-fiolet">
+                            <td style="width: 50%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.skladowa12, {attr: {'onchange': 'fetchCena(this,12)'}})}}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.skladowa12) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.skladowa12) }}</div>
+
+                                    {{ form_widget(edit_form.nazwa12) }}
+                                    <small>{{ form_help(edit_form.nazwa12) }}</small>
+                                    <div class="form-error">
+                                        {{ form_errors(edit_form.nazwa12) }}
+                                    </div>
+                                </div>
+                            </td>
+                            <td style="width: 16.67%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.sztuk12, {attr:{'onchange': 'calculateWartosc(this, 12)'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.sztuk12) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.sztuk12) }}</div>
+                                </div>
+                                <div class="dodajPolprodukt">
+                                    {{ form_widget(edit_form.dodacPolprodukt12, {'attr': {'class': 'dodajPolprodukt'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.dodacPolprodukt12) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.dodacPolprodukt12) }}</div>
+                                </div>
+                            </td>
+                            <td style="width: 16.67%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.cena12, {attr:{'onchange': 'calculateWartosc(this, 12)'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.cena12) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.cena12) }}</div>
+                                </div>
+                            </td>
+                            <td style="width: 16.67%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.wartosc12, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.wartosc12) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.wartosc12) }}</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="pastel-fiolet">
+                            <td style="width: 50%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.skladowa13, {attr: {'onchange': 'fetchCena(this,13)'}})}}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.skladowa13) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.skladowa13) }}</div>
+
+                                    {{ form_widget(edit_form.nazwa13) }}
+                                    <small>{{ form_help(edit_form.nazwa13) }}</small>
+                                    <div class="form-error">
+                                        {{ form_errors(edit_form.nazwa13) }}
+                                    </div>
+                                </div>
+                            </td>
+                            <td style="width: 16.67%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.sztuk13, {attr:{'onchange': 'calculateWartosc(this, 13)'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.sztuk13) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.sztuk13) }}</div>
+                                </div>
+                                <div class="dodajPolprodukt">
+                                    {{ form_widget(edit_form.dodacPolprodukt13, {'attr': {'class': 'dodajPolprodukt'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.dodacPolprodukt13) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.dodacPolprodukt13) }}</div>
+                                </div>
+                            </td>
+                            <td style="width: 16.67%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.cena13, {attr:{'onchange': 'calculateWartosc(this, 13)'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.cena13) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.cena13) }}</div>
+                                </div>
+                            </td>
+                            <td style="width: 16.67%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.wartosc13, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.wartosc13) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.wartosc13) }}</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="pastel-fiolet">
+                            <td style="width: 50%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.skladowa14, {attr: {'onchange': 'fetchCena(this,14)'}})}}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.skladowa14) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.skladowa14) }}</div>
+
+                                    {{ form_widget(edit_form.nazwa14) }}
+                                    <small>{{ form_help(edit_form.nazwa14) }}</small>
+                                    <div class="form-error">
+                                        {{ form_errors(edit_form.nazwa14) }}
+                                    </div>
+                                </div>
+                            </td>
+                            <td style="width: 16.67%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.sztuk14, {attr:{'onchange': 'calculateWartosc(this, 14)'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.sztuk14) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.sztuk14) }}</div>
+                                </div>
+                                <div class="dodajPolprodukt">
+                                    {{ form_widget(edit_form.dodacPolprodukt14, {'attr': {'class': 'dodajPolprodukt'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.dodacPolprodukt14) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.dodacPolprodukt14) }}</div>
+                                </div>
+                            </td>
+                            <td style="width: 16.67%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.cena14, {attr:{'onchange': 'calculateWartosc(this, 14)'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.cena14) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.cena14) }}</div>
+                                </div>
+                            </td>
+                            <td style="width: 16.67%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.wartosc14, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.wartosc14) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.wartosc14) }}</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="pastel-fiolet">
+                            <td style="width: 50%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.skladowa15, {attr: {'onchange': 'fetchCena(this,15)'}})}}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.skladowa15) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.skladowa15) }}</div>
+
+                                    {{ form_widget(edit_form.nazwa15) }}
+                                    <small>{{ form_help(edit_form.nazwa15) }}</small>
+                                    <div class="form-error">
+                                        {{ form_errors(edit_form.nazwa15) }}
+                                    </div>
+                                </div>
+                            </td>
+                            <td style="width: 16.67%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.sztuk15, {attr:{'onchange': 'calculateWartosc(this, 15)'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.sztuk15) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.sztuk15) }}</div>
+                                </div>
+                                <div class="dodajPolprodukt">
+                                    {{ form_widget(edit_form.dodacPolprodukt15, {'attr': {'class': 'dodajPolprodukt'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.dodacPolprodukt15) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.dodacPolprodukt15) }}</div>
+                                </div>
+                            </td>
+                            <td style="width: 16.67%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.cena15, {attr:{'onchange': 'calculateWartosc(this, 15)'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.cena15) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.cena15) }}</div>
+                                </div>
+                            </td>
+                            <td style="width: 16.67%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.wartosc15, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.wartosc15) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.wartosc15) }}</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="pastel-fiolet">
+                            <td style="width: 50%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.skladowa16, {attr: {'onchange': 'fetchCena(this,16)'}})}}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.skladowa16) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.skladowa16) }}</div>
+
+                                    {{ form_widget(edit_form.nazwa16) }}
+                                    <small>{{ form_help(edit_form.nazwa16) }}</small>
+                                    <div class="form-error">
+                                        {{ form_errors(edit_form.nazwa16) }}
+                                    </div>
+                                </div>
+                            </td>
+                            <td style="width: 16.67%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.sztuk16, {attr:{'onchange': 'calculateWartosc(this, 16)'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.sztuk16) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.sztuk16) }}</div>
+                                </div>
+                                <div class="dodajPolprodukt">
+                                    {{ form_widget(edit_form.dodacPolprodukt16, {'attr': {'class': 'dodajPolprodukt'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.dodacPolprodukt16) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.dodacPolprodukt16) }}</div>
+                                </div>
+                            </td>
+                            <td style="width: 16.67%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.cena16, {attr:{'onchange': 'calculateWartosc(this, 16)'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.cena16) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.cena16) }}</div>
+                                </div>
+                            </td>
+                            <td style="width: 16.67%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.wartosc16, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.wartosc16) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.wartosc16) }}</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="pastel-fiolet">
+                            <td style="width: 50%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.skladowa17, {attr: {'onchange': 'fetchCena(this,17)'}})}}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.skladowa17) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.skladowa17) }}</div>
+
+                                    {{ form_widget(edit_form.nazwa17) }}
+                                    <small>{{ form_help(edit_form.nazwa17) }}</small>
+                                    <div class="form-error">
+                                        {{ form_errors(edit_form.nazwa17) }}
+                                    </div>
+                                </div>
+                            </td>
+                            <td style="width: 16.67%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.sztuk17, {attr:{'onchange': 'calculateWartosc(this, 17)'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.sztuk17) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.sztuk17) }}</div>
+                                </div>
+                                <div class="dodajPolprodukt">
+                                    {{ form_widget(edit_form.dodacPolprodukt17, {'attr': {'class': 'dodajPolprodukt'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.dodacPolprodukt17) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.dodacPolprodukt17) }}</div>
+                                </div>
+                            </td>
+                            <td style="width: 16.67%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.cena17, {attr:{'onchange': 'calculateWartosc(this, 17)'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.cena17) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.cena17) }}</div>
+                                </div>
+                            </td>
+                            <td style="width: 16.67%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.wartosc17, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.wartosc17) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.wartosc17) }}</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="pastel-fiolet">
+                            <td style="width: 50%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.skladowa18, {attr: {'onchange': 'fetchCena(this,18)'}})}}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.skladowa18) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.skladowa18) }}</div>
+
+                                    {{ form_widget(edit_form.nazwa18) }}
+                                    <small>{{ form_help(edit_form.nazwa18) }}</small>
+                                    <div class="form-error">
+                                        {{ form_errors(edit_form.nazwa18) }}
+                                    </div>
+                                </div>
+                            </td>
+                            <td style="width: 16.67%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.sztuk18, {attr:{'onchange': 'calculateWartosc(this, 18)'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.sztuk18) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.sztuk18) }}</div>
+                                </div>
+                                <div class="dodajPolprodukt">
+                                    {{ form_widget(edit_form.dodacPolprodukt18, {'attr': {'class': 'dodajPolprodukt'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.dodacPolprodukt18) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.dodacPolprodukt18) }}</div>
+                                </div>
+                            </td>
+                            <td style="width: 16.67%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.cena18, {attr:{'onchange': 'calculateWartosc(this, 18)'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.cena18) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.cena18) }}</div>
+                                </div>
+                            </td>
+                            <td style="width: 16.67%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.wartosc18, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.wartosc18) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.wartosc18) }}</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="text-center">
+                            <td colspan="4">Składowe nie występujące w wazonie:</td>
+                        </tr>
+                        <tr class="pastel-fiolet">
+                            <td style="width: 50%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.skladowa19, {attr: {'onchange': 'fetchCena(this,19)'}})}}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.skladowa19) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.skladowa19) }}</div>
+
+                                    {{ form_widget(edit_form.nazwa19) }}
+                                    <small>{{ form_help(edit_form.nazwa19) }}</small>
+                                    <div class="form-error">
+                                        {{ form_errors(edit_form.nazwa19) }}
+                                    </div>
+                                </div>
+                            </td>
+                            <td style="width: 16.67%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.sztuk19, {attr:{'onchange': 'calculateWartosc(this, 19)'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.sztuk19) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.sztuk19) }}</div>
+                                </div>
+                                <div class="dodajPolprodukt">
+                                    {{ form_widget(edit_form.dodacPolprodukt19, {'attr': {'class': 'dodajPolprodukt'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.dodacPolprodukt19) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.dodacPolprodukt19) }}</div>
+                                </div>
+                            </td>
+                            <td style="width: 16.67%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.cena19, {attr:{'onchange': 'calculateWartosc(this, 19)'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.cena19) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.cena19) }}</div>
+                                </div>
+                            </td>
+                            <td style="width: 16.67%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.wartosc19, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.wartosc19) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.wartosc19) }}</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="pastel-fiolet">
+                            <td style="width: 50%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.skladowa20, {attr: {'onchange': 'fetchCena(this,20)'}})}}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.skladowa20) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.skladowa20) }}</div>
+
+                                    {{ form_widget(edit_form.nazwa20) }}
+                                    <small>{{ form_help(edit_form.nazwa20) }}</small>
+                                    <div class="form-error">
+                                        {{ form_errors(edit_form.nazwa20) }}
+                                    </div>
+                                </div>
+                            </td>
+                            <td style="width: 16.67%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.sztuk20, {attr:{'onchange': 'calculateWartosc(this, 20)'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.sztuk20) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.sztuk20) }}</div>
+                                </div>
+                                <div class="dodajPolprodukt">
+                                    {{ form_widget(edit_form.dodacPolprodukt20, {'attr': {'class': 'dodajPolprodukt'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.dodacPolprodukt20) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.dodacPolprodukt20) }}</div>
+                                </div>
+                            </td>
+                            <td style="width: 16.67%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.cena20, {attr:{'onchange': 'calculateWartosc(this, 20)'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.cena20) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.cena20) }}</div>
+                                </div>
+                            </td>
+                            <td style="width: 16.67%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.wartosc20, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.wartosc20) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.wartosc20) }}</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="pastel-fiolet">
+                            <td style="width: 50%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.skladowa21, {attr: {'onchange': 'fetchCena(this,21)'}})}}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.skladowa21) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.skladowa21) }}</div>
+
+                                    {{ form_widget(edit_form.nazwa21) }}
+                                    <small>{{ form_help(edit_form.nazwa21) }}</small>
+                                    <div class="form-error">
+                                        {{ form_errors(edit_form.nazwa21) }}
+                                    </div>
+                                </div>
+                            </td>
+                            <td style="width: 16.67%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.sztuk21, {attr:{'onchange': 'calculateWartosc(this, 21)'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.sztuk21) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.sztuk21) }}</div>
+                                </div>
+                                <div class="dodajPolprodukt">
+                                    {{ form_widget(edit_form.dodacPolprodukt21, {'attr': {'class': 'dodajPolprodukt'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.dodacPolprodukt21) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.dodacPolprodukt21) }}</div>
+                                </div>
+                            </td>
+                            <td style="width: 16.67%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.cena21, {attr:{'onchange': 'calculateWartosc(this, 21)'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.cena21) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.cena21) }}</div>
+                                </div>
+                            </td>
+                            <td style="width: 16.67%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.wartosc21, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.wartosc21) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.wartosc21) }}</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="bg-custom-red"><td colspan="3" class="text-right">KOSZT SOLO:</td><td id="solo_koszt" colspan="2" class="text-right"></td></tr>
+                        <tr class="bg-custom-green"><td colspan="2" class="text-right"></td>
+
+
+                            <td>
+                                <div class="blokuj">
+                                    <div class=" d-flex mt-2 mr-0">
+                                        <label for="{{ edit_form.blokujMarzaSolo.vars.id }}" class="mr-2"></label>
+                                        {{ form_widget(edit_form.blokujMarzaSolo, {'attr': {'class': 'blokuj'}}) }}
+                                        <div class="flex-grow-1 ml-2">
+                                            <div class="invalid-feedback">{{ form_errors(edit_form.blokujMarzaSolo) }}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+
+                            <td id="solo_marza" colspan="2" class="text-right">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.marza_solo, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.marza_solo) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.marza_solo) }}</div>
+                                </div>
+                            </td></tr>
+
+
+                        <tr><td colspan="4"></td></tr>
+                        <tr class="text-center pastel-yellow">
+                            <td colspan="4"><strong>WAZON:</strong></td>
+                        </tr>
+                        <tr class="pastel-yellow">
+                            <td style="width: 50%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.skladowa22, {attr: {'onchange': 'fetchCena(this,22)'}})}}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.skladowa22) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.skladowa22) }}</div>
+                                </div>
+                            </td>
+                            <td style="width: 16.67%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.sztuk22, {attr:{'onchange': 'calculateWartosc(this, 22)'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.sztuk22) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.sztuk22) }}</div>
+                                </div>
+                            </td>
+                            <td style="width: 16.67%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.cena22, {attr:{'onchange': 'calculateWartosc(this, 22)'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.cena22) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.cena22) }}</div>
+                                </div>
+                            </td>
+                            <td style="width: 16.67%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.wartosc22, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.wartosc22) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.wartosc22) }}</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="pastel-yellow">
+                            <td style="width: 50%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.skladowa23, {attr: {'onchange': 'fetchCena(this,23)'}})}}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.skladowa23) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.skladowa23) }}</div>
+                                </div>
+                            </td>
+                            <td style="width: 16.67%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.sztuk23, {attr:{'onchange': 'calculateWartosc(this, 23)'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.sztuk23) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.sztuk23) }}</div>
+                                </div>
+                            </td>
+                            <td style="width: 16.67%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.cena23, {attr:{'onchange': 'calculateWartosc(this, 23)'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.cena23) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.cena23) }}</div>
+                                </div>
+                            </td>
+                            <td style="width: 16.67%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.wartosc23, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.wartosc23) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.wartosc23) }}</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="pastel-yellow">
+                            <td style="width: 50%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.skladowa24, {attr: {'onchange': 'fetchCena(this,24)'}})}}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.skladowa24) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.skladowa24) }}</div>
+                                </div>
+                            </td>
+                            <td style="width: 16.67%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.sztuk24, {attr:{'onchange': 'calculateWartosc(this, 24)'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.sztuk24) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.sztuk24) }}</div>
+                                </div>
+                            </td>
+                            <td style="width: 16.67%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.cena24, {attr:{'onchange': 'calculateWartosc(this, 24)'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.cena24) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.cena24) }}</div>
+                                </div>
+                            </td>
+                            <td style="width: 16.67%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.wartosc24, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.wartosc24) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.wartosc24) }}</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="pastel-yellow">
+                            <td style="width: 50%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.skladowa25, {attr: {'onchange': 'fetchCena(this,25)'}})}}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.skladowa25) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.skladowa25) }}</div>
+                                </div>
+                            </td>
+                            <td style="width: 16.67%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.sztuk25, {attr:{'onchange': 'calculateWartosc(this, 25)'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.sztuk25) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.sztuk25) }}</div>
+                                </div>
+                            </td>
+                            <td style="width: 16.67%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.cena25, {attr:{'onchange': 'calculateWartosc(this, 25)'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.cena25) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.cena25) }}</div>
+                                </div>
+                            </td>
+                            <td style="width: 16.67%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.wartosc25, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.wartosc25) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.wartosc25) }}</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="pastel-yellow">
+                            <td style="width: 50%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.skladowa26, {attr: {'onchange': 'fetchCena(this,26)'}})}}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.skladowa26) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.skladowa26) }}</div>
+                                </div>
+                            </td>
+                            <td style="width: 16.67%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.sztuk26, {attr:{'onchange': 'calculateWartosc(this, 26)'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.sztuk26) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.sztuk26) }}</div>
+                                </div>
+                            </td>
+                            <td style="width: 16.67%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.cena26, {attr:{'onchange': 'calculateWartosc(this, 26)'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.cena26) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.cena26) }}</div>
+                                </div>
+                            </td>
+                            <td style="width: 16.67%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.wartosc26, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.wartosc26) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.wartosc26) }}</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="pastel-yellow">
+                            <td style="width: 50%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.skladowa27, {attr: {'onchange': 'fetchCena(this,27)'}})}}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.skladowa27) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.skladowa27) }}</div>
+                                </div>
+                            </td>
+                            <td style="width: 16.67%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.sztuk27, {attr:{'onchange': 'calculateWartosc(this, 27)'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.sztuk27) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.sztuk27) }}</div>
+                                </div>
+                            </td>
+                            <td style="width: 16.67%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.cena27, {attr:{'onchange': 'calculateWartosc(this, 27)'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.cena27) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.cena27) }}</div>
+                                </div>
+                            </td>
+                            <td style="width: 16.67%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.wartosc27, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.wartosc27) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.wartosc27) }}</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="pastel-yellow">
+                            <td style="width: 50%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.skladowa28, {attr: {'onchange': 'fetchCena(this,28)'}})}}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.skladowa28) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.skladowa28) }}</div>
+                                </div>
+                            </td>
+                            <td style="width: 16.67%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.sztuk28, {attr:{'onchange': 'calculateWartosc(this, 28)'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.sztuk28) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.sztuk28) }}</div>
+                                </div>
+                            </td>
+                            <td style="width: 16.67%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.cena28, {attr:{'onchange': 'calculateWartosc(this, 28)'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.cena28) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.cena28) }}</div>
+                                </div>
+                            </td>
+                            <td style="width: 16.67%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.wartosc28, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.wartosc28) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.wartosc28) }}</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="pastel-yellow">
+                            <td style="width: 50%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.skladowa29, {attr: {'onchange': 'fetchCena(this,29)'}})}}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.skladowa29) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.skladowa29) }}</div>
+
+                                    {{ form_widget(edit_form.nazwa29) }}
+                                    <small>{{ form_help(edit_form.nazwa29) }}</small>
+                                    <div class="form-error">
+                                        {{ form_errors(edit_form.nazwa29) }}
+                                    </div>
+                                </div>
+                            </td>
+                            <td style="width: 16.67%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.sztuk29, {attr:{'onchange': 'calculateWartosc(this, 29)'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.sztuk29) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.sztuk29) }}</div>
+                                </div>
+                            </td>
+                            <td style="width: 16.67%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.cena29, {attr:{'onchange': 'calculateWartosc(this, 29)'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.cena29) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.cena29) }}</div>
+                                </div>
+                            </td>
+                            <td style="width: 16.67%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.wartosc29, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.wartosc29) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.wartosc29) }}</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="pastel-yellow">
+                            <td style="width: 50%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.skladowa30, {attr: {'onchange': 'fetchCena(this,30)'}})}}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.skladowa30) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.skladowa30) }}</div>
+
+                                    {{ form_widget(edit_form.nazwa30) }}
+                                    <small>{{ form_help(edit_form.nazwa30) }}</small>
+                                    <div class="form-error">
+                                        {{ form_errors(edit_form.nazwa30) }}
+                                    </div>
+                                </div>
+                            </td>
+                            <td style="width: 16.67%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.sztuk30, {attr:{'onchange': 'calculateWartosc(this, 30)'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.sztuk30) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.sztuk30) }}</div>
+                                </div>
+                            </td>
+                            <td style="width: 16.67%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.cena30, {attr:{'onchange': 'calculateWartosc(this, 30)'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.cena30) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.cena30) }}</div>
+                                </div>
+                            </td>
+                            <td style="width: 16.67%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.wartosc30, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.wartosc30) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.wartosc30) }}</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="pastel-yellow">
+                            <td style="width: 50%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.skladowa31, {attr: {'onchange': 'fetchCena(this,31)'}})}}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.skladowa31) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.skladowa31) }}</div>
+
+                                    {{ form_widget(edit_form.nazwa31) }}
+                                    <small>{{ form_help(edit_form.nazwa31) }}</small>
+                                    <div class="form-error">
+                                        {{ form_errors(edit_form.nazwa31) }}
+                                    </div>
+                                </div>
+                            </td>
+                            <td style="width: 16.67%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.sztuk31, {attr:{'onchange': 'calculateWartosc(this, 31)'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.sztuk31) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.sztuk31) }}</div>
+                                </div>
+                            </td>
+                            <td style="width: 16.67%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.cena31, {attr:{'onchange': 'calculateWartosc(this, 31)'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.cena31) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.cena31) }}</div>
+                                </div>
+                            </td>
+                            <td style="width: 16.67%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.wartosc31, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.wartosc31) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.wartosc31) }}</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="pastel-yellow">
+                            <td style="width: 50%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.skladowa32, {attr: {'onchange': 'fetchCena(this,32)'}})}}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.skladowa32) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.skladowa32) }}</div>
+
+                                    {{ form_widget(edit_form.nazwa32) }}
+                                    <small>{{ form_help(edit_form.nazwa32) }}</small>
+                                    <div class="form-error">
+                                        {{ form_errors(edit_form.nazwa32) }}
+                                    </div>
+                                </div>
+                            </td>
+                            <td style="width: 16.67%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.sztuk32, {attr:{'onchange': 'calculateWartosc(this, 32)'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.sztuk32) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.sztuk32) }}</div>
+                                </div>
+                            </td>
+                            <td style="width: 16.67%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.cena32, {attr:{'onchange': 'calculateWartosc(this, 32)'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.cena32) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.cena32) }}</div>
+                                </div>
+                            </td>
+                            <td style="width: 16.67%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.wartosc32, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.wartosc32) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.wartosc32) }}</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="pastel-yellow">
+                            <td style="width: 50%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.skladowa33, {attr: {'onchange': 'fetchCena(this,33)'}})}}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.skladowa33) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.skladowa33) }}</div>
+
+                                    {{ form_widget(edit_form.nazwa33) }}
+                                    <small>{{ form_help(edit_form.nazwa33) }}</small>
+                                    <div class="form-error">
+                                        {{ form_errors(edit_form.nazwa33) }}
+                                    </div>
+                                </div>
+                            </td>
+                            <td style="width: 16.67%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.sztuk33, {attr:{'onchange': 'calculateWartosc(this, 33)'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.sztuk33) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.sztuk33) }}</div>
+                                </div>
+                            </td>
+                            <td style="width: 16.67%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.cena33, {attr:{'onchange': 'calculateWartosc(this, 33)'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.cena33) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.cena33) }}</div>
+                                </div>
+                            </td>
+                            <td style="width: 16.67%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.wartosc33, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.wartosc33) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.wartosc33) }}</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="pastel-yellow">
+                            <td style="width: 50%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.skladowa34, {attr: {'onchange': 'fetchCena(this,34)'}})}}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.skladowa34) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.skladowa34) }}</div>
+
+                                    {{ form_widget(edit_form.nazwa34) }}
+                                    <small>{{ form_help(edit_form.nazwa34) }}</small>
+                                    <div class="form-error">
+                                        {{ form_errors(edit_form.nazwa34) }}
+                                    </div>
+                                </div>
+                            </td>
+                            <td style="width: 16.67%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.sztuk34, {attr:{'onchange': 'calculateWartosc(this, 34)'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.sztuk34) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.sztuk34) }}</div>
+                                </div>
+                            </td>
+                            <td style="width: 16.67%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.cena34, {attr:{'onchange': 'calculateWartosc(this, 34)'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.cena34) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.cena34) }}</div>
+                                </div>
+                            </td>
+                            <td style="width: 16.67%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.wartosc34, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.wartosc34) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.wartosc34) }}</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="pastel-yellow">
+                            <td style="width: 50%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.skladowa35, {attr: {'onchange': 'fetchCena(this,35)'}})}}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.skladowa35) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.skladowa35) }}</div>
+
+                                    {{ form_widget(edit_form.nazwa35) }}
+                                    <small>{{ form_help(edit_form.nazwa35) }}</small>
+                                    <div class="form-error">
+                                        {{ form_errors(edit_form.nazwa35) }}
+                                    </div>
+                                </div>
+                            </td>
+                            <td style="width: 16.67%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.sztuk35, {attr:{'onchange': 'calculateWartosc(this, 35)'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.sztuk35) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.sztuk35) }}</div>
+                                </div>
+                            </td>
+                            <td style="width: 16.67%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.cena35, {attr:{'onchange': 'calculateWartosc(this, 35)'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.cena35) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.cena35) }}</div>
+                                </div>
+                            </td>
+                            <td style="width: 16.67%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.wartosc35, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.wartosc35) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.wartosc35) }}</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="pastel-yellow">
+                            <td style="width: 50%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.skladowa36, {attr: {'onchange': 'fetchCena(this,36)'}})}}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.skladowa36) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.skladowa36) }}</div>
+
+                                    {{ form_widget(edit_form.nazwa36) }}
+                                    <small>{{ form_help(edit_form.nazwa36) }}</small>
+                                    <div class="form-error">
+                                        {{ form_errors(edit_form.nazwa36) }}
+                                    </div>
+                                </div>
+                            </td>
+                            <td style="width: 16.67%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.sztuk36, {attr:{'onchange': 'calculateWartosc(this, 36)'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.sztuk36) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.sztuk36) }}</div>
+                                </div>
+                            </td>
+                            <td style="width: 16.67%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.cena36, {attr:{'onchange': 'calculateWartosc(this, 36)'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.cena36) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.cena36) }}</div>
+                                </div>
+                            </td>
+                            <td style="width: 16.67%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.wartosc36, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.wartosc36) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.wartosc36) }}</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="pastel-yellow">
+                            <td style="width: 50%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.skladowa37, {attr: {'onchange': 'fetchCena(this,37)'}})}}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.skladowa37) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.skladowa37) }}</div>
+
+                                    {{ form_widget(edit_form.nazwa37) }}
+                                    <small>{{ form_help(edit_form.nazwa37) }}</small>
+                                    <div class="form-error">
+                                        {{ form_errors(edit_form.nazwa37) }}
+                                    </div>
+                                </div>
+                            </td>
+                            <td style="width: 16.67%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.sztuk37, {attr:{'onchange': 'calculateWartosc(this, 37)'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.sztuk37) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.sztuk37) }}</div>
+                                </div>
+                            </td>
+                            <td style="width: 16.67%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.cena37, {attr:{'onchange': 'calculateWartosc(this, 37)'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.cena37) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.cena37) }}</div>
+                                </div>
+                            </td>
+                            <td style="width: 16.67%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.wartosc37, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.wartosc37) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.wartosc37) }}</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="pastel-yellow">
+                            <td style="width: 50%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.skladowa38, {attr: {'onchange': 'fetchCena(this,38)'}})}}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.skladowa38) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.skladowa38) }}</div>
+
+                                    {{ form_widget(edit_form.nazwa38) }}
+                                    <small>{{ form_help(edit_form.nazwa38) }}</small>
+                                    <div class="form-error">
+                                        {{ form_errors(edit_form.nazwa38) }}
+                                    </div>
+                                </div>
+                            </td>
+                            <td style="width: 16.67%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.sztuk38, {attr:{'onchange': 'calculateWartosc(this, 38)'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.sztuk38) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.sztuk38) }}</div>
+                                </div>
+                            </td>
+                            <td style="width: 16.67%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.cena38, {attr:{'onchange': 'calculateWartosc(this, 38)'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.cena38) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.cena38) }}</div>
+                                </div>
+                            </td>
+                            <td style="width: 16.67%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.wartosc38, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.wartosc38) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.wartosc38) }}</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="pastel-yellow">
+                            <td style="width: 50%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.skladowa39, {attr: {'onchange': 'fetchCena(this,39)'}})}}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.skladowa39) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.skladowa39) }}</div>
+
+                                    {{ form_widget(edit_form.nazwa39) }}
+                                    <small>{{ form_help(edit_form.nazwa39) }}</small>
+                                    <div class="form-error">
+                                        {{ form_errors(edit_form.nazwa39) }}
+                                    </div>
+                                </div>
+                            </td>
+                            <td style="width: 16.67%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.sztuk39, {attr:{'onchange': 'calculateWartosc(this, 39)'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.sztuk39) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.sztuk39) }}</div>
+                                </div>
+                            </td>
+                            <td style="width: 16.67%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.cena39, {attr:{'onchange': 'calculateWartosc(this, 39)'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.cena39) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.cena39) }}</div>
+                                </div>
+                            </td>
+                            <td style="width: 16.67%;">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.wartosc39, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.wartosc39) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.wartosc39) }}</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="bg-custom-red"><td colspan="3" class="text-right">KOSZT WAZON:</td><td id="wazon_koszt" colspan="2" class="text-right"></td></tr>
+                        <tr class="bg-custom-green"><td colspan="2" class="text-right"></td>
+                            <td>
+                                <div class="blokuj">
+                                    <div class=" d-flex mt-2 mr-0">
+                                        <label for="{{ edit_form.blokujMarzaWazon.vars.id }}" class="mr-2"></label>
+                                        {{ form_widget(edit_form.blokujMarzaWazon, {'attr': {'class': 'blokuj'}}) }}
+                                        <div class="flex-grow-1 ml-2">
+                                            <div class="invalid-feedback">{{ form_errors(edit_form.blokujMarzaWazon) }}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td id="wazon_marza" colspan="2" class="text-right">
+                                <div class="form-group">
+                                    {{ form_widget(edit_form.marza_wazon, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(edit_form.marza_wazon) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(edit_form.marza_wazon) }}</div>
+                                </div>
+                            </td></tr>
+
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="col-md-3"> <!-- Kolumna po prawej stronie o szerokości 25% -->
+                <div id="kompozycja_zdj" class="sticky-image">
+                    <h3 class="text-center">{{ edit_form.vars.value.nazwa }}</h3>
+
+                    <div class="row p-1 border">
+                        <div class="col-md-6">
+                            <div class="form-group2 pastel-fiolet">
+                                <label>{{ form_label(edit_form.cena_solo) }}:</label>
+                                {{ form_widget(edit_form.cena_solo, {'attr': {'class': 'form-control'}}) }}
+                            </div>
+
+                            <div class="form-group2 pastel-yellow">
+                                <label>{{ form_label(edit_form.cena_wazon) }}:</label>
+                                {{ form_widget(edit_form.cena_wazon, {'attr': {'class': 'form-control'}}) }}
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 zielony-prawa">
+                            <div class="form-group2 zielony">
+                                <label>{{ form_label(edit_form.cena_kpl) }}:</label>
+                                {{ form_widget(edit_form.cena_kpl, {'attr': {'class': 'form-control'}}) }}
+                            </div>
+
+                            <div class="form-group2">
+                                <label>{{ form_label(edit_form.cena_kpl_2w) }}:</label>
+                                {{ form_widget(edit_form.cena_kpl_2w, {'attr': {'class': 'form-control'}}) }}
+                            </div>
+                        </div>
+                    </div>
+
+
+                <div class="d-flex flex-column p-1">
+                    {% set imagePath = asset('uploads/kompozycje/' ~ edit_form.vars.value.zdjecie) %}
+                    {% if edit_form.vars.value.zdjecie %}
+                        <div class="my-2 d-flex-container">
+                            <a href="#" class="ea-lightbox-thumbnail" data-ea-lightbox-content-selector="#ea-lightbox-01H4N6K15A3NSHY5KB400FQAMP-1">
+                                <img src="{{ imagePath }}" alt="Nazwa obrazka" class="img-fluid">
+                            </a>
+                            <div id="ea-lightbox-01H4N6K15A3NSHY5KB400FQAMP-1" class="ea-lightbox">
+                                <img src="{{ imagePath }}" class="img-fluid">
+                            </div>
+                        </div>
+                        <div class="edycja_zdjecia">
+                            {{ form_widget(edit_form.zdjecie) }}
+                            <small class="form-text text-muted">{{ form_help(edit_form.zdjecie) }}</small>
+                            <div class="invalid-feedback">{{ form_errors(edit_form.zdjecie) }}</div>
+                        </div>
+                    {% else %}
+                        <div class="edycja_zdjecia">
+                            {{ form_label(edit_form.zdjecie) }}
+                            {{ form_widget(edit_form.zdjecie) }}
+                            <small class="form-text text-muted">{{ form_help(edit_form.zdjecie) }}</small>
+                            <div class="invalid-feedback">{{ form_errors(edit_form.zdjecie) }}</div>
+                        </div>
+                    {% endif %}
+
+
+                        {% set imagePath = asset('uploads/kompozycje/' ~ edit_form.vars.value.zdjecieSolo) %}
+                        {% if edit_form.vars.value.zdjecieSolo %}
+                            <div class="my-2 d-flex-container">
+                                <a href="#" class="ea-lightbox-thumbnail" data-ea-lightbox-content-selector="#ea-lightbox-01H4N6K15A3NSHY5KB400FQAMP-2">
+                                    <img src="{{ imagePath }}" alt="Nazwa obrazka" class="img-fluid">
+                                </a>
+                                <div id="ea-lightbox-01H4N6K15A3NSHY5KB400FQAMP-2" class="ea-lightbox">
+                                    <img src="{{ imagePath }}" class="img-fluid">
+                                </div>
+                            </div>
+                            <div class="edycja_zdjecia">
+                                {{ form_widget(edit_form.zdjecie_solo) }}
+                                <small class="form-text text-muted">{{ form_help(edit_form.zdjecie_solo) }}</small>
+                                <div class="invalid-feedback">{{ form_errors(edit_form.zdjecie_solo) }}</div>
+                            </div>
+                        {% else %}
+                            <div class="edycja_zdjecia">
+                                {{ form_label(edit_form.zdjecie_solo) }}
+                                {{ form_widget(edit_form.zdjecie_solo) }}
+                                <small class="form-text text-muted">{{ form_help(edit_form.zdjecie_solo) }}</small>
+                                <div class="invalid-feedback">{{ form_errors(edit_form.zdjecie_solo) }}</div>
+                            </div>
+                        {% endif %}
+
+                        {% set imagePath = asset('uploads/kompozycje/' ~ edit_form.vars.value.zdjecieWazon) %}
+                        {% if edit_form.vars.value.zdjecieWazon %}
+                            <div class="my-2 d-flex-container">
+                                <a href="#" class="ea-lightbox-thumbnail" data-ea-lightbox-content-selector="#ea-lightbox-01H4N6K15A3NSHY5KB400FQAMP-3">
+                                    <img src="{{ imagePath }}" alt="Nazwa obrazka" class="img-fluid ">
+                                </a>
+                                <div id="ea-lightbox-01H4N6K15A3NSHY5KB400FQAMP-3" class="ea-lightbox">
+                                    <img src="{{ imagePath }}" class="img-fluid">
+                                </div>
+                            </div>
+                            <div class="edycja_zdjecia">
+                                {{ form_widget(edit_form.zdjecie_wazon) }}
+                                <small class="form-text text-muted">{{ form_help(edit_form.zdjecie_wazon) }}</small>
+                                <div class="invalid-feedback">{{ form_errors(edit_form.zdjecie_wazon) }}</div>
+                            </div>
+                        {% else %}
+                            <div class="edycja_zdjecia">
+                                {{ form_label(edit_form.zdjecie_wazon) }}
+                                {{ form_widget(edit_form.zdjecie_wazon) }}
+                                <small class="form-text text-muted">{{ form_help(edit_form.zdjecie_wazon) }}</small>
+                                <div class="invalid-feedback">{{ form_errors(edit_form.zdjecie_wazon) }}</div>
+                            </div>
+                        {% endif %}
+                </div>
+
+                </div>
+
+
+
+{#                    <a href="#" class="ea-lightbox-thumbnail" data-ea-lightbox-content-selector="#ea-lightbox-01H4N6K15A3NSHY5KB400FQAMP-1">#}
+{#                        <img src="/uploads/kompozycje/img-20230622-141057-851-[kompozycja]-1688563171.jpg" class="img-fluid">#}
+{#                    </a>#}
+
+{#                    <div id="ea-lightbox-01H4N6K15A3NSHY5KB400FQAMP-1" class="ea-lightbox">#}
+{#                        <img src="/uploads/kompozycje/img-20230622-141057-851-[kompozycja]-1688563171.jpg">#}
+{#                    </div>#}
+
+
+
+            </div>
+        </div>
+
+        {{ form_end(edit_form) }}
+    {% endblock edit_form %}
+{% endblock %}

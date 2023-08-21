@@ -1,0 +1,191 @@
+#wyceny-table td, #wyceny-table th{
+    padding: 1px;
+}
+
+#wyceny-table .form-group {
+    padding: 1px 0;
+}
+
+/*#wyceny-table tr td:not(:first-child) {*/
+/*    vertical-align: middle;*/
+/*}*/
+
+#wyceny-table tr {
+    border-bottom: 3px solid gray;
+}
+.bg-custom-green {
+    background-color: #C9E4C9 !important;
+}
+.bg-custom-red {
+    background-color: #FFEBEE !important;
+}
+#wyceny * {
+    font-weight: bold;
+}
+.sticky-image {
+    position: sticky;
+    top: 100px;
+    background-color: white;
+    z-index: 100;
+}
+
+.sticky-image h3 {
+    text-align: center;
+    margin-top: 0;
+}
+
+#wyceny-table td input, #hurtowe-table td input{
+    padding-left: 3px;
+    padding-right: 3px;
+    padding-top: 5px;
+    padding-bottom: 4px;
+}
+
+#hurtowe-table div.row>*, #wyceny-table div.row>*{
+    padding-right: 0 !important;
+}
+/*wyrównanie całego formularza max do prawej na mobilnych*/
+#new-Hurtowe-form .row, #edit-Hurtowe-form .row,#new-Wyceny-form .row, #edit-Wyceny-form .row{
+    padding-right: 0;
+    --bs-gutter-x: 0;
+}
+
+#suma-label {
+    vertical-align: middle;
+}
+
+
+.rodzaje_kompozycji td{
+    width: 50%;
+}
+div.rodzaje_kompozycji>*{
+    padding-top: 3px !important;
+    padding-bottom: 3px !important;
+}
+
+.rodzaje_kompozycji .form-check {
+    display: inline-block !important;
+}
+
+#hurtowe-table td, #hurtowe-table th{
+    padding: 1px;
+    border: none;
+}
+
+#hurtowe-table .form-group {
+    padding: 1px 0;
+}
+
+.table-hurtowe tr:nth-child(even) {
+    border-bottom: 3px solid gray !important;
+}
+
+/*wozek druk*/
+.wozek-druk {
+    border: 1px solid;
+}
+
+#zestawienie-suma{
+    border-top: 4px solid;
+}
+.zestawienie-druki{
+    padding-left: 10px;
+}
+
+.gray {
+    --bs-table-accent-bg: rgba(90, 90, 90, 0.2); /* Kolor troszeczkę ciemniejszy */
+    color: var(--bs-table-striped-color); /* Zachowujemy kolor tekstu z poprzedniego stylu */
+}
+
+
+.more-gray {
+    --bs-table-accent-bg: rgba(128, 128, 128, 0.6); /* Przykładowa wartość koloru - ciemniejszy o 30% */
+    color: var(--bs-table-striped-color); /* Zachowujemy kolor tekstu z poprzedniego stylu */
+}
+
+.img-fluid {
+    max-width: 100%;
+}
+
+.pastel-yellow,
+.pastel-yellow *{
+    background-color: #ffffcc;
+    font-weight: bold;
+}
+
+.pastel-fiolet,
+.pastel-fiolet * {
+    background-color: #e6e6ff;
+    font-weight: bold;
+}
+
+.zielony{
+    font-weight: bold;
+    background-color: #C9E4C9 !important;
+}
+div.naglowek{
+    font-size: var(--font-size-xxl) !important;
+}
+
+.border input{
+    border: 1px solid black;
+}
+
+/* Styl dla warningu */
+.alert {
+    padding: 8px;
+    margin-bottom: 16px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+}
+
+.alert-warning {
+    color: #856404;
+    background-color: #fff3cd;
+    border-color: #ffeeba;
+}
+
+.flex-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+h1.my-4 {
+    flex: 1;
+}
+
+.klient {
+    flex: 1;
+    text-align: right;
+    font-size: 25px;
+    font-weight: bold;
+}
+div.edycja_zdjecia .custom-file-label{
+    padding: 3px 100px 3px 7px!important;
+}
+
+div.podglad{
+    align-items: center!important;
+}
+
+.d-flex-container {
+    display: flex;
+    justify-content: center; /* Wyśrodkowanie wzdłuż osi poziomej */
+    align-items: center; /* Wyśrodkowanie wzdłuż osi pionowej */
+}
+div#some-custom-id > *{
+    font-weight: bold !important;
+}
+.dodajPolprodukt .form-check {
+    padding-left: 0px !important;
+    margin-top: 5px;
+}
+.blokuj{
+    float:left;
+    text-align: right;
+    padding-top:5px !important;
+}
+div.has-error{
+    background-color: crimson !important;
+}

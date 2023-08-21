@@ -1,0 +1,163 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Danmal - Koszyk{% endblock %}
+
+{% block body %}
+
+    <section style="background-color: #eee;">
+        <div class="container h-100 py-5">
+            <div class="row d-flex justify-content-center align-items-center h-100">
+                <div class="col">
+                    <div class="card shopping-cart" style="border-radius: 15px;">
+                        <div class="card-body text-black">
+
+                            {% if cart.produkty.count > 0 %}
+
+
+                            {{ form_start(form,{'attr': {'class': 'mb-5'}}) }}
+                            <div class="row" id="order-details" data-id="{{ form.produkty.vars.value.owner.id }}">
+                                <div class="col-lg-6 px-5 py-4">
+                                    <p>Dziękujemy za złożenie zamówienia.</p>
+                                    <br/>
+                                    <p>Wszystkie dotychczasowe zamówienia jak i status bieżącego można śledzić w <a href="http://kompozycjecmentarne.pl/admin">panelu klienta </a> w zakładce <b>ZAMÓWIENIA</b></p>
+                                    <h3 class="mb-5 pt-2 text-center fw-bold text-uppercase">Twoje produkty</h3>
+
+
+                                    {% for produkt in form.produkty %}
+
+
+{#                                        {{ dump(produkt.vars.data.zamowienieRef.id) }}#}
+                                        <div class="d-flex align-items-center mb-5">
+                                        <div class="flex-shrink-0">
+
+
+                                            <img src=" {{ asset('uploads/kompozycje/' ~ produkt.vars.data.produkt.zdjecie) }}"
+                                                 class="img-fluid" style="width: 150px;" alt="Generic placeholder image">
+                                        </div>
+                                        <div class="flex-grow-1 ms-3">
+
+
+                                            <a class="text-decoration-none" href="{{ path('app_sklep_produkt', {'id': produkt.vars.data.produkt.id}) }}"><h5 class="text-primary">{{ produkt.vars.data.produkt.nazwa }}</h5></a>
+
+
+
+                                            <div class="input-group rodzajProduktu">
+                                                <input  id={{ "cart_produkty_" ~ loop.index0 ~ "_rodzaj"}} name={{ "cart[produkty][" ~ loop.index0 ~ "][rodzaj]"}} required="required"  class="koszykowy_button form-control rodzaj fw-bold text-black" value="{{ produkt.vars.data.rodzaj }}" type="hidden">
+
+                                            </div>
+                                            <h6 style="color: #9e9e9e;">Rodzaj: <span id="produkt-rodzaj">{{ produkt.vars.data.rodzaj }}</span></h6>
+                                            <div class="d-flex align-items-center flex-column flex-md-row">
+                                                {% if produkt.vars.data.rodzaj == 'kpl' %}
+                                                    {% set cenaProduktu = produkt.vars.data.produkt.cenaKpl %}
+                                                    <p class="fw-bold me-2 pe-3 cena-jednostkowa">{{ produkt.vars.data.produkt.cenaKpl }}zł</p>
+                                                {% elseif produkt.vars.data.rodzaj == 'solo' %}
+                                                    {% set cenaProduktu = produkt.vars.data.produkt.cenaSolo %}
+                                                    <p class="fw-bold me-2 pe-3 cena-jednostkowa">{{ produkt.vars.data.produkt.cenaSolo }}zł</p>
+                                                {% elseif produkt.vars.data.rodzaj == 'w' %}
+                                                    {% set cenaProduktu = produkt.vars.data.produkt.cenaWazon %}
+                                                    <p class="fw-bold me-2 pe-3 cena-jednostkowa">{{ produkt.vars.data.produkt.cenaWazon }}zł</p>
+                                                {% elseif produkt.vars.data.rodzaj == '2w' %}
+                                                    {% set cenaProduktu = produkt.vars.data.produkt.cenaKpl + produkt.vars.data.produkt.cenaWazon %}
+                                                    <p class="fw-bold me-2 pe-3 cena-jednostkowa">{{ produkt.vars.data.produkt.cenaKpl + produkt.vars.data.produkt.cenaWazon }}zł</p>
+                                                {% endif %}
+
+                                                <div class="btn-toolbar mb-3" role="toolbar" aria-label="Toolbar with button groups" id="produkt-id" data-id="{{ produkt.vars.data.produkt.id }}">
+                                                    <div class="btn-group mr-2" role="group" aria-label="First group">
+                                                        <button type="button" onclick="this.parentNode.querySelector('input[type=number]').stepDown(); cartUpdate(this.parentNode, -1, '{{ produkt.vars.data.rodzaj }}'); sumQuantityInputs();" class="btn btn-success minus">-</button>
+                                                        <div class="input-group">
+                                                            <input id="{{ 'cart_produkty_' ~ loop.index0 ~ '_quantity' }}" name="{{ 'cart[produkty][' ~ loop.index0 ~ '][quantity]' }}" required="required" class="koszykowy_button form-control quantity fw-bold text-black" min="0" value="{{ produkt.vars.data.quantity }}" type="number">
+                                                        </div>
+                                                        <button type="button" onclick="this.parentNode.querySelector('input[type=number]').stepUp(); cartUpdate(this.parentNode, 1, '{{ produkt.vars.data.rodzaj }}'); sumQuantityInputs();" class="plus btn btn-success mb-0">+</button>
+                                                    </div>
+                                                </div>
+
+
+                                                <div class="btn-toolbar mb-3 podsuma-koszyk" style="margin-left: auto;">
+                                                    <h5 class="fw-bold mb-0">{{ cenaProduktu * produkt.vars.data.quantity }}zł</h5>
+                                                </div>
+                                            </div>
+
+
+
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+
+
+
+
+                                    <hr class="mb-4" style="height: 2px; background-color: #59ab6e; opacity: 1;">
+
+                                    <div class="d-flex justify-content-between px-x">
+                                        <p class="fw-bold">Naliczona zniżka:</p>
+                                        <p class="fw-bold">0zł</p>
+                                    </div>
+                                    <div class="d-flex justify-content-between p-2 mb-2" style="background-color: #59ab6e;">
+                                        <h5 class="fw-bold mb-0">Suma:</h5>
+                                        <h5 class="fw-bold mb-0" id="cartTotal">{{ cart.total }}zł</h5>
+                                    </div>
+
+                                    <h5 class="fw-bold mb-5" style="position: absolute; bottom: 0;">
+                                        <a href="{{ path('app_sklep') }}"><i class="fas fa-angle-left me-2"></i>Wróć do zakupów</a>
+                                    </h5>
+
+                                </div>
+                                <div class="col-lg-6 px-5 py-4">
+
+                                    <h3 class="mb-5 pt-2 text-center fw-bold text-uppercase">SPOSÓB PŁATNOŚCI</h3>
+
+{#                                        <div class="form-outline mb-5">#}
+{#                                            <input type="text" id="typeText" class="form-control form-control-lg" siez="17"#}
+{#                                                   value="1234 5678 9012 3457" minlength="19" maxlength="19" />#}
+{#                                            <label class="form-label" for="typeText">Card Number</label>#}
+{#                                        </div>#}
+
+{#                                        <div class="form-outline mb-5">#}
+{#                                            <input type="text" id="typeName" class="form-control form-control-lg" siez="17"#}
+{#                                                   value="John Smith" />#}
+{#                                            <label class="form-label" for="typeName">Name on card</label>#}
+{#                                        </div>#}
+
+{#                                        <div class="row">#}
+{#                                            <div class="col-md-6 mb-5">#}
+{#                                                <div class="form-outline">#}
+{#                                                    <input type="text" id="typeExp" class="form-control form-control-lg" value="01/22"#}
+{#                                                           size="7" id="exp" minlength="7" maxlength="7" />#}
+{#                                                    <label class="form-label" for="typeExp">Expiration</label>#}
+{#                                                </div>#}
+{#                                            </div>#}
+{#                                            <div class="col-md-6 mb-5">#}
+{#                                                <div class="form-outline">#}
+{#                                                    <input type="password" id="typeText" class="form-control form-control-lg"#}
+{#                                                           value="&#9679;&#9679;&#9679;" size="1" minlength="3" maxlength="3" />#}
+{#                                                    <label class="form-label" for="typeText">Cvv</label>#}
+{#                                                </div>#}
+{#                                            </div>#}
+{#                                        </div>#}
+
+{#                                        <p class="mb-5">Lorem ipsum dolor sit amet consectetur, adipisicing elit <a#}
+{#                                                    href="#!">obcaecati sapiente</a>.</p>#}
+
+
+
+
+
+
+                                </div>
+                            </div>
+                            {% else %}
+                                <div class="alert alert-info">
+                                    <strong>Twój koszyk jest pusty. Zapraszamy <a href="{{ path('app_sklep') }}">do sklepu</a>.</strong>
+                                </div>
+                            {% endif %}
+
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+

@@ -1,0 +1,222 @@
+{% extends 'base.html.twig' %}
+
+
+
+{% block title %}Sklep - Danmal{% endblock %}
+
+{% block body %}
+
+    <!-- Open Content -->
+    <section class="bg-light">
+        <div class="container pb-5">
+            <div class="row">
+                <div class="col-lg-5 mt-5">
+                    <div class="card mb-3">
+                        <img class="card-img img-fluid" src="{{ asset('uploads/kompozycje/' ~ produkt[0].zdjecie) }}" alt="Card image cap" id="product-detail">
+                    </div>
+                    <div class="row">
+                        <!--Start Controls-->
+                        <div class="col-1 align-self-center">
+                            <a href="#multi-item-example" role="button" data-bs-slide="prev">
+                                <i class="text-dark fas fa-chevron-left"></i>
+                                <span class="sr-only">Previous</span>
+                            </a>
+                        </div>
+                        <!--End Controls-->
+                        <!--Start Carousel Wrapper-->
+                        <div id="multi-item-example" class="col-10 carousel slide carousel-multi-item" data-bs-ride="carousel">
+                            <!--Start Slides-->
+                            <div class="carousel-inner product-links-wap" role="listbox">
+
+                                <!--First slide-->
+                                <div class="carousel-item active">
+                                    <div class="row">
+                                        {% if produkt[0].zdjecieSolo is defined and produkt[0].zdjecieSolo is not empty %}
+                                        <div class="col-4">
+                                            <a href="#">
+                                                <img class="card-img img-fluid" src="{{ asset('uploads/kompozycje/' ~ produkt[0].zdjecieSolo) }}" alt="Product Image 1">
+                                            </a>
+                                        </div>
+                                        {% endif %}
+                                        {% if produkt[0].zdjecieWazon is defined and produkt[0].zdjecieWazon is not empty %}
+                                        <div class="col-4">
+                                            <a href="#">
+                                                <img class="card-img img-fluid" src="{{ asset('uploads/kompozycje/' ~ produkt[0].zdjecieWazon) }}" alt="Product Image 2">
+                                            </a>
+                                        </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <!--/.First slide-->
+
+                            </div>
+                            <!--End Slides-->
+                        </div>
+                        <!--End Carousel Wrapper-->
+                        <!--Start Controls-->
+                        <div class="col-1 align-self-center">
+                            <a href="#multi-item-example" role="button" data-bs-slide="next">
+                                <i class="text-dark fas fa-chevron-right"></i>
+                                <span class="sr-only">Next</span>
+                            </a>
+                        </div>
+                        <!--End Controls-->
+                    </div>
+                </div>
+                <!-- col end -->
+                <div class="col-lg-7 mt-5">
+                    <div class="card">
+                        <div class="card-body">
+                            <h1 class="h2">{{ produkt[0].nazwa }}</h1>
+                            <p class="h3 py-2">{{ produkt[0].cenaKpl }}zł</p>
+{#                            <p class="py-2">#}
+{#                                <i class="fa fa-star text-warning"></i>#}
+{#                                <i class="fa fa-star text-warning"></i>#}
+{#                                <i class="fa fa-star text-warning"></i>#}
+{#                                <i class="fa fa-star text-warning"></i>#}
+{#                                <i class="fa fa-star text-secondary"></i>#}
+{#                                <span class="list-inline-item text-dark">Rating 4.8 | 36 Comments</span>#}
+{#                            </p>#}
+                            <ul class="list-inline">
+                                <li class="list-inline-item">
+                                    <h6>Kategoria:</h6>
+                                </li>
+                                <li class="list-inline-item">
+                                    <p class="text-muted"><strong><a class="text-muted" href="{{ path('app_sklep', {'slug': grupa_aktualna != '-' ? slug : null}) }}">
+                                        {{grupa_aktualna}}
+                                            </a></strong></p>
+                                </li>
+                            </ul>
+
+{#                            <h6>Opis:</h6>#}
+{#                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod temp incididunt ut labore et dolore magna aliqua. Quis ipsum suspendisse. Donec condimentum elementum convallis. Nunc sed orci a diam ultrices aliquet interdum quis nulla.</p>#}
+{#                            <ul class="list-inline">#}
+{#                                <li class="list-inline-item">#}
+{#                                    <h6>Dostępne kolory :</h6>#}
+{#                                </li>#}
+{#                                <li class="list-inline-item">#}
+{#                                    <p class="text-muted"><strong>White / Black</strong></p>#}
+{#                                </li>#}
+{#                            </ul>#}
+
+                            <h6>Specyfikacja:</h6>
+                            {{ form_start(form) }}
+
+                            {% set ceny = {
+                                'solo': produkt[0].cenaSolo,
+                                'w': produkt[0].cenaWazon,
+                                'kpl': produkt[0].cenaKpl,
+                                '2w': produkt[0].cenaKpl2W
+                            } %}
+
+                            <div class="radio-container">
+                                <table class="radio-table">
+                                    <tbody>
+                                    {% for child in form.rodzaj %}
+                                        <tr>
+                                            <td>
+                                                <label class="custom-radio">
+                                                    {{ form_widget(child) }}
+                                                    <span class="checkmark"></span>
+                                                    {{ form_label(child) }}
+                                                </label>
+                                            </td>
+                                            <td class="price-column">
+                                                {% if child.vars.value is defined and ceny[child.vars.value] is defined %}
+                                                    <span class="price">{{ ceny[child.vars.value] }}zł </span>
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-auto">
+                                    <div class="btn-toolbar mb-3" role="toolbar" aria-label="Toolbar with button groups">
+                                        <strong class="koszykowa_ilosc align-middle">Ilość:</strong>
+                                        <div class="btn-group mr-2" role="group" aria-label="First group">
+                                            <button type="button" onclick="this.parentNode.querySelector('input[type=number]').stepDown()" class="btn btn-success minus">-</button>
+                                            <div class="input-group">
+                                                <input id="add_to_cart_quantity" name="add_to_cart[quantity]" required="required" class="form-control quantity fw-bold text-black" min="0" value="1" type="number">
+
+                                            </div>
+                                            <button type="button" onclick="this.parentNode.querySelector('input[type=number]').stepUp()" class="plus btn btn-success">+</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row pb-3">
+                                <div class="col d-grid">
+                                    {{ form_widget(form.add, {'attr': {'class': 'btn btn-success btn-lg'}}) }}
+                                    {#                                        <button type="submit" class="btn btn-success btn-lg" name="submit" value="buy">Kup</button>#}
+                                </div>
+{#                                <div class="col d-grid">#}
+{#                                    <button type="submit" class="btn btn-success btn-lg" name="submit" value="addtocard">Dodaj do koszyka</button>#}
+{#                                </div>#}
+                            </div>
+                            {{ form_row(form._token) }}
+                            {{ form_end(form, {'render_rest': false}) }}
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Close Content -->
+
+
+
+
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }} {# Zachowaj przekazywane skrypty JS z nadklasy #}
+    <script>
+        // Funkcja do obsługi zmiany zaznaczenia radio buttona
+        function handleRadioChange(event) {
+            const selectedRadio = event.target;
+            if (!selectedRadio) return;
+
+            const prices = document.querySelectorAll('.price-column .price');
+
+            // Przywróć normalny font-weight dla wszystkich cen
+            prices.forEach(price => {
+                price.style.fontWeight = 'normal';
+                price.closest('.price-column').classList.remove('bold-price'); // Usuń klasę bold-price z elementu price-column
+            });
+
+            const priceElement = selectedRadio.closest('tr').querySelector('.price-column');
+            if (priceElement) {
+                const price = priceElement.querySelector('.price');
+                if (price) {
+                    price.style.fontWeight = 'bold';
+                    priceElement.classList.add('bold-price'); // Dodaj klasę bold-price do elementu price-column
+                }
+            }
+        }
+
+        // Dodaj obsługę zmiany dla wszystkich radio buttonów
+        document.addEventListener('change', function(event) {
+            if (event.target && event.target.matches('.custom-radio input[type="radio"]')) {
+                handleRadioChange(event);
+            }
+        });
+
+        // Dodaj klasę bold-price do odpowiedniego elementu na starcie (jeśli potrzebujesz)
+        window.addEventListener('load', function() {
+            const defaultCheckedRadio = document.querySelector('.custom-radio input[type="radio"]:checked');
+            if (defaultCheckedRadio) {
+                const defaultPriceElement = defaultCheckedRadio.closest('tr').querySelector('.price-column');
+                if (defaultPriceElement) {
+                    defaultPriceElement.classList.add('bold-price');
+                }
+            }
+        });
+    </script>
+
+{% endblock %}

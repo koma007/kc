@@ -1,0 +1,21 @@
+{% extends '@EasyAdmin/page/content.html.twig' %}
+
+{% block content_title %}DANMAL - Panel{% endblock %}
+{% block page_actions %}
+{#    <a class="btn btn-primary" href="...">Some Action</a>#}
+{% endblock %}
+
+{% block main %}
+<h4>Witamy w Panelu klienta!</h4>
+
+    {% include '@EasyAdmin/flash_messages.html.twig' %}
+
+    {% for flash_error in app.flashes('verify_email_error') %}
+        <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
+    {% endfor %}
+
+    {% if not app.user.verified  %}
+    <div class="alert alert-success" role="alert">Email weryfikacyjny został wysłany na wskazną skrzynkę pocztową.</div>
+    {% endif %}
+
+{% endblock %}

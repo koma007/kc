@@ -1,0 +1,131 @@
+{#{% extends 'base.html.twig' %}#}
+
+{#{% block title %}Register{% endblock %}#}
+
+{#{% block body %}#}
+{#    {% for flash_error in app.flashes('verify_email_error') %}#}
+{#        <div class="alert alert-danger" role="alert">{{ flash_error }}</div>#}
+{#    {% endfor %}#}
+
+{#    <h1>Register</h1>#}
+
+{#    {{ form_start(registrationForm) }}#}
+{#        {{ form_row(registrationForm.name) }}#}
+{#        {{ form_row(registrationForm.email) }}#}
+{#        {{ form_row(registrationForm.plainPassword, {#}
+{#            label: 'Password'#}
+{#        }) }}#}
+{#        {{ form_row(registrationForm.agreeTerms) }}#}
+
+{#        <button type="submit" class="btn">Register</button>#}
+{#    {{ form_end(registrationForm) }}#}
+{#{% endblock %}#}
+
+{% extends '@!EasyAdmin/page/login.html.twig' %}
+
+
+{% block wrapper_wrapper %}
+
+    {% set page_title = "Danmal - rejestracja" %}
+    {% set _username_label = "E-mail" %}
+    {% set _password_label = "Hasło" %}
+    {% set _sign_in_label = "Zarejestruj się" %}
+    {% set formErrors = registrationForm.vars.errors.form.getErrors(true) %}
+
+    {% include '@EasyAdmin/flash_messages.html.twig' %}
+
+        {% for flash_error in app.flashes('verify_email_error') %}
+            <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
+        {% endfor %}
+
+    <div class="login-wrapper">
+        <header class="main-header">
+            <div id="header-logo">
+                {% block header_logo %}
+                    {% if page_title %}
+                        {% if ea is defined %}
+                            <a class="logo {{ page_title|length > 14 ? 'logo-long' }}" title="{{ page_title|striptags }}" href="{{ path(ea.dashboardRouteName) }}">
+                                {{ page_title|raw }}
+                            </a>
+                        {% else %}
+                            <div class="logo {{ page_title|length > 14 ? 'logo-long' }}">
+                                {{ page_title|raw }}
+                            </div>
+                        {% endif %}
+                    {% endif %}
+                {% endblock header_logo %}
+            </div>
+        </header>
+
+        <section class="content">
+
+            {% if error|default(false) %}
+                <div class="w-100 alert alert-danger rounded mb-3">
+                    <i class="fas fa-times-circle mr-1"></i>
+                    {{ error.messageKey|trans(error.messageData, 'security') }}
+                </div>
+            {% endif %}
+
+            {{ form_start(registrationForm) }}
+                {% if csrf_token_intention|default(false) %}
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token(csrf_token_intention) }}">
+                {% endif %}
+
+                <input type="hidden" name="{{ target_path_parameter|default('_target_path') }}" value="{{ target_path|default(ea is defined ? path(ea.dashboardRouteName) : '/') }}" />
+
+                <div class="form-group">
+                    <label class="form-control-label required" for="registration_form_name">Imię</label>
+                    <div class="form-widget">
+                        <input type="text" id="registration_form_name" name="registration_form[name]" class="form-control" value="{{ last_username|default('') }}" required autofocus autocomplete="username">
+                    </div>
+                </div>
+            {% if form_errors(registrationForm.name) %}
+                <div class="alert alert-danger" role="alert">
+                    {{ form_errors(registrationForm.name) }}
+                </div>
+            {% endif %}
+
+                <div class="form-group">
+                    <label class="form-control-label required" for="registration_form_email">{{ _username_label }}</label>
+                    <div class="form-widget">
+                        <input type="text" id="registration_form_email" name="registration_form[email]" class="form-control" value="{{ last_username|default('') }}" required autofocus autocomplete="username">
+                    </div>
+                </div>
+            {% if form_errors(registrationForm.email) %}
+                <div class="alert alert-danger" role="alert">
+                    {{ form_errors(registrationForm.email) }}
+                </div>
+            {% endif %}
+
+                <div class="form-group">
+                    <label class="form-control-label required" for="registration_form_plainPassword">{{ _password_label }}</label>
+                    <div class="form-widget">
+                        <input type="password" id="registration_form_plainPassword" name="registration_form[plainPassword]" class="form-control" required autocomplete="current-password">
+                    </div>
+
+                </div>
+
+            <div class="form-group">
+                <input style="background-color:#59ab6e !important;" class="form-check-input" type="checkbox" id="registration_form_agreeTerms" name="registration_form[agreeTerms]" checked>
+                <label class="form-check-label" for="registration_form_agreeTerms">
+                    Zaakceptuj warunki
+                </label>
+            </div>
+            {{ form_row(registrationForm._token) }}
+
+
+
+
+
+
+                <div class="form-group" style="display: flex; justify-content: space-between; ">
+                    <button type="submit" class="btn btn-success btn-lg btn-block">{{ _sign_in_label }}</button>
+
+                </div>
+
+            {{ form_end(registrationForm, {'render_rest': false}) }}
+
+            <script src="{{ asset('login.js', constant('EasyCorp\\Bundle\\EasyAdminBundle\\Asset\\AssetPackage::PACKAGE_NAME')) }}"></script>
+        </section>
+    </div>
+{% endblock %}

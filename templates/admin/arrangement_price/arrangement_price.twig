@@ -1,0 +1,28 @@
+{% extends '@EasyAdmin/page/content.html.twig' %}
+{% block content_title %}Cennik produktów{% endblock %}
+{% block page_actions %}
+    <a class="btn btn-primary" href="...">Some Action</a>
+{% endblock %}
+
+{% block main %}
+    <table class="datagrid">
+        <thead>
+        <tr>
+            <td>ID</td>
+            <td>Nazwa</td>
+            <td>Cena</td>
+            <td>Akcja</td>
+        </tr>
+        </thead>
+        <tbody>
+        {% for arrangement in arrangement_prices %}
+            <tr>
+                <td>{{ loop.index }}</td>
+                <td>{{ arrangement.name }}</td>
+                <td>{{ arrangement.price }}</td>
+                <td><i class="fa fa-pencil" aria-hidden="true"></i></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

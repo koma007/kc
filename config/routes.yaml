@@ -1,0 +1,25 @@
+controllers:
+    resource:
+        path: ../src/Controller/
+        namespace: App\Controller
+    type: attribute
+
+index:
+    path: /
+    controller: App\Controller\IndexController::index
+
+app_get_hurtowe_wozek:
+    path: /admin/hurtowe/{id}/wozek/{wozek}
+    controller: App\Controller\Admin\HurtoweWozekController::getHurtoweWozek
+
+app_get_hurtowe_wozek_pdf:
+    path: /admin/hurtowe-pdf/{id}/wozek/{wozek}
+    controller: App\Controller\Admin\HurtoweWozekController::getHurtoweWozekPdf
+
+app_get_hurtowe_zamowienie:
+    path: /admin/hurtowe/{id}
+    controller: App\Controller\Admin\HurtoweWozekController::getHurtoweZamowienie
+
+app_get_hurtowe_zamowienie_pdf:
+    path: /admin/hurtowe-pdf/{id}
+    controller: App\Controller\Admin\HurtoweWozekController::getHurtoweZamowieniePdf

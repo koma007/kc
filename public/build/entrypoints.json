@@ -1,0 +1,120 @@
+{
+  "entrypoints": {
+    "app": {
+      "js": [
+        "/build/runtime.js",
+        "/build/app.js"
+      ],
+      "css": [
+        "/build/app.css"
+      ]
+    },
+    "js1": {
+      "js": [
+        "/build/runtime.js",
+        "/build/vendors-node_modules_core-js_internals_advance-string-index_js-node_modules_core-js_internals-8e7521.js",
+        "/build/vendors-node_modules_core-js_internals_number-parse-int_js-node_modules_core-js_modules_es_ar-e405aa.js",
+        "/build/vendors-node_modules_core-js_modules_es_array_concat_js-node_modules_core-js_modules_es_regex-650ec2.js",
+        "/build/js1.js"
+      ]
+    },
+    "js2": {
+      "js": [
+        "/build/runtime.js",
+        "/build/vendors-node_modules_jquery_dist_jquery_js.js",
+        "/build/vendors-node_modules_core-js_internals_advance-string-index_js-node_modules_core-js_internals-8e7521.js",
+        "/build/vendors-node_modules_core-js_modules_es_array_concat_js-node_modules_core-js_modules_es_regex-650ec2.js",
+        "/build/js2.js"
+      ]
+    },
+    "slick": {
+      "js": [
+        "/build/runtime.js",
+        "/build/vendors-node_modules_jquery_dist_jquery_js.js",
+        "/build/vendors-node_modules_core-js_internals_advance-string-index_js-node_modules_core-js_internals-8e7521.js",
+        "/build/vendors-node_modules_core-js_internals_number-parse-int_js-node_modules_core-js_modules_es_ar-e405aa.js",
+        "/build/slick.js"
+      ]
+    },
+    "js3": {
+      "js": [
+        "/build/runtime.js",
+        "/build/vendors-node_modules_jquery_dist_jquery_js.js",
+        "/build/vendors-node_modules_core-js_internals_advance-string-index_js-node_modules_core-js_internals-8e7521.js",
+        "/build/vendors-node_modules_core-js_internals_number-parse-int_js-node_modules_core-js_modules_es_ar-e405aa.js",
+        "/build/vendors-node_modules_core-js_modules_es_array_concat_js-node_modules_core-js_modules_es_regex-650ec2.js",
+        "/build/vendors-node_modules_core-js_modules_es_array_every_js-node_modules_core-js_modules_es_array_-a23ac9.js",
+        "/build/js3.js"
+      ]
+    },
+    "js4": {
+      "js": [
+        "/build/runtime.js",
+        "/build/vendors-node_modules_jquery_dist_jquery_js.js",
+        "/build/js4.js"
+      ]
+    },
+    "js5": {
+      "js": [
+        "/build/runtime.js",
+        "/build/vendors-node_modules_jquery_dist_jquery_js.js",
+        "/build/js5.js"
+      ]
+    },
+    "custom2": {
+      "js": [
+        "/build/runtime.js",
+        "/build/vendors-node_modules_jquery_dist_jquery_js.js",
+        "/build/custom2.js"
+      ]
+    },
+    "admin": {
+      "js": [
+        "/build/runtime.js"
+      ],
+      "css": [
+        "/build/admin.css"
+      ]
+    },
+    "front1": {
+      "js": [
+        "/build/runtime.js"
+      ],
+      "css": [
+        "/build/front1.css"
+      ]
+    },
+    "front2": {
+      "js": [
+        "/build/runtime.js"
+      ],
+      "css": [
+        "/build/front2.css"
+      ]
+    },
+    "front3": {
+      "js": [
+        "/build/runtime.js"
+      ],
+      "css": [
+        "/build/front3.css"
+      ]
+    },
+    "front4": {
+      "js": [
+        "/build/runtime.js"
+      ],
+      "css": [
+        "/build/front4.css"
+      ]
+    },
+    "front5": {
+      "js": [
+        "/build/runtime.js"
+      ],
+      "css": [
+        "/build/front5.css"
+      ]
+    }
+  }
+}

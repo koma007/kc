@@ -1,0 +1,2489 @@
+{# @var ea \EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext #}
+{# @var entity \EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto #}
+{% extends ea.templatePath('layout') %}
+{% form_theme new_form with ea.crud.formThemes only %}
+
+{% trans_default_domain ea.i18n.translationDomain %}
+
+{% block body_id 'ea-new-' ~ entity.name %}
+{% block body_class 'ea-new ea-new-' ~ entity.name %}
+
+{% set ea_field_assets = ea.crud.fieldAssets(constant('EasyCorp\\Bundle\\EasyAdminBundle\\Config\\Crud::PAGE_NEW')) %}
+
+{% block head_javascript %}
+    {{ parent() }}
+    <script src="{{ asset('form.js', ea.assets.defaultAssetPackageName) }}"></script>
+{% endblock head_javascript %}
+
+{% block configured_head_contents %}
+    {{ parent() }}
+    {% for htmlContent in ea_field_assets.headContents %}
+        {{ htmlContent|raw }}
+    {% endfor %}
+{% endblock %}
+
+{% block configured_body_contents %}
+    {{ parent() }}
+    {% for htmlContent in ea_field_assets.bodyContents %}
+        {{ htmlContent|raw }}
+    {% endfor %}
+{% endblock %}
+
+{% block configured_stylesheets %}
+    {{ parent() }}
+    {{ include('@EasyAdmin/includes/_css_assets.html.twig', { assets: ea_field_assets.cssAssets }, with_context = false) }}
+    {{ include('@EasyAdmin/includes/_encore_link_tags.html.twig', { assets: ea_field_assets.webpackEncoreAssets }, with_context = false) }}
+{% endblock %}
+
+{% block configured_javascripts %}
+    {{ parent() }}
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+
+    {{ include('@EasyAdmin/includes/_js_assets.html.twig', { assets: ea_field_assets.jsAssets }, with_context = false) }}
+    {{ include('@EasyAdmin/includes/_encore_script_tags.html.twig', { assets: ea_field_assets.webpackEncoreAssets }, with_context = false) }}
+
+    <script>
+        function calculateSum() {
+            var suma = 0;
+            for (var i = 1; i <= 40; i++) {
+                var inputId = 'Hurtowe_wartosc' + i;
+                var inputValue = $('#' + inputId).val();
+                if (inputValue) {
+                    var value = parseFloat(inputValue.replace('.', '').replace(',', '.'));
+                    if (!isNaN(value)) {
+                        suma += value;
+                    }
+                }
+            }
+
+            //suma - góra
+            var total = suma;
+            $('#calkowita_wartosc').text(total.toLocaleString('pl-PL') + ' zł');
+
+            //wazon -dół
+            var formattedTotal = total.toLocaleString('pl-PL', { minimumFractionDigits: 2 });
+            // Usunięcie ewentualnych spacji
+            formattedTotal = formattedTotal.replace(/\s/g, '');
+            $('#Hurtowe_suma').val(formattedTotal);
+        }
+
+        $(document).ready(function() {
+            let selectedOption = '';
+            calculateSum();
+
+            $('input[id^="Hurtowe_wartosc"]').on('input', function() {
+                calculateSum();
+            });
+
+            //zmiana ceny w solo
+            $('input[id^="Hurtowe_cena"]').on('input', function() {
+
+            });
+
+            document.getElementById('Hurtowe_nazwa').addEventListener('input', function() {
+                var inputValue = this.value;
+                document.getElementById('tytul_klient').textContent = inputValue;
+            });
+
+
+            //rodzaj
+            //id całego elementu
+            var idCalegoElementu;
+            $('td.rodzaje_kompozycji input[type="radio"]').on('change', function() {
+                var elementId = $(this).closest('td').find('div[id^="Hurtowe_rodzaj"]').attr('id');
+                idCalegoElementu = elementId.match(/\d+/);
+
+                        var selectedValue = $(this).val();
+                        var selectedId = $(this).attr('id');
+                        var id = selectedId.substring(selectedId.lastIndexOf('_') + 1);
+                        var selectedOption = $('#Hurtowe_kompozycja'+idCalegoElementu+'_autocomplete').val();
+                fetchCenaAfterRadioChange(selectedOption,selectedValue,idCalegoElementu);
+            });
+        });
+
+        const sztukFields = document.querySelectorAll('[id^="Hurtowe_sztuk"]');
+        const cenaFields = document.querySelectorAll('[id^="Hurtowe_cena"]');
+        const wartoscFields = document.querySelectorAll('[id^="Hurtowe_wartosc"]');
+
+        sztukFields.forEach((sztukField) => {
+            const where = sztukField.id.slice(-1);
+            const cenaField = document.getElementById(`Hurtowe_cena${where}`);
+            const wartoscField = document.getElementById(`Hurtowe_wartosc${where}`);
+
+            sztukField.addEventListener('input', () => {
+                const sztuk = parseInt(sztukField.value);
+                const cena = parseFloat(cenaField.value);
+                const wartosc = sztuk * cena;
+                wartoscField.value = wartosc.toFixed(2);
+            });
+
+            cenaField.addEventListener('input', () => {
+                const sztuk = parseInt(sztukField.value);
+                const cena = parseFloat(cenaField.value);
+                const wartosc = sztuk * cena;
+                wartoscField.value = wartosc.toFixed(2);
+            });
+        });
+
+        function fetchCena(element, where) {
+            const selectedOption = element.value;
+            var selectedRodzaj = $('#Hurtowe_rodzaj' + where + ' input[type="radio"]:checked').val();
+
+            const specificPriceUrl = '{{ path('app_get_cena_kompozycja', {'id': '__kompozycja1__', 'cena': '__cena__'}) }}'.replace('__kompozycja1__', selectedOption).replace('__cena__', selectedRodzaj);
+            const cenaKplFieldId = `Hurtowe_cena${where}`;
+            const sztukFieldId = `Hurtowe_sztuk${where}`;
+            const wartoscFieldId = `Hurtowe_wartosc${where}`;
+
+
+            $.ajax({
+                url: specificPriceUrl,
+                type: 'POST',
+                success: (data) => {
+
+                    $('#' + cenaKplFieldId).val(data.cena.toString().replace('.', ','));
+
+                    var cena = parseFloat(data.cena.toString().replace(',', '.'));
+                    var sztuk = parseFloat($('#' + sztukFieldId).val());
+
+                    if (!isNaN(cena) && !isNaN(sztuk)) {
+                        var wynik = cena*sztuk
+                        $('#' + wartoscFieldId).val(wynik.toString().replace('.', ','));
+                    } else {
+                        $('#' + wartoscFieldId).val('');
+                    }
+                    calculateSum();
+                }
+            });
+        };
+
+
+        function fetchCenaAfterRadioChange(selectedOption, selectedValue,idCalegoElementu) {
+
+            const specificPriceUrl = '{{ path('app_get_cena_kompozycja', {'id': '__kompozycja1__', 'cena': '__cena__'}) }}'.replace('__kompozycja1__', selectedOption).replace('__cena__', selectedValue);
+            const cenaKplFieldId = `Hurtowe_cena${idCalegoElementu}`;
+            const sztukFieldId = `Hurtowe_sztuk${idCalegoElementu}`;
+            const wartoscFieldId = `Hurtowe_wartosc${idCalegoElementu}`;
+
+            $.ajax({
+                url: specificPriceUrl,
+                type: 'POST',
+                success: (data) => {
+
+                    //nowa cena
+                    $('#' + cenaKplFieldId).val(data.cena.toString().replace('.', ','));
+
+                    //przeliczenie ze sztukami po nowej cenie
+                    var cena = parseFloat(data.cena.toString().replace(',', '.'));
+                    var sztuk = parseFloat($('#' + sztukFieldId).val());
+
+                    if (!isNaN(cena) && !isNaN(sztuk)) {
+                        var wynik = cena*sztuk
+                        $('#' + wartoscFieldId).val(wynik.toString().replace('.', ','));
+                    } else {
+                        $('#' + wartoscFieldId).val('');
+                    }
+
+                }
+            });
+            setTimeout(function() {
+                calculateSum();
+            }, 700);
+        }
+
+        function calculateWartosc(value, where) {
+            const sztuk = document.getElementById('Hurtowe_sztuk' + where).value;
+            const cena = document.getElementById('Hurtowe_cena' + where).value.replace(',', '.');
+            const wartosc = (sztuk * cena).toFixed(2);
+
+            document.getElementById('Hurtowe_wartosc' + where).value = wartosc.toString().replace(/\./g, ',');
+            calculateSum();
+        }
+    </script>
+{% endblock %}
+
+{% block content_title %}
+    <div id="tytul_klient" class="d-inline-block">
+    {%- apply spaceless -%}
+        {% set custom_page_title = ea.crud.customPageTitle('new', null, ea.i18n.translationParameters) %}
+        {{ custom_page_title is null
+        ? ea.crud.defaultPageTitle('new', null, ea.i18n.translationParameters)|trans|raw
+        : custom_page_title|trans|raw }}
+    {%- endapply -%}
+    </div>
+    <div class="d-inline-block" style="float: right;">
+        <div class="d-inline-block">SUMA:</div>
+        <div id="calkowita_wartosc" class="d-inline-block">0 zł</div>
+    </div>
+    <div style="clear: both;"></div>
+
+{% endblock %}
+
+{% block page_actions %}
+    {% for action in entity.actions %}
+        {{ include(action.templatePath, { action: action }, with_context = false) }}
+    {% endfor %}
+{% endblock %}
+
+{% block main %}
+
+    {% block new_form %}
+        {{ form_start(new_form) }}
+        <div class="my-custom-class-for-errors">
+            {{ form_errors(new_form) }}
+        </div>
+        <div class="row">
+            <div class="col-md-9"> <!-- Kolumna po lewej stronie o szerokości 75% -->
+                <div class="col" id="some-custom-id">
+
+                        {{ form_label(new_form.nazwa) }}
+                        {{ form_widget(new_form.nazwa) }}
+
+                        <small>{{ form_help(new_form.nazwa) }}</small>
+
+                        <div class="form-error">
+                            {{ form_errors(new_form.nazwa) }}
+                        </div>
+
+                </div>
+                <div id="hurtowe-table" class="table-responsive table-hurtowe">
+                    <table class="table table-striped" id="hurtowe">
+                        <thead>
+                        <tr>
+                            <th scope="col">Kompozycja</th>
+                            <th scope="col">Sztuk</th>
+                            <th scope="col">Cena</th>
+                            <th scope="col">Wartość</th>
+                            <th scope="col">Wózek</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td style="width: 50%;">
+                                <div class="form-group">
+                                    {{ form_widget(new_form.kompozycja1, {attr: {'onchange': 'fetchCena(this,1)'}})}}
+                                    <small class="form-text text-muted">{{ form_help(new_form.kompozycja1) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.kompozycja1) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.sztuk1, {attr:{'onchange': 'calculateWartosc(this, 1)', 'min': 0}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.sztuk1) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.sztuk1) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.cena1, {attr:{'onchange': 'calculateWartosc(this, 1)'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.cena1) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.cena1) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.wartosc1, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.wartosc1) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.wartosc1) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.wozek1, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.wozek1) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.wozek1) }}</div>
+                                </div>
+                            </td>
+
+                        </tr>
+                        <tr>
+                            <td style="width: 50%">
+                                <div class="form-group">
+                                    {{ form_widget(new_form.nazwa1) }}
+                                    <small>{{ form_help(new_form.nazwa1) }}</small>
+                                    <div class="form-error">
+                                        {{ form_errors(new_form.nazwa1) }}
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="rodzaje_kompozycji" style="width: 50%" colspan="4">
+                                <div class="form-group rodzaje_kompozycji">
+                                    {{ form_widget(new_form.rodzaj1, {'attr': {'class': 'form-control form-check-inline'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.rodzaj1) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.rodzaj1) }}</div>
+                                </div>
+                            </td>
+                        </tr>
+
+
+
+
+                        <tr>
+                            <td style="width: 50%;">
+                                <div class="form-group">
+                                    {{ form_widget(new_form.kompozycja2, {attr: {'onchange': 'fetchCena(this,2)'}})}}
+                                    <small class="form-text text-muted">{{ form_help(new_form.kompozycja2) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.kompozycja2) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.sztuk2, {attr:{'onchange': 'calculateWartosc(this, 2)', 'min': 0}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.sztuk2) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.sztuk2) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.cena2, {attr:{'onchange': 'calculateWartosc(this, 2)'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.cena2) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.cena2) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.wartosc2, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.wartosc2) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.wartosc2) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.wozek2, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.wozek2) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.wozek2) }}</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 50%">
+                                <div class="form-group">
+                                    {{ form_widget(new_form.nazwa2) }}
+                                    <small>{{ form_help(new_form.nazwa2) }}</small>
+                                    <div class="form-error">
+                                        {{ form_errors(new_form.nazwa2) }}
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="rodzaje_kompozycji" style="width: 50%" colspan="4">
+                                <div class="form-group rodzaje_kompozycji">
+                                    {{ form_widget(new_form.rodzaj2, {'attr': {'class': 'form-control form-check-inline'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.rodzaj2) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.rodzaj2) }}</div>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td style="width: 50%;">
+                                <div class="form-group">
+                                    {{ form_widget(new_form.kompozycja3, {attr: {'onchange': 'fetchCena(this,3)'}})}}
+                                    <small class="form-text text-muted">{{ form_help(new_form.kompozycja3) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.kompozycja3) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.sztuk3, {attr:{'onchange': 'calculateWartosc(this, 3)', 'min': 0}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.sztuk3) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.sztuk3) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.cena3, {attr:{'onchange': 'calculateWartosc(this, 3)'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.cena3) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.cena3) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.wartosc3, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.wartosc3) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.wartosc3) }}</div>
+                                </div>
+                            </td>
+
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.wozek3, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.wozek3) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.wozek3) }}</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 50%">
+                                <div class="form-group">
+                                    {{ form_widget(new_form.nazwa3) }}
+                                    <small>{{ form_help(new_form.nazwa3) }}</small>
+                                    <div class="form-error">
+                                        {{ form_errors(new_form.nazwa3) }}
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="rodzaje_kompozycji" style="width: 50%" colspan="4">
+                                <div class="form-group rodzaje_kompozycji">
+                                    {{ form_widget(new_form.rodzaj3, {'attr': {'class': 'form-control form-check-inline'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.rodzaj3) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.rodzaj3) }}</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 50%;">
+                                <div class="form-group">
+                                    {{ form_widget(new_form.kompozycja4, {attr: {'onchange': 'fetchCena(this,4)'}})}}
+                                    <small class="form-text text-muted">{{ form_help(new_form.kompozycja4) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.kompozycja4) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.sztuk4, {attr:{'onchange': 'calculateWartosc(this, 4)', 'min': 0}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.sztuk4) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.sztuk4) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.cena4, {attr:{'onchange': 'calculateWartosc(this, 4)'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.cena4) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.cena4) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.wartosc4, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.wartosc4) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.wartosc4) }}</div>
+                                </div>
+                            </td>
+
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.wozek4, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.wozek4) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.wozek4) }}</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 50%">
+                                <div class="form-group">
+                                    {{ form_widget(new_form.nazwa4) }}
+                                    <small>{{ form_help(new_form.nazwa4) }}</small>
+                                    <div class="form-error">
+                                        {{ form_errors(new_form.nazwa4) }}
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="rodzaje_kompozycji" style="width: 50%" colspan="4">
+                                <div class="form-group rodzaje_kompozycji">
+                                    {{ form_widget(new_form.rodzaj4, {'attr': {'class': 'form-control form-check-inline'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.rodzaj4) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.rodzaj4) }}</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 50%;">
+                                <div class="form-group">
+                                    {{ form_widget(new_form.kompozycja5, {attr: {'onchange': 'fetchCena(this,5)'}})}}
+                                    <small class="form-text text-muted">{{ form_help(new_form.kompozycja5) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.kompozycja5) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.sztuk5, {attr:{'onchange': 'calculateWartosc(this, 5)', 'min': 0}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.sztuk5) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.sztuk5) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.cena5, {attr:{'onchange': 'calculateWartosc(this, 5)'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.cena5) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.cena5) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.wartosc5, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.wartosc5) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.wartosc5) }}</div>
+                                </div>
+                            </td>
+
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.wozek5, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.wozek5) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.wozek5) }}</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 50%">
+                                <div class="form-group">
+                                    {{ form_widget(new_form.nazwa5) }}
+                                    <small>{{ form_help(new_form.nazwa5) }}</small>
+                                    <div class="form-error">
+                                        {{ form_errors(new_form.nazwa5) }}
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="rodzaje_kompozycji" style="width: 50%" colspan="4">
+                                <div class="form-group rodzaje_kompozycji">
+                                    {{ form_widget(new_form.rodzaj5, {'attr': {'class': 'form-control form-check-inline'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.rodzaj5) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.rodzaj5) }}</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 50%;">
+                                <div class="form-group">
+                                    {{ form_widget(new_form.kompozycja6, {attr: {'onchange': 'fetchCena(this,6)'}})}}
+                                    <small class="form-text text-muted">{{ form_help(new_form.kompozycja6) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.kompozycja6) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.sztuk6, {attr:{'onchange': 'calculateWartosc(this, 6)', 'min': 0}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.sztuk6) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.sztuk6) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.cena6, {attr:{'onchange': 'calculateWartosc(this, 6)'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.cena6) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.cena6) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.wartosc6, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.wartosc6) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.wartosc6) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.wozek6, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.wozek6) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.wozek6) }}</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 50%">
+                                <div class="form-group">
+                                    {{ form_widget(new_form.nazwa6) }}
+                                    <small>{{ form_help(new_form.nazwa6) }}</small>
+                                    <div class="form-error">
+                                        {{ form_errors(new_form.nazwa6) }}
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="rodzaje_kompozycji" style="width: 50%" colspan="4">
+                                <div class="form-group rodzaje_kompozycji">
+                                    {{ form_widget(new_form.rodzaj6, {'attr': {'class': 'form-control form-check-inline'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.rodzaj6) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.rodzaj6) }}</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 50%;">
+                                <div class="form-group">
+                                    {{ form_widget(new_form.kompozycja7, {attr: {'onchange': 'fetchCena(this,7)'}})}}
+                                    <small class="form-text text-muted">{{ form_help(new_form.kompozycja7) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.kompozycja7) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.sztuk7, {attr:{'onchange': 'calculateWartosc(this, 7)', 'min': 0}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.sztuk7) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.sztuk7) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.cena7, {attr:{'onchange': 'calculateWartosc(this, 7)'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.cena7) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.cena7) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.wartosc7, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.wartosc7) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.wartosc7) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.wozek7, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.wozek7) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.wozek7) }}</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 50%">
+                                <div class="form-group">
+                                    {{ form_widget(new_form.nazwa7) }}
+                                    <small>{{ form_help(new_form.nazwa7) }}</small>
+                                    <div class="form-error">
+                                        {{ form_errors(new_form.nazwa7) }}
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="rodzaje_kompozycji" style="width: 50%" colspan="4">
+                                <div class="form-group rodzaje_kompozycji">
+                                    {{ form_widget(new_form.rodzaj7, {'attr': {'class': 'form-control form-check-inline'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.rodzaj7) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.rodzaj7) }}</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 50%;">
+                                <div class="form-group">
+                                    {{ form_widget(new_form.kompozycja8, {attr: {'onchange': 'fetchCena(this,8)'}})}}
+                                    <small class="form-text text-muted">{{ form_help(new_form.kompozycja8) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.kompozycja8) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.sztuk8, {attr:{'onchange': 'calculateWartosc(this, 8)', 'min': 0}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.sztuk8) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.sztuk8) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.cena8, {attr:{'onchange': 'calculateWartosc(this, 8)'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.cena8) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.cena8) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.wartosc8, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.wartosc8) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.wartosc8) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.wozek8, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.wozek8) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.wozek8) }}</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 50%">
+                                <div class="form-group">
+                                    {{ form_widget(new_form.nazwa8) }}
+                                    <small>{{ form_help(new_form.nazwa8) }}</small>
+                                    <div class="form-error">
+                                        {{ form_errors(new_form.nazwa8) }}
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="rodzaje_kompozycji" style="width: 50%" colspan="4">
+                                <div class="form-group rodzaje_kompozycji">
+                                    {{ form_widget(new_form.rodzaj8, {'attr': {'class': 'form-control form-check-inline'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.rodzaj8) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.rodzaj8) }}</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 50%;">
+                                <div class="form-group">
+                                    {{ form_widget(new_form.kompozycja9, {attr: {'onchange': 'fetchCena(this,9)'}})}}
+                                    <small class="form-text text-muted">{{ form_help(new_form.kompozycja9) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.kompozycja9) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.sztuk9, {attr:{'onchange': 'calculateWartosc(this, 9)', 'min': 0}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.sztuk9) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.sztuk9) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.cena9, {attr:{'onchange': 'calculateWartosc(this, 9)'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.cena9) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.cena9) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.wartosc9, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.wartosc9) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.wartosc9) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.wozek9, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.wozek9) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.wozek9) }}</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 50%">
+                                <div class="form-group">
+                                    {{ form_widget(new_form.nazwa9) }}
+                                    <small>{{ form_help(new_form.nazwa9) }}</small>
+                                    <div class="form-error">
+                                        {{ form_errors(new_form.nazwa9) }}
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="rodzaje_kompozycji" style="width: 50%" colspan="4">
+                                <div class="form-group rodzaje_kompozycji">
+                                    {{ form_widget(new_form.rodzaj9, {'attr': {'class': 'form-control form-check-inline'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.rodzaj9) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.rodzaj9) }}</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 50%;">
+                                <div class="form-group">
+                                    {{ form_widget(new_form.kompozycja10, {attr: {'onchange': 'fetchCena(this,10)'}})}}
+                                    <small class="form-text text-muted">{{ form_help(new_form.kompozycja10) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.kompozycja10) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.sztuk10, {attr:{'onchange': 'calculateWartosc(this, 10)', 'min': 0}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.sztuk10) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.sztuk10) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.cena10, {attr:{'onchange': 'calculateWartosc(this, 10)'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.cena10) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.cena10) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.wartosc10, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.wartosc10) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.wartosc10) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.wozek10, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.wozek10) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.wozek10) }}</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 50%">
+                                <div class="form-group">
+                                    {{ form_widget(new_form.nazwa10) }}
+                                    <small>{{ form_help(new_form.nazwa10) }}</small>
+                                    <div class="form-error">
+                                        {{ form_errors(new_form.nazwa10) }}
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="rodzaje_kompozycji" style="width: 50%" colspan="4">
+                                <div class="form-group rodzaje_kompozycji">
+                                    {{ form_widget(new_form.rodzaj10, {'attr': {'class': 'form-control form-check-inline'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.rodzaj10) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.rodzaj10) }}</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 50%;">
+                                <div class="form-group">
+                                    {{ form_widget(new_form.kompozycja11, {attr: {'onchange': 'fetchCena(this,11)'}})}}
+                                    <small class="form-text text-muted">{{ form_help(new_form.kompozycja11) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.kompozycja11) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.sztuk11, {attr:{'onchange': 'calculateWartosc(this, 11)', 'min': 0}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.sztuk11) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.sztuk11) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.cena11, {attr:{'onchange': 'calculateWartosc(this, 11)'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.cena11) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.cena11) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.wartosc11, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.wartosc11) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.wartosc11) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.wozek11, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.wozek11) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.wozek11) }}</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 50%">
+                                <div class="form-group">
+                                    {{ form_widget(new_form.nazwa11) }}
+                                    <small>{{ form_help(new_form.nazwa11) }}</small>
+                                    <div class="form-error">
+                                        {{ form_errors(new_form.nazwa11) }}
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="rodzaje_kompozycji" style="width: 50%" colspan="4">
+                                <div class="form-group rodzaje_kompozycji">
+                                    {{ form_widget(new_form.rodzaj11, {'attr': {'class': 'form-control form-check-inline'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.rodzaj11) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.rodzaj11) }}</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 50%;">
+                                <div class="form-group">
+                                    {{ form_widget(new_form.kompozycja12, {attr: {'onchange': 'fetchCena(this,12)'}})}}
+                                    <small class="form-text text-muted">{{ form_help(new_form.kompozycja12) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.kompozycja12) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.sztuk12, {attr:{'onchange': 'calculateWartosc(this, 12)', 'min': 0}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.sztuk12) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.sztuk12) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.cena12, {attr:{'onchange': 'calculateWartosc(this, 12)'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.cena12) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.cena12) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.wartosc12, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.wartosc12) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.wartosc12) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.wozek12, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.wozek12) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.wozek12) }}</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 50%">
+                                <div class="form-group">
+                                    {{ form_widget(new_form.nazwa12) }}
+                                    <small>{{ form_help(new_form.nazwa12) }}</small>
+                                    <div class="form-error">
+                                        {{ form_errors(new_form.nazwa12) }}
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="rodzaje_kompozycji" style="width: 50%" colspan="4">
+                                <div class="form-group rodzaje_kompozycji">
+                                    {{ form_widget(new_form.rodzaj12, {'attr': {'class': 'form-control form-check-inline'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.rodzaj12) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.rodzaj12) }}</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 50%;">
+                                <div class="form-group">
+                                    {{ form_widget(new_form.kompozycja13, {attr: {'onchange': 'fetchCena(this,13)'}})}}
+                                    <small class="form-text text-muted">{{ form_help(new_form.kompozycja13) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.kompozycja13) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.sztuk13, {attr:{'onchange': 'calculateWartosc(this, 13)', 'min': 0}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.sztuk13) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.sztuk13) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.cena13, {attr:{'onchange': 'calculateWartosc(this, 13)'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.cena13) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.cena13) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.wartosc13, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.wartosc13) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.wartosc13) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.wozek13, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.wozek13) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.wozek13) }}</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 50%">
+                                <div class="form-group">
+                                    {{ form_widget(new_form.nazwa13) }}
+                                    <small>{{ form_help(new_form.nazwa13) }}</small>
+                                    <div class="form-error">
+                                        {{ form_errors(new_form.nazwa13) }}
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="rodzaje_kompozycji" style="width: 50%" colspan="4">
+                                <div class="form-group rodzaje_kompozycji">
+                                    {{ form_widget(new_form.rodzaj13, {'attr': {'class': 'form-control form-check-inline'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.rodzaj13) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.rodzaj13) }}</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 50%;">
+                                <div class="form-group">
+                                    {{ form_widget(new_form.kompozycja14, {attr: {'onchange': 'fetchCena(this,14)'}})}}
+                                    <small class="form-text text-muted">{{ form_help(new_form.kompozycja14) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.kompozycja14) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.sztuk14, {attr:{'onchange': 'calculateWartosc(this, 14)', 'min': 0}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.sztuk14) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.sztuk14) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.cena14, {attr:{'onchange': 'calculateWartosc(this, 14)'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.cena14) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.cena14) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.wartosc14, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.wartosc14) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.wartosc14) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.wozek14, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.wozek14) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.wozek14) }}</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 50%">
+                                <div class="form-group">
+                                    {{ form_widget(new_form.nazwa14) }}
+                                    <small>{{ form_help(new_form.nazwa14) }}</small>
+                                    <div class="form-error">
+                                        {{ form_errors(new_form.nazwa14) }}
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="rodzaje_kompozycji" style="width: 50%" colspan="4">
+                                <div class="form-group rodzaje_kompozycji">
+                                    {{ form_widget(new_form.rodzaj14, {'attr': {'class': 'form-control form-check-inline'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.rodzaj14) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.rodzaj14) }}</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 50%;">
+                                <div class="form-group">
+                                    {{ form_widget(new_form.kompozycja15, {attr: {'onchange': 'fetchCena(this,15)'}})}}
+                                    <small class="form-text text-muted">{{ form_help(new_form.kompozycja15) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.kompozycja15) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.sztuk15, {attr:{'onchange': 'calculateWartosc(this, 15)', 'min': 0}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.sztuk15) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.sztuk15) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.cena15, {attr:{'onchange': 'calculateWartosc(this, 15)'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.cena15) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.cena15) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.wartosc15, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.wartosc15) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.wartosc15) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.wozek15, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.wozek15) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.wozek15) }}</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 50%">
+                                <div class="form-group">
+                                    {{ form_widget(new_form.nazwa15) }}
+                                    <small>{{ form_help(new_form.nazwa15) }}</small>
+                                    <div class="form-error">
+                                        {{ form_errors(new_form.nazwa15) }}
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="rodzaje_kompozycji" style="width: 50%" colspan="4">
+                                <div class="form-group rodzaje_kompozycji">
+                                    {{ form_widget(new_form.rodzaj15, {'attr': {'class': 'form-control form-check-inline'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.rodzaj15) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.rodzaj15) }}</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 50%;">
+                                <div class="form-group">
+                                    {{ form_widget(new_form.kompozycja16, {attr: {'onchange': 'fetchCena(this,16)'}})}}
+                                    <small class="form-text text-muted">{{ form_help(new_form.kompozycja16) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.kompozycja16) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.sztuk16, {attr:{'onchange': 'calculateWartosc(this, 16)', 'min': 0}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.sztuk16) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.sztuk16) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.cena16, {attr:{'onchange': 'calculateWartosc(this, 16)'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.cena16) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.cena16) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.wartosc16, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.wartosc16) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.wartosc16) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.wozek16, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.wozek16) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.wozek16) }}</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 50%">
+                                <div class="form-group">
+                                    {{ form_widget(new_form.nazwa16) }}
+                                    <small>{{ form_help(new_form.nazwa16) }}</small>
+                                    <div class="form-error">
+                                        {{ form_errors(new_form.nazwa16) }}
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="rodzaje_kompozycji" style="width: 50%" colspan="4">
+                                <div class="form-group rodzaje_kompozycji">
+                                    {{ form_widget(new_form.rodzaj16, {'attr': {'class': 'form-control form-check-inline'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.rodzaj16) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.rodzaj16) }}</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 50%;">
+                                <div class="form-group">
+                                    {{ form_widget(new_form.kompozycja17, {attr: {'onchange': 'fetchCena(this,17)'}})}}
+                                    <small class="form-text text-muted">{{ form_help(new_form.kompozycja17) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.kompozycja17) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.sztuk17, {attr:{'onchange': 'calculateWartosc(this, 17)', 'min': 0}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.sztuk17) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.sztuk17) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.cena17, {attr:{'onchange': 'calculateWartosc(this, 17)'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.cena17) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.cena17) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.wartosc17, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.wartosc17) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.wartosc17) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.wozek17, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.wozek17) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.wozek17) }}</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 50%">
+                                <div class="form-group">
+                                    {{ form_widget(new_form.nazwa17) }}
+                                    <small>{{ form_help(new_form.nazwa17) }}</small>
+                                    <div class="form-error">
+                                        {{ form_errors(new_form.nazwa17) }}
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="rodzaje_kompozycji" style="width: 50%" colspan="4">
+                                <div class="form-group rodzaje_kompozycji">
+                                    {{ form_widget(new_form.rodzaj17, {'attr': {'class': 'form-control form-check-inline'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.rodzaj17) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.rodzaj17) }}</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 50%;">
+                                <div class="form-group">
+                                    {{ form_widget(new_form.kompozycja18, {attr: {'onchange': 'fetchCena(this,18)'}})}}
+                                    <small class="form-text text-muted">{{ form_help(new_form.kompozycja18) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.kompozycja18) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.sztuk18, {attr:{'onchange': 'calculateWartosc(this, 18)', 'min': 0}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.sztuk18) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.sztuk18) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.cena18, {attr:{'onchange': 'calculateWartosc(this, 18)'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.cena18) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.cena18) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.wartosc18, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.wartosc18) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.wartosc18) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.wozek18, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.wozek18) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.wozek18) }}</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 50%">
+                                <div class="form-group">
+                                    {{ form_widget(new_form.nazwa18) }}
+                                    <small>{{ form_help(new_form.nazwa18) }}</small>
+                                    <div class="form-error">
+                                        {{ form_errors(new_form.nazwa18) }}
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="rodzaje_kompozycji" style="width: 50%" colspan="4">
+                                <div class="form-group rodzaje_kompozycji">
+                                    {{ form_widget(new_form.rodzaj18, {'attr': {'class': 'form-control form-check-inline'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.rodzaj18) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.rodzaj18) }}</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 50%;">
+                                <div class="form-group">
+                                    {{ form_widget(new_form.kompozycja19, {attr: {'onchange': 'fetchCena(this,19)'}})}}
+                                    <small class="form-text text-muted">{{ form_help(new_form.kompozycja19) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.kompozycja19) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.sztuk19, {attr:{'onchange': 'calculateWartosc(this, 19)', 'min': 0}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.sztuk19) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.sztuk19) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.cena19, {attr:{'onchange': 'calculateWartosc(this, 19)'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.cena19) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.cena19) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.wartosc19, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.wartosc19) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.wartosc19) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.wozek19, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.wozek19) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.wozek19) }}</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 50%">
+                                <div class="form-group">
+                                    {{ form_widget(new_form.nazwa19) }}
+                                    <small>{{ form_help(new_form.nazwa19) }}</small>
+                                    <div class="form-error">
+                                        {{ form_errors(new_form.nazwa19) }}
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="rodzaje_kompozycji" style="width: 50%" colspan="4">
+                                <div class="form-group rodzaje_kompozycji">
+                                    {{ form_widget(new_form.rodzaj19, {'attr': {'class': 'form-control form-check-inline'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.rodzaj19) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.rodzaj19) }}</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 50%;">
+                                <div class="form-group">
+                                    {{ form_widget(new_form.kompozycja20, {attr: {'onchange': 'fetchCena(this,20)'}})}}
+                                    <small class="form-text text-muted">{{ form_help(new_form.kompozycja20) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.kompozycja20) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.sztuk20, {attr:{'onchange': 'calculateWartosc(this, 20)', 'min': 0}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.sztuk20) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.sztuk20) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.cena20, {attr:{'onchange': 'calculateWartosc(this, 20)'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.cena20) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.cena20) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.wartosc20, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.wartosc20) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.wartosc20) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.wozek20, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.wozek20) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.wozek20) }}</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 50%">
+                                <div class="form-group">
+                                    {{ form_widget(new_form.nazwa20) }}
+                                    <small>{{ form_help(new_form.nazwa20) }}</small>
+                                    <div class="form-error">
+                                        {{ form_errors(new_form.nazwa20) }}
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="rodzaje_kompozycji" style="width: 50%" colspan="4">
+                                <div class="form-group rodzaje_kompozycji">
+                                    {{ form_widget(new_form.rodzaj20, {'attr': {'class': 'form-control form-check-inline'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.rodzaj20) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.rodzaj20) }}</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 50%;">
+                                <div class="form-group">
+                                    {{ form_widget(new_form.kompozycja21, {attr: {'onchange': 'fetchCena(this,21)'}})}}
+                                    <small class="form-text text-muted">{{ form_help(new_form.kompozycja21) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.kompozycja21) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.sztuk21, {attr:{'onchange': 'calculateWartosc(this, 21)', 'min': 0}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.sztuk21) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.sztuk21) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.cena21, {attr:{'onchange': 'calculateWartosc(this, 21)'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.cena21) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.cena21) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.wartosc21, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.wartosc21) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.wartosc21) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.wozek21, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.wozek21) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.wozek21) }}</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 50%">
+                                <div class="form-group">
+                                    {{ form_widget(new_form.nazwa21) }}
+                                    <small>{{ form_help(new_form.nazwa21) }}</small>
+                                    <div class="form-error">
+                                        {{ form_errors(new_form.nazwa21) }}
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="rodzaje_kompozycji" style="width: 50%" colspan="4">
+                                <div class="form-group rodzaje_kompozycji">
+                                    {{ form_widget(new_form.rodzaj21, {'attr': {'class': 'form-control form-check-inline'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.rodzaj21) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.rodzaj21) }}</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 50%;">
+                                <div class="form-group">
+                                    {{ form_widget(new_form.kompozycja22, {attr: {'onchange': 'fetchCena(this,22)'}})}}
+                                    <small class="form-text text-muted">{{ form_help(new_form.kompozycja22) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.kompozycja22) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.sztuk22, {attr:{'onchange': 'calculateWartosc(this, 22)', 'min': 0}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.sztuk22) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.sztuk22) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.cena22, {attr:{'onchange': 'calculateWartosc(this, 22)'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.cena22) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.cena22) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.wartosc22, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.wartosc22) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.wartosc22) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.wozek22, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.wozek22) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.wozek22) }}</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 50%">
+                                <div class="form-group">
+                                    {{ form_widget(new_form.nazwa22) }}
+                                    <small>{{ form_help(new_form.nazwa22) }}</small>
+                                    <div class="form-error">
+                                        {{ form_errors(new_form.nazwa22) }}
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="rodzaje_kompozycji" style="width: 50%" colspan="4">
+                                <div class="form-group rodzaje_kompozycji">
+                                    {{ form_widget(new_form.rodzaj22, {'attr': {'class': 'form-control form-check-inline'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.rodzaj22) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.rodzaj22) }}</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 50%;">
+                                <div class="form-group">
+                                    {{ form_widget(new_form.kompozycja23, {attr: {'onchange': 'fetchCena(this,23)'}})}}
+                                    <small class="form-text text-muted">{{ form_help(new_form.kompozycja23) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.kompozycja23) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.sztuk23, {attr:{'onchange': 'calculateWartosc(this, 23)', 'min': 0}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.sztuk23) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.sztuk23) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.cena23, {attr:{'onchange': 'calculateWartosc(this, 23)'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.cena23) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.cena23) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.wartosc23, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.wartosc23) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.wartosc23) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.wozek23, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.wozek23) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.wozek23) }}</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 50%">
+                                <div class="form-group">
+                                    {{ form_widget(new_form.nazwa23) }}
+                                    <small>{{ form_help(new_form.nazwa23) }}</small>
+                                    <div class="form-error">
+                                        {{ form_errors(new_form.nazwa23) }}
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="rodzaje_kompozycji" style="width: 50%" colspan="4">
+                                <div class="form-group rodzaje_kompozycji">
+                                    {{ form_widget(new_form.rodzaj23, {'attr': {'class': 'form-control form-check-inline'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.rodzaj23) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.rodzaj23) }}</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 50%;">
+                                <div class="form-group">
+                                    {{ form_widget(new_form.kompozycja24, {attr: {'onchange': 'fetchCena(this,24)'}})}}
+                                    <small class="form-text text-muted">{{ form_help(new_form.kompozycja24) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.kompozycja24) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.sztuk24, {attr:{'onchange': 'calculateWartosc(this, 24)', 'min': 0}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.sztuk24) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.sztuk24) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.cena24, {attr:{'onchange': 'calculateWartosc(this, 24)'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.cena24) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.cena24) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.wartosc24, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.wartosc24) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.wartosc24) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.wozek24, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.wozek24) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.wozek24) }}</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 50%">
+                                <div class="form-group">
+                                    {{ form_widget(new_form.nazwa24) }}
+                                    <small>{{ form_help(new_form.nazwa24) }}</small>
+                                    <div class="form-error">
+                                        {{ form_errors(new_form.nazwa24) }}
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="rodzaje_kompozycji" style="width: 50%" colspan="4">
+                                <div class="form-group rodzaje_kompozycji">
+                                    {{ form_widget(new_form.rodzaj24, {'attr': {'class': 'form-control form-check-inline'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.rodzaj24) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.rodzaj24) }}</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 50%;">
+                                <div class="form-group">
+                                    {{ form_widget(new_form.kompozycja25, {attr: {'onchange': 'fetchCena(this,25)'}})}}
+                                    <small class="form-text text-muted">{{ form_help(new_form.kompozycja25) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.kompozycja25) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.sztuk25, {attr:{'onchange': 'calculateWartosc(this, 25)', 'min': 0}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.sztuk25) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.sztuk25) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.cena25, {attr:{'onchange': 'calculateWartosc(this, 25)'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.cena25) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.cena25) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.wartosc25, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.wartosc25) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.wartosc25) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.wozek25, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.wozek25) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.wozek25) }}</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 50%">
+                                <div class="form-group">
+                                    {{ form_widget(new_form.nazwa25) }}
+                                    <small>{{ form_help(new_form.nazwa25) }}</small>
+                                    <div class="form-error">
+                                        {{ form_errors(new_form.nazwa25) }}
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="rodzaje_kompozycji" style="width: 50%" colspan="4">
+                                <div class="form-group rodzaje_kompozycji">
+                                    {{ form_widget(new_form.rodzaj25, {'attr': {'class': 'form-control form-check-inline'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.rodzaj25) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.rodzaj25) }}</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 50%;">
+                                <div class="form-group">
+                                    {{ form_widget(new_form.kompozycja26, {attr: {'onchange': 'fetchCena(this,26)'}})}}
+                                    <small class="form-text text-muted">{{ form_help(new_form.kompozycja26) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.kompozycja26) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.sztuk26, {attr:{'onchange': 'calculateWartosc(this, 26)', 'min': 0}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.sztuk26) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.sztuk26) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.cena26, {attr:{'onchange': 'calculateWartosc(this, 26)'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.cena26) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.cena26) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.wartosc26, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.wartosc26) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.wartosc26) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.wozek26, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.wozek26) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.wozek26) }}</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 50%">
+                                <div class="form-group">
+                                    {{ form_widget(new_form.nazwa26) }}
+                                    <small>{{ form_help(new_form.nazwa26) }}</small>
+                                    <div class="form-error">
+                                        {{ form_errors(new_form.nazwa26) }}
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="rodzaje_kompozycji" style="width: 50%" colspan="4">
+                                <div class="form-group rodzaje_kompozycji">
+                                    {{ form_widget(new_form.rodzaj26, {'attr': {'class': 'form-control form-check-inline'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.rodzaj26) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.rodzaj26) }}</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 50%;">
+                                <div class="form-group">
+                                    {{ form_widget(new_form.kompozycja27, {attr: {'onchange': 'fetchCena(this,27)'}})}}
+                                    <small class="form-text text-muted">{{ form_help(new_form.kompozycja27) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.kompozycja27) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.sztuk27, {attr:{'onchange': 'calculateWartosc(this, 27)', 'min': 0}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.sztuk27) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.sztuk27) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.cena27, {attr:{'onchange': 'calculateWartosc(this, 27)'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.cena27) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.cena27) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.wartosc27, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.wartosc27) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.wartosc27) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.wozek27, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.wozek27) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.wozek27) }}</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 50%">
+                                <div class="form-group">
+                                    {{ form_widget(new_form.nazwa27) }}
+                                    <small>{{ form_help(new_form.nazwa27) }}</small>
+                                    <div class="form-error">
+                                        {{ form_errors(new_form.nazwa27) }}
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="rodzaje_kompozycji" style="width: 50%" colspan="4">
+                                <div class="form-group rodzaje_kompozycji">
+                                    {{ form_widget(new_form.rodzaj27, {'attr': {'class': 'form-control form-check-inline'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.rodzaj27) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.rodzaj27) }}</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 50%;">
+                                <div class="form-group">
+                                    {{ form_widget(new_form.kompozycja28, {attr: {'onchange': 'fetchCena(this,28)'}})}}
+                                    <small class="form-text text-muted">{{ form_help(new_form.kompozycja28) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.kompozycja28) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.sztuk28, {attr:{'onchange': 'calculateWartosc(this, 28)', 'min': 0}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.sztuk28) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.sztuk28) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.cena28, {attr:{'onchange': 'calculateWartosc(this, 28)'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.cena28) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.cena28) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.wartosc28, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.wartosc28) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.wartosc28) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.wozek28, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.wozek28) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.wozek28) }}</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 50%">
+                                <div class="form-group">
+                                    {{ form_widget(new_form.nazwa28) }}
+                                    <small>{{ form_help(new_form.nazwa28) }}</small>
+                                    <div class="form-error">
+                                        {{ form_errors(new_form.nazwa28) }}
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="rodzaje_kompozycji" style="width: 50%" colspan="4">
+                                <div class="form-group rodzaje_kompozycji">
+                                    {{ form_widget(new_form.rodzaj28, {'attr': {'class': 'form-control form-check-inline'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.rodzaj28) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.rodzaj28) }}</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 50%;">
+                                <div class="form-group">
+                                    {{ form_widget(new_form.kompozycja29, {attr: {'onchange': 'fetchCena(this,29)'}})}}
+                                    <small class="form-text text-muted">{{ form_help(new_form.kompozycja29) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.kompozycja29) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.sztuk29, {attr:{'onchange': 'calculateWartosc(this, 29)', 'min': 0}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.sztuk29) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.sztuk29) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.cena29, {attr:{'onchange': 'calculateWartosc(this, 29)'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.cena29) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.cena29) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.wartosc29, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.wartosc29) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.wartosc29) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.wozek29, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.wozek29) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.wozek29) }}</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 50%">
+                                <div class="form-group">
+                                    {{ form_widget(new_form.nazwa29) }}
+                                    <small>{{ form_help(new_form.nazwa29) }}</small>
+                                    <div class="form-error">
+                                        {{ form_errors(new_form.nazwa29) }}
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="rodzaje_kompozycji" style="width: 50%" colspan="4">
+                                <div class="form-group rodzaje_kompozycji">
+                                    {{ form_widget(new_form.rodzaj29, {'attr': {'class': 'form-control form-check-inline'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.rodzaj29) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.rodzaj29) }}</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 50%;">
+                                <div class="form-group">
+                                    {{ form_widget(new_form.kompozycja30, {attr: {'onchange': 'fetchCena(this,30)'}})}}
+                                    <small class="form-text text-muted">{{ form_help(new_form.kompozycja30) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.kompozycja30) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.sztuk30, {attr:{'onchange': 'calculateWartosc(this, 30)', 'min': 0}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.sztuk30) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.sztuk30) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.cena30, {attr:{'onchange': 'calculateWartosc(this, 30)'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.cena30) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.cena30) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.wartosc30, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.wartosc30) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.wartosc30) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.wozek30, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.wozek30) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.wozek30) }}</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 50%">
+                                <div class="form-group">
+                                    {{ form_widget(new_form.nazwa30) }}
+                                    <small>{{ form_help(new_form.nazwa30) }}</small>
+                                    <div class="form-error">
+                                        {{ form_errors(new_form.nazwa30) }}
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="rodzaje_kompozycji" style="width: 50%" colspan="4">
+                                <div class="form-group rodzaje_kompozycji">
+                                    {{ form_widget(new_form.rodzaj30, {'attr': {'class': 'form-control form-check-inline'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.rodzaj30) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.rodzaj30) }}</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 50%;">
+                                <div class="form-group">
+                                    {{ form_widget(new_form.kompozycja31, {attr: {'onchange': 'fetchCena(this,31)'}})}}
+                                    <small class="form-text text-muted">{{ form_help(new_form.kompozycja31) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.kompozycja31) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.sztuk31, {attr:{'onchange': 'calculateWartosc(this, 31)', 'min': 0}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.sztuk31) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.sztuk31) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.cena31, {attr:{'onchange': 'calculateWartosc(this, 31)'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.cena31) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.cena31) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.wartosc31, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.wartosc31) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.wartosc31) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.wozek31, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.wozek31) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.wozek31) }}</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 50%">
+                                <div class="form-group">
+                                    {{ form_widget(new_form.nazwa31) }}
+                                    <small>{{ form_help(new_form.nazwa31) }}</small>
+                                    <div class="form-error">
+                                        {{ form_errors(new_form.nazwa31) }}
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="rodzaje_kompozycji" style="width: 50%" colspan="4">
+                                <div class="form-group rodzaje_kompozycji">
+                                    {{ form_widget(new_form.rodzaj31, {'attr': {'class': 'form-control form-check-inline'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.rodzaj31) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.rodzaj31) }}</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 50%;">
+                                <div class="form-group">
+                                    {{ form_widget(new_form.kompozycja32, {attr: {'onchange': 'fetchCena(this,32)'}})}}
+                                    <small class="form-text text-muted">{{ form_help(new_form.kompozycja32) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.kompozycja32) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.sztuk32, {attr:{'onchange': 'calculateWartosc(this, 32)', 'min': 0}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.sztuk32) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.sztuk32) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.cena32, {attr:{'onchange': 'calculateWartosc(this, 32)'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.cena32) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.cena32) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.wartosc32, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.wartosc32) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.wartosc32) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.wozek32, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.wozek32) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.wozek32) }}</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 50%">
+                                <div class="form-group">
+                                    {{ form_widget(new_form.nazwa32) }}
+                                    <small>{{ form_help(new_form.nazwa32) }}</small>
+                                    <div class="form-error">
+                                        {{ form_errors(new_form.nazwa32) }}
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="rodzaje_kompozycji" style="width: 50%" colspan="4">
+                                <div class="form-group rodzaje_kompozycji">
+                                    {{ form_widget(new_form.rodzaj32, {'attr': {'class': 'form-control form-check-inline'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.rodzaj32) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.rodzaj32) }}</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 50%;">
+                                <div class="form-group">
+                                    {{ form_widget(new_form.kompozycja33, {attr: {'onchange': 'fetchCena(this,33)'}})}}
+                                    <small class="form-text text-muted">{{ form_help(new_form.kompozycja33) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.kompozycja33) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.sztuk33, {attr:{'onchange': 'calculateWartosc(this, 33)', 'min': 0}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.sztuk33) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.sztuk33) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.cena33, {attr:{'onchange': 'calculateWartosc(this, 33)'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.cena33) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.cena33) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.wartosc33, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.wartosc33) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.wartosc33) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.wozek33, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.wozek33) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.wozek33) }}</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 50%">
+                                <div class="form-group">
+                                    {{ form_widget(new_form.nazwa33) }}
+                                    <small>{{ form_help(new_form.nazwa33) }}</small>
+                                    <div class="form-error">
+                                        {{ form_errors(new_form.nazwa33) }}
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="rodzaje_kompozycji" style="width: 50%" colspan="4">
+                                <div class="form-group rodzaje_kompozycji">
+                                    {{ form_widget(new_form.rodzaj33, {'attr': {'class': 'form-control form-check-inline'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.rodzaj33) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.rodzaj33) }}</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 50%;">
+                                <div class="form-group">
+                                    {{ form_widget(new_form.kompozycja34, {attr: {'onchange': 'fetchCena(this,34)'}})}}
+                                    <small class="form-text text-muted">{{ form_help(new_form.kompozycja34) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.kompozycja34) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.sztuk34, {attr:{'onchange': 'calculateWartosc(this, 34)', 'min': 0}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.sztuk34) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.sztuk34) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.cena34, {attr:{'onchange': 'calculateWartosc(this, 34)'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.cena34) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.cena34) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.wartosc34, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.wartosc34) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.wartosc34) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.wozek34, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.wozek34) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.wozek34) }}</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 50%">
+                                <div class="form-group">
+                                    {{ form_widget(new_form.nazwa34) }}
+                                    <small>{{ form_help(new_form.nazwa34) }}</small>
+                                    <div class="form-error">
+                                        {{ form_errors(new_form.nazwa34) }}
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="rodzaje_kompozycji" style="width: 50%" colspan="4">
+                                <div class="form-group rodzaje_kompozycji">
+                                    {{ form_widget(new_form.rodzaj34, {'attr': {'class': 'form-control form-check-inline'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.rodzaj34) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.rodzaj34) }}</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 50%;">
+                                <div class="form-group">
+                                    {{ form_widget(new_form.kompozycja35, {attr: {'onchange': 'fetchCena(this,35)'}})}}
+                                    <small class="form-text text-muted">{{ form_help(new_form.kompozycja35) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.kompozycja35) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.sztuk35, {attr:{'onchange': 'calculateWartosc(this, 35)', 'min': 0}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.sztuk35) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.sztuk35) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.cena35, {attr:{'onchange': 'calculateWartosc(this, 35)'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.cena35) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.cena35) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.wartosc35, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.wartosc35) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.wartosc35) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.wozek35, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.wozek35) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.wozek35) }}</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 50%">
+                                <div class="form-group">
+                                    {{ form_widget(new_form.nazwa35) }}
+                                    <small>{{ form_help(new_form.nazwa35) }}</small>
+                                    <div class="form-error">
+                                        {{ form_errors(new_form.nazwa35) }}
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="rodzaje_kompozycji" style="width: 50%" colspan="4">
+                                <div class="form-group rodzaje_kompozycji">
+                                    {{ form_widget(new_form.rodzaj35, {'attr': {'class': 'form-control form-check-inline'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.rodzaj35) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.rodzaj35) }}</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 50%;">
+                                <div class="form-group">
+                                    {{ form_widget(new_form.kompozycja36, {attr: {'onchange': 'fetchCena(this,36)'}})}}
+                                    <small class="form-text text-muted">{{ form_help(new_form.kompozycja36) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.kompozycja36) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.sztuk36, {attr:{'onchange': 'calculateWartosc(this, 36)', 'min': 0}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.sztuk36) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.sztuk36) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.cena36, {attr:{'onchange': 'calculateWartosc(this, 36)'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.cena36) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.cena36) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.wartosc36, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.wartosc36) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.wartosc36) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.wozek36, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.wozek36) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.wozek36) }}</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 50%">
+                                <div class="form-group">
+                                    {{ form_widget(new_form.nazwa36) }}
+                                    <small>{{ form_help(new_form.nazwa36) }}</small>
+                                    <div class="form-error">
+                                        {{ form_errors(new_form.nazwa36) }}
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="rodzaje_kompozycji" style="width: 50%" colspan="4">
+                                <div class="form-group rodzaje_kompozycji">
+                                    {{ form_widget(new_form.rodzaj36, {'attr': {'class': 'form-control form-check-inline'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.rodzaj36) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.rodzaj36) }}</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 50%;">
+                                <div class="form-group">
+                                    {{ form_widget(new_form.kompozycja37, {attr: {'onchange': 'fetchCena(this,37)'}})}}
+                                    <small class="form-text text-muted">{{ form_help(new_form.kompozycja37) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.kompozycja37) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.sztuk37, {attr:{'onchange': 'calculateWartosc(this, 37)', 'min': 0}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.sztuk37) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.sztuk37) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.cena37, {attr:{'onchange': 'calculateWartosc(this, 37)'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.cena37) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.cena37) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.wartosc37, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.wartosc37) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.wartosc37) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.wozek37, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.wozek37) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.wozek37) }}</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 50%">
+                                <div class="form-group">
+                                    {{ form_widget(new_form.nazwa37) }}
+                                    <small>{{ form_help(new_form.nazwa37) }}</small>
+                                    <div class="form-error">
+                                        {{ form_errors(new_form.nazwa37) }}
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="rodzaje_kompozycji" style="width: 50%" colspan="4">
+                                <div class="form-group rodzaje_kompozycji">
+                                    {{ form_widget(new_form.rodzaj37, {'attr': {'class': 'form-control form-check-inline'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.rodzaj37) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.rodzaj37) }}</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 50%;">
+                                <div class="form-group">
+                                    {{ form_widget(new_form.kompozycja38, {attr: {'onchange': 'fetchCena(this,38)'}})}}
+                                    <small class="form-text text-muted">{{ form_help(new_form.kompozycja38) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.kompozycja38) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.sztuk38, {attr:{'onchange': 'calculateWartosc(this, 38)', 'min': 0}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.sztuk38) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.sztuk38) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.cena38, {attr:{'onchange': 'calculateWartosc(this, 38)'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.cena38) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.cena38) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.wartosc38, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.wartosc38) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.wartosc38) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.wozek38, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.wozek38) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.wozek38) }}</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 50%">
+                                <div class="form-group">
+                                    {{ form_widget(new_form.nazwa38) }}
+                                    <small>{{ form_help(new_form.nazwa38) }}</small>
+                                    <div class="form-error">
+                                        {{ form_errors(new_form.nazwa38) }}
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="rodzaje_kompozycji" style="width: 50%" colspan="4">
+                                <div class="form-group rodzaje_kompozycji">
+                                    {{ form_widget(new_form.rodzaj38, {'attr': {'class': 'form-control form-check-inline'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.rodzaj38) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.rodzaj38) }}</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 50%;">
+                                <div class="form-group">
+                                    {{ form_widget(new_form.kompozycja39, {attr: {'onchange': 'fetchCena(this,39)'}})}}
+                                    <small class="form-text text-muted">{{ form_help(new_form.kompozycja39) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.kompozycja39) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.sztuk39, {attr:{'onchange': 'calculateWartosc(this, 39)', 'min': 0}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.sztuk39) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.sztuk39) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.cena39, {attr:{'onchange': 'calculateWartosc(this, 39)'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.cena39) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.cena39) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.wartosc39, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.wartosc39) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.wartosc39) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.wozek39, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.wozek39) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.wozek39) }}</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 50%">
+                                <div class="form-group">
+                                    {{ form_widget(new_form.nazwa39) }}
+                                    <small>{{ form_help(new_form.nazwa39) }}</small>
+                                    <div class="form-error">
+                                        {{ form_errors(new_form.nazwa39) }}
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="rodzaje_kompozycji" style="width: 50%" colspan="4">
+                                <div class="form-group rodzaje_kompozycji">
+                                    {{ form_widget(new_form.rodzaj39, {'attr': {'class': 'form-control form-check-inline'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.rodzaj39) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.rodzaj39) }}</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 50%;">
+                                <div class="form-group">
+                                    {{ form_widget(new_form.kompozycja40, {attr: {'onchange': 'fetchCena(this,40)'}})}}
+                                    <small class="form-text text-muted">{{ form_help(new_form.kompozycja40) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.kompozycja40) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.sztuk40, {attr:{'onchange': 'calculateWartosc(this, 40)', 'min': 0}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.sztuk40) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.sztuk40) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.cena40, {attr:{'onchange': 'calculateWartosc(this, 40)'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.cena40) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.cena40) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.wartosc40, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.wartosc40) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.wartosc40) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.wozek40, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.wozek40) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.wozek40) }}</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 50%">
+                                <div class="form-group">
+                                    {{ form_widget(new_form.nazwa40) }}
+                                    <small>{{ form_help(new_form.nazwa40) }}</small>
+                                    <div class="form-error">
+                                        {{ form_errors(new_form.nazwa40) }}
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="rodzaje_kompozycji" style="width: 50%" colspan="4">
+                                <div class="form-group rodzaje_kompozycji">
+                                    {{ form_widget(new_form.rodzaj40, {'attr': {'class': 'form-control form-check-inline'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.rodzaj40) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.rodzaj40) }}</div>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr class="bg-custom-green"><td colspan="3" class="text-right" id="suma-label">SUMA:</td><td id="suma" colspan="2" class="text-right">
+                                <div class="form-group">
+                                    {{ form_widget(new_form.suma, {'attr': {'class': 'form-control text-right'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.suma) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.suma) }}</div>
+                                </div>
+                            </td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+
+        {{ form_end(new_form) }}
+    {% endblock new_form %}
+{% endblock %}
+
+
+

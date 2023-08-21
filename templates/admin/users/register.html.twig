@@ -1,0 +1,32 @@
+{% extends '@EasyAdmin/page/content.html.twig' %}
+
+{% block content_title %}Dodaj nowego użytkownika{% endblock %}
+{% block page_actions %}
+    <a class="btn btn-primary" href="...">Some Action</a>
+{% endblock %}
+
+
+{% block title %}Register{% endblock %}
+
+{% block main %}
+    {% for flash_error in app.flashes('verify_email_error') %}
+        <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
+    {% endfor %}
+
+    <h1>Nowy użytkownik</h1>
+
+    {{ form_start(registrationForm) }}
+        <div class="mb-3">
+            {{ form_row(registrationForm.email) }}
+        </div>
+        <div class="mb-3">
+            {{ form_row(registrationForm.plainPassword, {
+            label: 'Hasło'
+            }) }}
+        </div>
+            {{ form_row(registrationForm.agreeTerms) }}
+
+        <button type="submit" class="btn">Dodaj</button>
+
+    {{ form_end(registrationForm) }}
+{% endblock %}

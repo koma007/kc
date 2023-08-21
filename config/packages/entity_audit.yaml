@@ -1,0 +1,11 @@
+# config/packages/entity_audit.yaml
+
+simple_things_entity_audit:
+    audited_entities:
+        - App\Entity\User
+        - App\Entity\Polprodukty
+        - App\Entity\Grupy
+        - App\Entity\Wyceny
+    global_ignore_columns:
+        - created_at
+        - updated_at
