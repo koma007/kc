@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Grupy;
 use App\Entity\Wyceny;
 use App\Form\AddToCartType;
+use App\Message\RegisterUserNotification;
 use App\Service\CartManagerService;
 use App\Service\ZamowienieFactoryService;
 use Symfony\Bridge\Doctrine\ManagerRegistry;
@@ -12,6 +13,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -20,8 +22,10 @@ class SklepController extends AbstractController
 {
 
     #[Route('/sklep/{slug?}', name: 'app_sklep')]
-    public function index(\Doctrine\Persistence\ManagerRegistry $doctrine, ?string $slug, ?int $id, Security $security): Response
+    public function index(\Doctrine\Persistence\ManagerRegistry $doctrine, ?string $slug, ?int $id, Security $security, MessageBusInterface $bus): Response
     {
+
+        //$bus->dispatch(new RegisterUserNotification('Look! I created a message!'));
 //       dd($security->getUser()->getId());
         if(!$slug) {
             $slug = 'caloroczne';
