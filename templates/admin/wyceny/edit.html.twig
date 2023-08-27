@@ -498,6 +498,29 @@
                 calculateSumWazon();
             });
 
+
+
+
+            // Pobierz wartość ukrytego pola
+            var idPracownikowString = document.getElementById('idPracownikow').value;
+            var idPracownikowTrimmed = idPracownikowString.slice(1, -1);
+            var idPracownikowArray = idPracownikowTrimmed.split(',');
+            var idPracownikowFinal = idPracownikowArray.map(function(item) {
+                return parseInt(item.trim());
+            });
+
+            // Pobierz elementy pola select
+            var selectElement = document.getElementById('Wyceny_pracownik');
+            var options = selectElement.options;
+
+            // Ukryj niepasujące opcje
+            for (var i = 0; i < options.length; i++) {
+                var optionValue = parseInt(options[i].value);
+                if (!idPracownikowFinal.includes(optionValue)) {
+                    options[i].style.display = 'none';
+                }
+            }
+
         });
 
 
@@ -2241,6 +2264,14 @@
 
 
 
+            </div>
+
+            <input type="hidden" id="idPracownikow" value="{{ idPracownikow|json_encode|e }}">
+            <div class="">
+                <strong>{{ form_label(edit_form.pracownik) }}</strong>
+                {{ form_widget(edit_form.pracownik) }}
+                <small class="form-text text-muted">{{ form_help(edit_form.pracownik) }}</small>
+                <div class="invalid-feedback">{{ form_errors(edit_form.pracownik) }}</div>
             </div>
         </div>
 

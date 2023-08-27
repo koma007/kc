@@ -5,15 +5,20 @@ namespace App\Controller\Admin;
 use App\Entity\DomyslnaGrupa;
 use App\Entity\Grupy;
 use App\Entity\Polprodukty;
+use App\Entity\User;
 use App\Entity\Wyceny;
+use App\Repository\UserRepository;
 use App\Repository\WycenyRepository;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Assets;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
+use EasyCorp\Bundle\EasyAdminBundle\Config\KeyValueStore;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\HiddenField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
@@ -30,15 +35,24 @@ class WycenyCrudController extends AbstractCrudController
     private $selectedSkladowa1;
 
     private $wycenyRepository;
+    private $pracownik;
 
-    public function __construct(EntityManagerInterface $entityManager, WycenyRepository $wycenyRepository)
+    private $idPracownikow;
+
+    public function __construct(EntityManagerInterface $entityManager, WycenyRepository $wycenyRepository, UserRepository $userRepository)
     {
         $this->entityManager = $entityManager;
         $this->wycenyRepository = $wycenyRepository;
+        $this->userRepository = $userRepository;
+        $this->idPracownikow = $this->entityManager->getRepository(User::class)->findIdPracownikowWithRole();
+
 
         $this->selectedSkladowa1 = $this->entityManager->getRepository(Polprodukty::class)->find(1);
+        $this->pracownik = $this->entityManager->getRepository(User::class);
+
 
     }
+
     public static function getEntityFqcn(): string
     {
         return Wyceny::class;
@@ -47,7 +61,8 @@ class WycenyCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
-        $id =1 ;
+        $id = 1;
+$userRepository = $this->entityManager->getRepository(User::class);
 
         $defaultGrupa = $this->entityManager->getRepository(Grupy::class)->findOneBy([], ['id' => 'ASC']);
         return [
@@ -150,7 +165,7 @@ class WycenyCrudController extends AbstractCrudController
             NumberField::new('wartosc7')
                 ->hideOnIndex(),
             TextField::new('nazwa7')
-            ->hideOnIndex(),
+                ->hideOnIndex(),
 
 
             AssociationField::new('skladowa8')
@@ -725,14 +740,30 @@ class WycenyCrudController extends AbstractCrudController
                 ->setLabel('Zablokuj')
                 ->hideOnIndex(),
 
+
+//            AssociationField::new('pracownik')
+//                ->setQueryBuilder(
+//                    fn() => $this->entityManager->getRepository(User::class)->findPracownikWithRole()
+//                )
+//                ->hideOnIndex(),
+
+        //tak naprawde ten Query builder nie działa w obecnym easyadmin, choc php zwraca poprawny zestaw stad js usuwa elementy, a dodatkowo dosyłam idki pracownikow
+            AssociationField::new('pracownik')
+                ->setLabel('Pracownik: (aby wybrać kilku wciśnij Ctrl i zaznacz)')
+                ->renderAsNativeWidget()
+                ->setQueryBuilder(function (QueryBuilder $queryBuilder) use ($userRepository) {
+                    return $this->entityManager->getRepository(User::class)->findPracownikWithRole();
+                })
+                ->hideOnIndex()
+
+
         ];
     }
 
     public function configureAssets(Assets $assets): Assets
     {
         return $assets
-            ->addJsFile('build/custom2.js')
-            ;
+            ->addJsFile('build/custom2.js');
     }
 
 
@@ -750,12 +781,11 @@ class WycenyCrudController extends AbstractCrudController
             ->showEntityActionsInlined() //nie ukrywaj edycja i usuń
             ->setDefaultSort([
                 'id' => 'DESC'
-            ])
-
-            ;
+            ]);
     }
 
-    public function createEntity(string $entityFqcn) {
+    public function createEntity(string $entityFqcn)
+    {
         $wycena = new Wyceny();
 
         /*
@@ -885,4 +915,11 @@ class WycenyCrudController extends AbstractCrudController
         return new JsonResponse(['cena' => $cenaValue, 'nazwa' => $nazwa]);
     }
 
+    public function configureResponseParameters(KeyValueStore $responseParameters): KeyValueStore
+    {
+        //dosłanie dodatowej zmiennej - idki pracowników
+        $idPracownikow = $this->entityManager->getRepository(User::class)->findIdPracownikowWithRole();
+        $responseParameters->set('idPracownikow', $idPracownikow);
+        return $responseParameters;
+    }
 }

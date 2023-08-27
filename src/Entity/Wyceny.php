@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\WycenyRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Blameable\Traits\BlameableEntity;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
@@ -3203,6 +3205,14 @@ class Wyceny
     #[ORM\Column(nullable: true)]
     private ?bool $blokujMarzaWazon = null;
 
+    #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'pracownik')]
+    private Collection $pracownik;
+
+    public function __construct()
+    {
+        $this->pracownik = new ArrayCollection();
+    }
+
 
 
     public function getDodacPolprodukt21(): ?bool
@@ -3239,6 +3249,35 @@ class Wyceny
         $this->blokujMarzaWazon = $blokujMarzaWazon;
 
         return $this;
+    }
+
+    /**
+     * @return Collection<int, User>
+     */
+    public function getPracownik(): Collection
+    {
+        return $this->pracownik;
+    }
+
+    public function addPracownik(User $pracownik): static
+    {
+        if (!$this->pracownik->contains($pracownik)) {
+            $this->pracownik->add($pracownik);
+        }
+
+        return $this;
+    }
+
+    public function removePracownik(User $pracownik): static
+    {
+        $this->pracownik->removeElement($pracownik);
+
+        return $this;
+    }
+
+    public function idPracownikow()
+    {
+        return '';
     }
 
 

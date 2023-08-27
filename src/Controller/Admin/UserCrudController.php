@@ -32,7 +32,7 @@ class UserCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
 
-        $roles = ['ROLE_ADMIN', 'ROLE_DETAL', 'ROLE_HURT', 'ROLE_USER'];
+        $roles = ['ROLE_ADMIN', 'ROLE_DETAL', 'ROLE_HURT', 'ROLE_USER', 'ROLE_PRACOWNIK'];
         return [
             TextField::new('Name')
                 ->setLabel('Imię')

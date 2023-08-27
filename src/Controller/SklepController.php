@@ -24,8 +24,7 @@ class SklepController extends AbstractController
     #[Route('/sklep/{slug?}', name: 'app_sklep')]
     public function index(\Doctrine\Persistence\ManagerRegistry $doctrine, ?string $slug, ?int $id, Security $security, MessageBusInterface $bus): Response
     {
-
-        //$bus->dispatch(new RegisterUserNotification('Look! I created a message!'));
+         //$bus->dispatch(new RegisterUserNotification('Look! I created a message!'));
 //       dd($security->getUser()->getId());
         if(!$slug) {
             $slug = 'caloroczne';

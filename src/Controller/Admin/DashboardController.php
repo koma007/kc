@@ -101,6 +101,10 @@ class DashboardController extends AbstractDashboardController
             yield MenuItem::linkToRoute('Dodaj użytkownika', 'fa fa-user-plus', 'app_register');
             yield MenuItem::linkToCrud('Lista użytkowników', 'fa fa-users', User::class);
 
+            if ($this->security->isGranted('ROLE_PRACOWNIK') OR $this->security->isGranted('ROLE_ADMIN')) {
+                yield MenuItem::linkToCrud('Zeszyt', 'fa-solid fa-address-book', User::class);
+            }
+
 
 
             if ($this->security->getUser()->getUserIdentifier() == 'admin@admin.pl') {

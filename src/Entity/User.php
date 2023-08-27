@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -38,6 +40,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(length: 255, nullable: false)]
     private ?string $name = null;
+
+    #[ORM\ManyToMany(targetEntity: Wyceny::class, mappedBy: 'pracownik')]
+    private Collection $pracownik;
+
+    public function __construct()
+    {
+        $this->pracownik = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -154,5 +164,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->name = $name;
 
         return $this;
+    }
+
+    /**
+     * @return Collection<int, Wyceny>
+     */
+    public function getPracownik(): Collection
+    {
+        return $this->pracownik;
+    }
+
+    public function addPracownik(Wyceny $pracownik): static
+    {
+        if (!$this->pracownik->contains($pracownik)) {
+            $this->pracownik->add($pracownik);
+            $pracownik->addPracownik($this);
+        }
+
+        return $this;
+    }
+
+    public function removePracownik(Wyceny $pracownik): static
+    {
+        if ($this->pracownik->removeElement($pracownik)) {
+            $pracownik->removePracownik($this);
+        }
+
+        return $this;
+    }
+
+    public function __toString(){
+        return $this->getName();
     }
 }
