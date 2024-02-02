@@ -2,16 +2,16 @@
   "entrypoints": {
     "app": {
       "css": [
-        "/app.614607cb.css",
-        "/app.614607cb.rtl.css"
+        "/app.933c96e5.css",
+        "/app.933c96e5.rtl.css"
       ],
       "js": [
-        "/app.914bb6ba.js"
+        "/app.dcb9a87a.js"
       ]
     },
     "form": {
       "js": [
-        "/form.fc39362b.js"
+        "/form.645e16a6.js"
       ]
     },
     "page-layout": {
@@ -21,7 +21,7 @@
     },
     "page-color-scheme": {
       "js": [
-        "/page-color-scheme.a1970567.js"
+        "/page-color-scheme.f25113a4.js"
       ]
     },
     "field-boolean": {
@@ -31,11 +31,11 @@
     },
     "field-code-editor": {
       "css": [
-        "/field-code-editor.09574d54.css",
-        "/field-code-editor.09574d54.rtl.css"
+        "/field-code-editor.78ccdb00.css",
+        "/field-code-editor.78ccdb00.rtl.css"
       ],
       "js": [
-        "/field-code-editor.8988bf27.js"
+        "/field-code-editor.6507533d.js"
       ]
     },
     "field-collection": {
@@ -65,11 +65,11 @@
     },
     "field-text-editor": {
       "css": [
-        "/field-text-editor.7348fb97.css",
-        "/field-text-editor.7348fb97.rtl.css"
+        "/field-text-editor.7f2b8426.css",
+        "/field-text-editor.7f2b8426.rtl.css"
       ],
       "js": [
-        "/field-text-editor.47d6e6da.js"
+        "/field-text-editor.722b7f0e.js"
       ]
     },
     "login": {
