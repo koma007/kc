@@ -7,6 +7,7 @@
         "php": ">=8.1",
         "ext-ctype": "*",
         "ext-iconv": "*",
+        "api-platform/core": "^3.1",
         "asimlqt/php-google-spreadsheet-client": "^3.0",
         "blackfireio/blackfire-symfony-meta": "^1.0",
         "doctrine/annotations": "^1.0",
@@ -17,6 +18,7 @@
         "gedmo/doctrine-extensions": "^3.11",
         "google/apiclient": "*",
         "mpdf/mpdf": "8.1.*",
+        "nelmio/cors-bundle": "^2.3",
         "phpdocumentor/reflection-docblock": "^5.3",
         "phpoffice/phpspreadsheet": "*",
         "phpstan/phpdoc-parser": "^1.15",
@@ -42,6 +44,7 @@
         "symfony/process": "6.2.*",
         "symfony/property-access": "6.2.*",
         "symfony/property-info": "6.2.*",
+        "symfony/requirements-checker": "^2.0",
         "symfony/runtime": "6.2.*",
         "symfony/security-bundle": "6.2.*",
         "symfony/serializer": "6.2.*",
@@ -87,7 +90,8 @@
     "scripts": {
         "auto-scripts": {
             "cache:clear": "symfony-cmd",
-            "assets:install %PUBLIC_DIR%": "symfony-cmd"
+            "assets:install %PUBLIC_DIR%": "symfony-cmd",
+            "requirements-checker": "script"
         },
         "post-install-cmd": [
             "@auto-scripts"

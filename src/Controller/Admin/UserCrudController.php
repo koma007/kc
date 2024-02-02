@@ -40,6 +40,7 @@ class UserCrudController extends AbstractCrudController
             TextField::new('Email')
             ->setRequired('true'),
             BooleanField::new('isVerified')
+                ->setLabel('Zweryfikowany')
                 ->renderAsSwitch(true),
             ChoiceField::new('roles')
                 ->setChoices(array_combine($roles, $roles))
@@ -47,6 +48,7 @@ class UserCrudController extends AbstractCrudController
                 ->renderExpanded()
                 ->onlyOnForms(),
             ImageField::new('avatar')
+                ->setLabel('Zdjęcie')
                 ->setBasePath('uploads/avatars')
                 ->setUploadDir('public/uploads/avatars')
                 ->setUploadedFileNamePattern('[slug]-[timestamp].[extension]')
