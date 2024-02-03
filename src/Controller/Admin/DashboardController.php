@@ -3,6 +3,7 @@
 namespace App\Controller\Admin;
 
 use App\Entity\ArrangementPrice;
+use App\Entity\Comment;
 use App\Entity\DomyslnaGrupa;
 use App\Entity\Grupy;
 use App\Entity\Hurtowe;
@@ -10,6 +11,8 @@ use App\Entity\Polprodukty;
 use App\Entity\User;
 use App\Entity\Wyceny;
 use App\Entity\Zamowienie;
+use App\Entity\Zeszyt;
+use App\Entity\Zeszyt2;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Assets;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
@@ -101,18 +104,23 @@ class DashboardController extends AbstractDashboardController
             yield MenuItem::linkToRoute('Dodaj użytkownika', 'fa fa-user-plus', 'app_register');
             yield MenuItem::linkToCrud('Lista użytkowników', 'fa fa-users', User::class);
 
-            if ($this->security->isGranted('ROLE_PRACOWNIK') OR $this->security->isGranted('ROLE_ADMIN')) {
-                yield MenuItem::linkToCrud('Zeszyt', 'fa-solid fa-address-book', User::class);
-            }
+
 
 
 
             if ($this->security->getUser()->getUserIdentifier() == 'admin@admin.pl') {
                 yield MenuItem::section('TESTY MARIUSZA');
                 yield MenuItem::linkToRoute('API GOOGLE', 'fa-solid fa-magnifying-glass', 'app_es');
+                yield MenuItem::linkToCrud('comment', 'fa-solid fa-address-book', Comment::class);
             }
 
 
+        }
+
+        if ($this->security->isGranted('ROLE_PRACOWNIK') OR $this->security->isGranted('ROLE_ADMIN')) {
+            yield MenuItem::section('PRACOWNIK');
+            yield MenuItem::linkToCrud('Zeszyt', 'fa-solid fa-address-book', Zeszyt::class);
+            yield MenuItem::linkToCrud('Zeszyt2', 'fa-solid fa-address-book', Zeszyt2::class);
         }
 
         yield MenuItem::section('------------------');

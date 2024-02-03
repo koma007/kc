@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>{{ klient }} - zestawienie</title>
+    <style>
+        /* Styl dla całej strony */
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 16px; /* Zmniejszenie wielkości czcionki */
+            line-height: 1.2; /* Zmniejszenie odstępu między wierszami */
+        }
+
+        /* Styl dla tabeli */
+        .wozek-druk {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .wozek-druk th,
+        .wozek-druk td {
+            border: 1px solid #ddd; /* Dodajemy obramowania tylko dla tej tabeli */
+            padding: 4px; /* Zmniejszenie paddingu w komórkach */
+        }
+
+        .wozek-druk th {
+            background-color: #d3d3d3;
+        }
+
+        .gray {
+            background-color: #f2f2f2; /* Tło szarego wiersza */
+        }
+
+        .more-gray {
+            background-color: #d3d3d3 !important; /* Tło nagłówka */
+        }
+
+        /* Wyśrodkowanie wartości do prawej */
+        .text-right {
+            text-align: right;
+        }
+
+        /* Nowy styl dla mniejszego tekstu na końcu */
+        .small-text {
+            font-size: 14px; /* Zmniejszenie wielkości tekstu na końcu */
+            margin-top: 8px; /* Zmniejszenie odstępu na końcu */
+        }
+        .wozek-druk td {
+            font-size: 12px; /* Zmniejszenie wielkości czcionki */
+            padding: 2px; /* Zmniejszenie paddingu w komórkach */
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="flex-container">
+        <h2 class="my-4">Zamówienie: {{ klient }}</h2>
+    </div>
+
+
+    <table class="wozek-druk">
+        <thead>
+        <tr class="more-gray">
+            <th>Lp</th>
+            <th>Nazwa</th>
+            <th>Typ</th>
+            <th>Sztuk</th>
+            <th>Cena</th>
+            <th class="text-right">Wartość</th>
+            <th>Wózek nr</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% set lp = 1 %}
+        {% set previous_key = -1 %}
+        {% set row_color = 'gray' %} {# Rozpoczynamy od szarego tła #}
+        {% for key, innerArray in wozki %}
+            {% for item in innerArray %}
+                {% if key != previous_key %}
+                    {% if row_color == 'gray' %}
+                        {% set row_color = 'white' %} {# Jeśli poprzedni wiersz był szary, to ustawiamy białe tło #}
+                    {% else %}
+                        {% set row_color = 'gray' %} {# W przeciwnym razie ustawiamy szare tło #}
+                    {% endif %}
+                    {% set previous_key = key %}
+                {% endif %}
+                {% if row_color == 'gray' %}
+                    <tr class="gray">
+                {% else %}
+                    <tr>
+                {% endif %}
+                <td>{{ lp }}</td>
+                <td>{{ item.nazwa | upper }}</td>
+                <td>{{ item.rodzaj }}</td>
+                <td class="text-right">{{ item.sztuk }}</td>
+                <td class="text-right">{{ item.cena }} zł</td>
+                <td class="text-right">{{ item.wartosc }} zł</td>
+                <td class="text-right">{{ key }}</td>
+                </tr>
+                {% set lp = lp + 1 %}
+            {% endfor %}
+        {% endfor %}
+        {% if wozki|length > 0 %}
+            {% if row_color == 'gray' %}
+                <tr class="gray">
+            {% else %}
+                <tr>
+            {% endif %}
+            <td colspan="5" class="text-right more-gray"><strong>SUMA:</strong></td>
+            <td class="more-gray text-right"><strong>{{ kwota }} zł</strong></td>
+            <td></td>
+            </tr>
+        {% endif %}
+        </tbody>
+    </table>
+
+    <p class="text-right small-text">Po zrealizowaniu niniejszego zamówienia faktura zostanie wysłana pocztą.</p>
+</div>
+</body>
+</html>

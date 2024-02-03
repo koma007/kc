@@ -915,6 +915,39 @@ $userRepository = $this->entityManager->getRepository(User::class);
         return new JsonResponse(['cena' => $cenaValue, 'nazwa' => $nazwa]);
     }
 
+    #[Route('/kompozycja-praca/{id}/{cena}', name: 'app_get_praca_kompozycja')]
+    public function getPraca(?int $id, ?string $cena): JsonResponse
+    {
+        $cenaSolo = $this->wycenyRepository->findOneBy(['id' => $id])->getCena1();
+
+        $cenaWazon = $this->wycenyRepository->findOneBy(['id' => $id])->getCena22();
+
+
+        switch ($cena) {
+            case 'kpl':
+                $cenaValue = $cenaSolo + $cenaWazon;
+                break;
+            case 'solo':
+                $cenaValue = $cenaSolo;
+                break;
+            case 'wazon':
+                $cenaValue = $cenaWazon;
+                break;
+            case '2w':
+                $cenaValue = $cenaSolo + (2* $cenaWazon);
+                break;
+            default:
+                $cenaValue = 0;
+                break;
+        }
+
+        $nazwa = $this->wycenyRepository->findOneBy(['id' => $id])->getNazwa();
+
+
+        // Return the cena value as a JSON response
+        return new JsonResponse(['cena' => $cenaValue, 'nazwa' => $nazwa]);
+    }
+
     public function configureResponseParameters(KeyValueStore $responseParameters): KeyValueStore
     {
         //dosłanie dodatowej zmiennej - idki pracowników
