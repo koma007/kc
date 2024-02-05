@@ -60,7 +60,13 @@ class ZeszytCrudController extends AbstractCrudController
                 ->autocomplete()
                 ->setLabel('Kompozycja')
                 ->setRequired(false)
-                ->hideOnIndex(),
+                ->hideOnIndex()
+                ->setQueryBuilder(function (QueryBuilder $queryBuilder) {
+                    $queryBuilder->join('entity.pracownik', 'u') // Dołączamy encję User
+                    ->andWhere('u.id = :userId')
+                    ->setParameter('userId', $this->security->getUser()->getId());
+                    return $queryBuilder;
+                }),
             IntegerField::new('sztuk1')
                 ->setLabel('Szt.')
                 ->setRequired(false)
@@ -96,7 +102,13 @@ class ZeszytCrudController extends AbstractCrudController
                 ->autocomplete()
                 ->setLabel('Kompozycja')
                 ->setRequired(false)
-                ->hideOnIndex(),
+                ->hideOnIndex()
+                ->setQueryBuilder(function (QueryBuilder $queryBuilder) {
+                    $queryBuilder->join('entity.pracownik', 'u') // Dołączamy encję User
+                    ->andWhere('u.id = :userId')
+                        ->setParameter('userId', $this->security->getUser()->getId());
+                    return $queryBuilder;
+                }),
             IntegerField::new('sztuk2')
                 ->setLabel('Szt.')
                 ->setRequired(false)
@@ -123,7 +135,13 @@ class ZeszytCrudController extends AbstractCrudController
                 ->autocomplete()
                 ->setLabel('Kompozycja')
                 ->setRequired(false)
-                ->hideOnIndex(),
+                ->hideOnIndex()
+                ->setQueryBuilder(function (QueryBuilder $queryBuilder) {
+                    $queryBuilder->join('entity.pracownik', 'u') // Dołączamy encję User
+                    ->andWhere('u.id = :userId')
+                        ->setParameter('userId', $this->security->getUser()->getId());
+                    return $queryBuilder;
+                }),
             IntegerField::new('sztuk3')
                 ->setLabel('Szt.')
                 ->setRequired(false)
@@ -150,7 +168,13 @@ class ZeszytCrudController extends AbstractCrudController
                 ->autocomplete()
                 ->setLabel('Kompozycja')
                 ->setRequired(false)
-                ->hideOnIndex(),
+                ->hideOnIndex()
+                ->setQueryBuilder(function (QueryBuilder $queryBuilder) {
+                    $queryBuilder->join('entity.pracownik', 'u') // Dołączamy encję User
+                    ->andWhere('u.id = :userId')
+                        ->setParameter('userId', $this->security->getUser()->getId());
+                    return $queryBuilder;
+                }),
             IntegerField::new('sztuk4')
                 ->setLabel('Szt.')
                 ->setRequired(false)
@@ -177,7 +201,13 @@ class ZeszytCrudController extends AbstractCrudController
                 ->autocomplete()
                 ->setLabel('Kompozycja')
                 ->setRequired(false)
-                ->hideOnIndex(),
+                ->hideOnIndex()
+                ->setQueryBuilder(function (QueryBuilder $queryBuilder) {
+                    $queryBuilder->join('entity.pracownik', 'u') // Dołączamy encję User
+                    ->andWhere('u.id = :userId')
+                        ->setParameter('userId', $this->security->getUser()->getId());
+                    return $queryBuilder;
+                }),
             IntegerField::new('sztuk5')
                 ->setLabel('Szt.')
                 ->setRequired(false)
@@ -204,7 +234,13 @@ class ZeszytCrudController extends AbstractCrudController
                 ->autocomplete()
                 ->setLabel('Kompozycja')
                 ->setRequired(false)
-                ->hideOnIndex(),
+                ->hideOnIndex()
+                ->setQueryBuilder(function (QueryBuilder $queryBuilder) {
+                    $queryBuilder->join('entity.pracownik', 'u') // Dołączamy encję User
+                    ->andWhere('u.id = :userId')
+                        ->setParameter('userId', $this->security->getUser()->getId());
+                    return $queryBuilder;
+                }),
             IntegerField::new('sztuk6')
                 ->setLabel('Szt.')
                 ->setRequired(false)
@@ -231,7 +267,13 @@ class ZeszytCrudController extends AbstractCrudController
                 ->autocomplete()
                 ->setLabel('Kompozycja')
                 ->setRequired(false)
-                ->hideOnIndex(),
+                ->hideOnIndex()
+                ->setQueryBuilder(function (QueryBuilder $queryBuilder) {
+                    $queryBuilder->join('entity.pracownik', 'u') // Dołączamy encję User
+                    ->andWhere('u.id = :userId')
+                        ->setParameter('userId', $this->security->getUser()->getId());
+                    return $queryBuilder;
+                }),
             IntegerField::new('sztuk7')
                 ->setLabel('Szt.')
                 ->setRequired(false)
@@ -258,7 +300,13 @@ class ZeszytCrudController extends AbstractCrudController
                 ->autocomplete()
                 ->setLabel('Kompozycja')
                 ->setRequired(false)
-                ->hideOnIndex(),
+                ->hideOnIndex()
+                ->setQueryBuilder(function (QueryBuilder $queryBuilder) {
+                    $queryBuilder->join('entity.pracownik', 'u') // Dołączamy encję User
+                    ->andWhere('u.id = :userId')
+                        ->setParameter('userId', $this->security->getUser()->getId());
+                    return $queryBuilder;
+                }),
             IntegerField::new('sztuk8')
                 ->setLabel('Szt.')
                 ->setRequired(false)
@@ -286,7 +334,13 @@ class ZeszytCrudController extends AbstractCrudController
                 ->autocomplete()
                 ->setLabel('Kompozycja')
                 ->setRequired(false)
-                ->hideOnIndex(),
+                ->hideOnIndex()
+                ->setQueryBuilder(function (QueryBuilder $queryBuilder) {
+                    $queryBuilder->join('entity.pracownik', 'u') // Dołączamy encję User
+                    ->andWhere('u.id = :userId')
+                        ->setParameter('userId', $this->security->getUser()->getId());
+                    return $queryBuilder;
+                }),
             IntegerField::new('sztuk9')
                 ->setLabel('Szt.')
                 ->setRequired(false)
@@ -314,7 +368,13 @@ class ZeszytCrudController extends AbstractCrudController
                 ->autocomplete()
                 ->setLabel('Kompozycja')
                 ->setRequired(false)
-                ->hideOnIndex(),
+                ->hideOnIndex()
+                ->setQueryBuilder(function (QueryBuilder $queryBuilder) {
+                    $queryBuilder->join('entity.pracownik', 'u') // Dołączamy encję User
+                    ->andWhere('u.id = :userId')
+                        ->setParameter('userId', $this->security->getUser()->getId());
+                    return $queryBuilder;
+                }),
             IntegerField::new('sztuk10')
                 ->setLabel('Szt.')
                 ->setRequired(false)
@@ -342,7 +402,13 @@ class ZeszytCrudController extends AbstractCrudController
                 ->autocomplete()
                 ->setLabel('Kompozycja')
                 ->setRequired(false)
-                ->hideOnIndex(),
+                ->hideOnIndex()
+                ->setQueryBuilder(function (QueryBuilder $queryBuilder) {
+                    $queryBuilder->join('entity.pracownik', 'u') // Dołączamy encję User
+                    ->andWhere('u.id = :userId')
+                        ->setParameter('userId', $this->security->getUser()->getId());
+                    return $queryBuilder;
+                }),
             IntegerField::new('sztuk11')
                 ->setLabel('Szt.')
                 ->setRequired(false)
@@ -370,7 +436,13 @@ class ZeszytCrudController extends AbstractCrudController
                 ->autocomplete()
                 ->setLabel('Kompozycja')
                 ->setRequired(false)
-                ->hideOnIndex(),
+                ->hideOnIndex()
+                ->setQueryBuilder(function (QueryBuilder $queryBuilder) {
+                    $queryBuilder->join('entity.pracownik', 'u') // Dołączamy encję User
+                    ->andWhere('u.id = :userId')
+                        ->setParameter('userId', $this->security->getUser()->getId());
+                    return $queryBuilder;
+                }),
             IntegerField::new('sztuk12')
                 ->setLabel('Szt.')
                 ->setRequired(false)
@@ -398,7 +470,13 @@ class ZeszytCrudController extends AbstractCrudController
                 ->autocomplete()
                 ->setLabel('Kompozycja')
                 ->setRequired(false)
-                ->hideOnIndex(),
+                ->hideOnIndex()
+                ->setQueryBuilder(function (QueryBuilder $queryBuilder) {
+                    $queryBuilder->join('entity.pracownik', 'u') // Dołączamy encję User
+                    ->andWhere('u.id = :userId')
+                        ->setParameter('userId', $this->security->getUser()->getId());
+                    return $queryBuilder;
+                }),
             IntegerField::new('sztuk13')
                 ->setLabel('Szt.')
                 ->setRequired(false)
@@ -426,7 +504,13 @@ class ZeszytCrudController extends AbstractCrudController
                 ->autocomplete()
                 ->setLabel('Kompozycja')
                 ->setRequired(false)
-                ->hideOnIndex(),
+                ->hideOnIndex()
+                ->setQueryBuilder(function (QueryBuilder $queryBuilder) {
+                    $queryBuilder->join('entity.pracownik', 'u') // Dołączamy encję User
+                    ->andWhere('u.id = :userId')
+                        ->setParameter('userId', $this->security->getUser()->getId());
+                    return $queryBuilder;
+                }),
             IntegerField::new('sztuk14')
                 ->setLabel('Szt.')
                 ->setRequired(false)
@@ -462,7 +546,13 @@ class ZeszytCrudController extends AbstractCrudController
                 ->autocomplete()
                 ->setLabel('Kompozycja')
                 ->setRequired(false)
-                ->hideOnIndex(),
+                ->hideOnIndex()
+                ->setQueryBuilder(function (QueryBuilder $queryBuilder) {
+                    $queryBuilder->join('entity.pracownik', 'u') // Dołączamy encję User
+                    ->andWhere('u.id = :userId')
+                        ->setParameter('userId', $this->security->getUser()->getId());
+                    return $queryBuilder;
+                }),
             IntegerField::new('sztuk15')
                 ->setLabel('Szt.')
                 ->setRequired(false)
@@ -490,7 +580,13 @@ class ZeszytCrudController extends AbstractCrudController
                 ->autocomplete()
                 ->setLabel('Kompozycja')
                 ->setRequired(false)
-                ->hideOnIndex(),
+                ->hideOnIndex()
+                ->setQueryBuilder(function (QueryBuilder $queryBuilder) {
+                    $queryBuilder->join('entity.pracownik', 'u') // Dołączamy encję User
+                    ->andWhere('u.id = :userId')
+                        ->setParameter('userId', $this->security->getUser()->getId());
+                    return $queryBuilder;
+                }),
             IntegerField::new('sztuk16')
                 ->setLabel('Szt.')
                 ->setRequired(false)
@@ -518,7 +614,13 @@ class ZeszytCrudController extends AbstractCrudController
                 ->autocomplete()
                 ->setLabel('Kompozycja')
                 ->setRequired(false)
-                ->hideOnIndex(),
+                ->hideOnIndex()
+                ->setQueryBuilder(function (QueryBuilder $queryBuilder) {
+                    $queryBuilder->join('entity.pracownik', 'u') // Dołączamy encję User
+                    ->andWhere('u.id = :userId')
+                        ->setParameter('userId', $this->security->getUser()->getId());
+                    return $queryBuilder;
+                }),
             IntegerField::new('sztuk17')
                 ->setLabel('Szt.')
                 ->setRequired(false)
@@ -546,7 +648,13 @@ class ZeszytCrudController extends AbstractCrudController
                 ->autocomplete()
                 ->setLabel('Kompozycja')
                 ->setRequired(false)
-                ->hideOnIndex(),
+                ->hideOnIndex()
+                ->setQueryBuilder(function (QueryBuilder $queryBuilder) {
+                    $queryBuilder->join('entity.pracownik', 'u') // Dołączamy encję User
+                    ->andWhere('u.id = :userId')
+                        ->setParameter('userId', $this->security->getUser()->getId());
+                    return $queryBuilder;
+                }),
             IntegerField::new('sztuk18')
                 ->setLabel('Szt.')
                 ->setRequired(false)
@@ -574,7 +682,13 @@ class ZeszytCrudController extends AbstractCrudController
                 ->autocomplete()
                 ->setLabel('Kompozycja')
                 ->setRequired(false)
-                ->hideOnIndex(),
+                ->hideOnIndex()
+                ->setQueryBuilder(function (QueryBuilder $queryBuilder) {
+                    $queryBuilder->join('entity.pracownik', 'u') // Dołączamy encję User
+                    ->andWhere('u.id = :userId')
+                        ->setParameter('userId', $this->security->getUser()->getId());
+                    return $queryBuilder;
+                }),
             IntegerField::new('sztuk19')
                 ->setLabel('Szt.')
                 ->setRequired(false)
@@ -602,7 +716,13 @@ class ZeszytCrudController extends AbstractCrudController
                 ->autocomplete()
                 ->setLabel('Kompozycja')
                 ->setRequired(false)
-                ->hideOnIndex(),
+                ->hideOnIndex()
+                ->setQueryBuilder(function (QueryBuilder $queryBuilder) {
+                    $queryBuilder->join('entity.pracownik', 'u') // Dołączamy encję User
+                    ->andWhere('u.id = :userId')
+                        ->setParameter('userId', $this->security->getUser()->getId());
+                    return $queryBuilder;
+                }),
             IntegerField::new('sztuk20')
                 ->setLabel('Szt.')
                 ->setRequired(false)
@@ -630,7 +750,13 @@ class ZeszytCrudController extends AbstractCrudController
                 ->autocomplete()
                 ->setLabel('Kompozycja')
                 ->setRequired(false)
-                ->hideOnIndex(),
+                ->hideOnIndex()
+                ->setQueryBuilder(function (QueryBuilder $queryBuilder) {
+                    $queryBuilder->join('entity.pracownik', 'u') // Dołączamy encję User
+                    ->andWhere('u.id = :userId')
+                        ->setParameter('userId', $this->security->getUser()->getId());
+                    return $queryBuilder;
+                }),
             IntegerField::new('sztuk21')
                 ->setLabel('Szt.')
                 ->setRequired(false)
@@ -658,7 +784,13 @@ class ZeszytCrudController extends AbstractCrudController
                 ->autocomplete()
                 ->setLabel('Kompozycja')
                 ->setRequired(false)
-                ->hideOnIndex(),
+                ->hideOnIndex()
+                ->setQueryBuilder(function (QueryBuilder $queryBuilder) {
+                    $queryBuilder->join('entity.pracownik', 'u') // Dołączamy encję User
+                    ->andWhere('u.id = :userId')
+                        ->setParameter('userId', $this->security->getUser()->getId());
+                    return $queryBuilder;
+                }),
             IntegerField::new('sztuk22')
                 ->setLabel('Szt.')
                 ->setRequired(false)
@@ -685,7 +817,13 @@ class ZeszytCrudController extends AbstractCrudController
                 ->autocomplete()
                 ->setLabel('Kompozycja')
                 ->setRequired(false)
-                ->hideOnIndex(),
+                ->hideOnIndex()
+                ->setQueryBuilder(function (QueryBuilder $queryBuilder) {
+                    $queryBuilder->join('entity.pracownik', 'u') // Dołączamy encję User
+                    ->andWhere('u.id = :userId')
+                        ->setParameter('userId', $this->security->getUser()->getId());
+                    return $queryBuilder;
+                }),
             IntegerField::new('sztuk23')
                 ->setLabel('Szt.')
                 ->setRequired(false)
@@ -712,7 +850,13 @@ class ZeszytCrudController extends AbstractCrudController
                 ->autocomplete()
                 ->setLabel('Kompozycja')
                 ->setRequired(false)
-                ->hideOnIndex(),
+                ->hideOnIndex()
+                ->setQueryBuilder(function (QueryBuilder $queryBuilder) {
+                    $queryBuilder->join('entity.pracownik', 'u') // Dołączamy encję User
+                    ->andWhere('u.id = :userId')
+                        ->setParameter('userId', $this->security->getUser()->getId());
+                    return $queryBuilder;
+                }),
             IntegerField::new('sztuk24')
                 ->setLabel('Szt.')
                 ->setRequired(false)
@@ -739,7 +883,13 @@ class ZeszytCrudController extends AbstractCrudController
                 ->autocomplete()
                 ->setLabel('Kompozycja')
                 ->setRequired(false)
-                ->hideOnIndex(),
+                ->hideOnIndex()
+                ->setQueryBuilder(function (QueryBuilder $queryBuilder) {
+                    $queryBuilder->join('entity.pracownik', 'u') // Dołączamy encję User
+                    ->andWhere('u.id = :userId')
+                        ->setParameter('userId', $this->security->getUser()->getId());
+                    return $queryBuilder;
+                }),
             IntegerField::new('sztuk25')
                 ->setLabel('Szt.')
                 ->setRequired(false)
@@ -766,7 +916,13 @@ class ZeszytCrudController extends AbstractCrudController
                 ->autocomplete()
                 ->setLabel('Kompozycja')
                 ->setRequired(false)
-                ->hideOnIndex(),
+                ->hideOnIndex()
+                ->setQueryBuilder(function (QueryBuilder $queryBuilder) {
+                    $queryBuilder->join('entity.pracownik', 'u') // Dołączamy encję User
+                    ->andWhere('u.id = :userId')
+                        ->setParameter('userId', $this->security->getUser()->getId());
+                    return $queryBuilder;
+                }),
             IntegerField::new('sztuk26')
                 ->setLabel('Szt.')
                 ->setRequired(false)
@@ -793,7 +949,13 @@ class ZeszytCrudController extends AbstractCrudController
                 ->autocomplete()
                 ->setLabel('Kompozycja')
                 ->setRequired(false)
-                ->hideOnIndex(),
+                ->hideOnIndex()
+                ->setQueryBuilder(function (QueryBuilder $queryBuilder) {
+                    $queryBuilder->join('entity.pracownik', 'u') // Dołączamy encję User
+                    ->andWhere('u.id = :userId')
+                        ->setParameter('userId', $this->security->getUser()->getId());
+                    return $queryBuilder;
+                }),
             IntegerField::new('sztuk27')
                 ->setLabel('Szt.')
                 ->setRequired(false)
@@ -820,7 +982,13 @@ class ZeszytCrudController extends AbstractCrudController
                 ->autocomplete()
                 ->setLabel('Kompozycja')
                 ->setRequired(false)
-                ->hideOnIndex(),
+                ->hideOnIndex()
+                ->setQueryBuilder(function (QueryBuilder $queryBuilder) {
+                    $queryBuilder->join('entity.pracownik', 'u') // Dołączamy encję User
+                    ->andWhere('u.id = :userId')
+                        ->setParameter('userId', $this->security->getUser()->getId());
+                    return $queryBuilder;
+                }),
             IntegerField::new('sztuk28')
                 ->setLabel('Szt.')
                 ->setRequired(false)
@@ -847,7 +1015,13 @@ class ZeszytCrudController extends AbstractCrudController
                 ->autocomplete()
                 ->setLabel('Kompozycja')
                 ->setRequired(false)
-                ->hideOnIndex(),
+                ->hideOnIndex()
+                ->setQueryBuilder(function (QueryBuilder $queryBuilder) {
+                    $queryBuilder->join('entity.pracownik', 'u') // Dołączamy encję User
+                    ->andWhere('u.id = :userId')
+                        ->setParameter('userId', $this->security->getUser()->getId());
+                    return $queryBuilder;
+                }),
             IntegerField::new('sztuk29')
                 ->setLabel('Szt.')
                 ->setRequired(false)
@@ -874,7 +1048,13 @@ class ZeszytCrudController extends AbstractCrudController
                 ->autocomplete()
                 ->setLabel('Kompozycja')
                 ->setRequired(false)
-                ->hideOnIndex(),
+                ->hideOnIndex()
+                ->setQueryBuilder(function (QueryBuilder $queryBuilder) {
+                    $queryBuilder->join('entity.pracownik', 'u') // Dołączamy encję User
+                    ->andWhere('u.id = :userId')
+                        ->setParameter('userId', $this->security->getUser()->getId());
+                    return $queryBuilder;
+                }),
             IntegerField::new('sztuk30')
                 ->setLabel('Szt.')
                 ->setRequired(false)
@@ -901,7 +1081,13 @@ class ZeszytCrudController extends AbstractCrudController
                 ->autocomplete()
                 ->setLabel('Kompozycja')
                 ->setRequired(false)
-                ->hideOnIndex(),
+                ->hideOnIndex()
+                ->setQueryBuilder(function (QueryBuilder $queryBuilder) {
+                    $queryBuilder->join('entity.pracownik', 'u') // Dołączamy encję User
+                    ->andWhere('u.id = :userId')
+                        ->setParameter('userId', $this->security->getUser()->getId());
+                    return $queryBuilder;
+                }),
             IntegerField::new('sztuk31')
                 ->setLabel('Szt.')
                 ->setRequired(false)
@@ -928,7 +1114,13 @@ class ZeszytCrudController extends AbstractCrudController
                 ->autocomplete()
                 ->setLabel('Kompozycja')
                 ->setRequired(false)
-                ->hideOnIndex(),
+                ->hideOnIndex()
+                ->setQueryBuilder(function (QueryBuilder $queryBuilder) {
+                    $queryBuilder->join('entity.pracownik', 'u') // Dołączamy encję User
+                    ->andWhere('u.id = :userId')
+                        ->setParameter('userId', $this->security->getUser()->getId());
+                    return $queryBuilder;
+                }),
             IntegerField::new('sztuk32')
                 ->setLabel('Szt.')
                 ->setRequired(false)
@@ -955,7 +1147,13 @@ class ZeszytCrudController extends AbstractCrudController
                 ->autocomplete()
                 ->setLabel('Kompozycja')
                 ->setRequired(false)
-                ->hideOnIndex(),
+                ->hideOnIndex()
+                ->setQueryBuilder(function (QueryBuilder $queryBuilder) {
+                    $queryBuilder->join('entity.pracownik', 'u') // Dołączamy encję User
+                    ->andWhere('u.id = :userId')
+                        ->setParameter('userId', $this->security->getUser()->getId());
+                    return $queryBuilder;
+                }),
             IntegerField::new('sztuk33')
                 ->setLabel('Szt.')
                 ->setRequired(false)
@@ -982,7 +1180,13 @@ class ZeszytCrudController extends AbstractCrudController
                 ->autocomplete()
                 ->setLabel('Kompozycja')
                 ->setRequired(false)
-                ->hideOnIndex(),
+                ->hideOnIndex()
+                ->setQueryBuilder(function (QueryBuilder $queryBuilder) {
+                    $queryBuilder->join('entity.pracownik', 'u') // Dołączamy encję User
+                    ->andWhere('u.id = :userId')
+                        ->setParameter('userId', $this->security->getUser()->getId());
+                    return $queryBuilder;
+                }),
             IntegerField::new('sztuk34')
                 ->setLabel('Szt.')
                 ->setRequired(false)
@@ -1009,7 +1213,13 @@ class ZeszytCrudController extends AbstractCrudController
                 ->autocomplete()
                 ->setLabel('Kompozycja')
                 ->setRequired(false)
-                ->hideOnIndex(),
+                ->hideOnIndex()
+                ->setQueryBuilder(function (QueryBuilder $queryBuilder) {
+                    $queryBuilder->join('entity.pracownik', 'u') // Dołączamy encję User
+                    ->andWhere('u.id = :userId')
+                        ->setParameter('userId', $this->security->getUser()->getId());
+                    return $queryBuilder;
+                }),
             IntegerField::new('sztuk35')
                 ->setLabel('Szt.')
                 ->setRequired(false)
@@ -1036,7 +1246,13 @@ class ZeszytCrudController extends AbstractCrudController
                 ->autocomplete()
                 ->setLabel('Kompozycja')
                 ->setRequired(false)
-                ->hideOnIndex(),
+                ->hideOnIndex()
+                ->setQueryBuilder(function (QueryBuilder $queryBuilder) {
+                    $queryBuilder->join('entity.pracownik', 'u') // Dołączamy encję User
+                    ->andWhere('u.id = :userId')
+                        ->setParameter('userId', $this->security->getUser()->getId());
+                    return $queryBuilder;
+                }),
             IntegerField::new('sztuk36')
                 ->setLabel('Szt.')
                 ->setRequired(false)
@@ -1063,7 +1279,13 @@ class ZeszytCrudController extends AbstractCrudController
                 ->autocomplete()
                 ->setLabel('Kompozycja')
                 ->setRequired(false)
-                ->hideOnIndex(),
+                ->hideOnIndex()
+                ->setQueryBuilder(function (QueryBuilder $queryBuilder) {
+                    $queryBuilder->join('entity.pracownik', 'u') // Dołączamy encję User
+                    ->andWhere('u.id = :userId')
+                        ->setParameter('userId', $this->security->getUser()->getId());
+                    return $queryBuilder;
+                }),
             IntegerField::new('sztuk37')
                 ->setLabel('Szt.')
                 ->setRequired(false)
@@ -1090,7 +1312,13 @@ class ZeszytCrudController extends AbstractCrudController
                 ->autocomplete()
                 ->setLabel('Kompozycja')
                 ->setRequired(false)
-                ->hideOnIndex(),
+                ->hideOnIndex()
+                ->setQueryBuilder(function (QueryBuilder $queryBuilder) {
+                    $queryBuilder->join('entity.pracownik', 'u') // Dołączamy encję User
+                    ->andWhere('u.id = :userId')
+                        ->setParameter('userId', $this->security->getUser()->getId());
+                    return $queryBuilder;
+                }),
             IntegerField::new('sztuk38')
                 ->setLabel('Szt.')
                 ->setRequired(false)
@@ -1117,7 +1345,13 @@ class ZeszytCrudController extends AbstractCrudController
                 ->autocomplete()
                 ->setLabel('Kompozycja')
                 ->setRequired(false)
-                ->hideOnIndex(),
+                ->hideOnIndex()
+                ->setQueryBuilder(function (QueryBuilder $queryBuilder) {
+                    $queryBuilder->join('entity.pracownik', 'u') // Dołączamy encję User
+                    ->andWhere('u.id = :userId')
+                        ->setParameter('userId', $this->security->getUser()->getId());
+                    return $queryBuilder;
+                }),
             IntegerField::new('sztuk39')
                 ->setLabel('Szt.')
                 ->setRequired(false)
@@ -1144,7 +1378,13 @@ class ZeszytCrudController extends AbstractCrudController
                 ->autocomplete()
                 ->setLabel('Kompozycja')
                 ->setRequired(false)
-                ->hideOnIndex(),
+                ->hideOnIndex()
+                ->setQueryBuilder(function (QueryBuilder $queryBuilder) {
+                    $queryBuilder->join('entity.pracownik', 'u') // Dołączamy encję User
+                    ->andWhere('u.id = :userId')
+                        ->setParameter('userId', $this->security->getUser()->getId());
+                    return $queryBuilder;
+                }),
             IntegerField::new('sztuk40')
                 ->setLabel('Szt.')
                 ->setRequired(false)
