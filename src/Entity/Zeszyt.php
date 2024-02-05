@@ -4273,6 +4273,9 @@ class Zeszyt
     #[ORM\Column(length: 255, nullable: true)]
     private $rodzaj40;
 
+    #[ORM\ManyToOne]
+    private ?User $pracownik = null;
+
     public function getRodzaj40(): ?string
     {
         return $this->rodzaj40;
@@ -4281,6 +4284,18 @@ class Zeszyt
     public function setRodzaj40(string $rodzaj40): self
     {
         $this->rodzaj40 = $rodzaj40;
+        return $this;
+    }
+
+    public function getPracownik(): ?User
+    {
+        return $this->pracownik;
+    }
+
+    public function setPracownik(?User $pracownik): static
+    {
+        $this->pracownik = $pracownik;
+
         return $this;
     }
 

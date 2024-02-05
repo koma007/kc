@@ -2,18 +2,27 @@
 
 namespace App\Controller\Admin;
 
+use App\Entity\User;
 use App\Entity\Zeszyt;
-use App\Entity\Wyceny;
+use App\Repository\UserRepository;
 use App\Repository\ZeszytRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\QueryBuilder;
+use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
+use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\KeyValueStore;
+use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
+use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
+use EasyCorp\Bundle\EasyAdminBundle\Dto\SearchDto;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
+use http\Env\Response;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -22,11 +31,14 @@ class ZeszytCrudController extends AbstractCrudController
 
     private $entityManager;
     private $requestStack;
+    private $pracownik;
 
-    public function __construct(EntityManagerInterface $entityManager, RequestStack $requestStack)
+    public function __construct(EntityManagerInterface $entityManager, RequestStack $requestStack, UserRepository $userRepository, Security $security)
     {
         $this->entityManager = $entityManager;
         $this->requestStack = $requestStack;
+        $this->userRepository = $userRepository;
+        $this->security = $security;
     }
 
 
@@ -42,8 +54,8 @@ class ZeszytCrudController extends AbstractCrudController
 
         return [
             TextField::new('nazwa')
-            ->setRequired(true)
-            ->setLabel('Klient'),
+                ->setRequired(true)
+                ->setLabel('Klient'),
             AssociationField::new('kompozycja1')
                 ->autocomplete()
                 ->setLabel('Kompozycja')
@@ -500,7 +512,6 @@ class ZeszytCrudController extends AbstractCrudController
                         'max' => 10,
                     ],
                 ]),
-
 
 
             AssociationField::new('kompozycja17')
@@ -1166,9 +1177,9 @@ class ZeszytCrudController extends AbstractCrudController
                     'Wazon' => 'wazon',
                     '2 wazony' => '2w',
                 ], 'kpl')
-            ->renderExpanded()
-            ->setRequired(true)
-            ->hideOnIndex(),
+                ->renderExpanded()
+                ->setRequired(true)
+                ->hideOnIndex(),
 
             ChoiceField::new('rodzaj2')
                 ->setChoices([
@@ -1177,20 +1188,20 @@ class ZeszytCrudController extends AbstractCrudController
                     'Wazon' => 'wazon',
                     '2 wazony' => '2w',
                 ], 'kpl')
-            ->renderExpanded()
-            ->setRequired(true)
-            ->hideOnIndex(),
+                ->renderExpanded()
+                ->setRequired(true)
+                ->hideOnIndex(),
 
             ChoiceField::new('rodzaj3')
                 ->setChoices([
                     'Kpl' => 'kpl',
-                                        'Solo' => 'solo',
+                    'Solo' => 'solo',
                     'Wazon' => 'wazon',
                     '2 wazony' => '2w',
                 ], 'kpl')
-            ->renderExpanded()
-            ->setRequired(true)
-            ->hideOnIndex(),
+                ->renderExpanded()
+                ->setRequired(true)
+                ->hideOnIndex(),
 
             ChoiceField::new('rodzaj4')
                 ->setChoices([
@@ -1199,9 +1210,9 @@ class ZeszytCrudController extends AbstractCrudController
                     'Wazon' => 'wazon',
                     '2 wazony' => '2w',
                 ], 'kpl')
-            ->renderExpanded()
-            ->setRequired(true)
-            ->hideOnIndex(),
+                ->renderExpanded()
+                ->setRequired(true)
+                ->hideOnIndex(),
 
             ChoiceField::new('rodzaj5')
                 ->setChoices([
@@ -1210,9 +1221,9 @@ class ZeszytCrudController extends AbstractCrudController
                     'Wazon' => 'wazon',
                     '2 wazony' => '2w',
                 ], 'kpl')
-            ->renderExpanded()
-            ->setRequired(true)
-            ->hideOnIndex(),
+                ->renderExpanded()
+                ->setRequired(true)
+                ->hideOnIndex(),
 
             ChoiceField::new('rodzaj6')
                 ->setChoices([
@@ -1221,9 +1232,9 @@ class ZeszytCrudController extends AbstractCrudController
                     'Wazon' => 'wazon',
                     '2 wazony' => '2w',
                 ], 'kpl')
-            ->renderExpanded()
-            ->setRequired(true)
-            ->hideOnIndex(),
+                ->renderExpanded()
+                ->setRequired(true)
+                ->hideOnIndex(),
 
             ChoiceField::new('rodzaj7')
                 ->setChoices([
@@ -1232,9 +1243,9 @@ class ZeszytCrudController extends AbstractCrudController
                     'Wazon' => 'wazon',
                     '2 wazony' => '2w',
                 ], 'kpl')
-            ->renderExpanded()
-            ->setRequired(true)
-            ->hideOnIndex(),
+                ->renderExpanded()
+                ->setRequired(true)
+                ->hideOnIndex(),
 
             ChoiceField::new('rodzaj8')
                 ->setChoices([
@@ -1243,9 +1254,9 @@ class ZeszytCrudController extends AbstractCrudController
                     'Wazon' => 'wazon',
                     '2 wazony' => '2w',
                 ], 'kpl')
-            ->renderExpanded()
-            ->setRequired(true)
-            ->hideOnIndex(),
+                ->renderExpanded()
+                ->setRequired(true)
+                ->hideOnIndex(),
 
             ChoiceField::new('rodzaj9')
                 ->setChoices([
@@ -1254,9 +1265,9 @@ class ZeszytCrudController extends AbstractCrudController
                     'Wazon' => 'wazon',
                     '2 wazony' => '2w',
                 ], 'kpl')
-            ->renderExpanded()
-            ->setRequired(true)
-            ->hideOnIndex(),
+                ->renderExpanded()
+                ->setRequired(true)
+                ->hideOnIndex(),
 
             ChoiceField::new('rodzaj10')
                 ->setChoices([
@@ -1265,9 +1276,9 @@ class ZeszytCrudController extends AbstractCrudController
                     'Wazon' => 'wazon',
                     '2 wazony' => '2w',
                 ], 'kpl')
-            ->renderExpanded()
-            ->setRequired(true)
-            ->hideOnIndex(),
+                ->renderExpanded()
+                ->setRequired(true)
+                ->hideOnIndex(),
 
             ChoiceField::new('rodzaj11')
                 ->setChoices([
@@ -1276,9 +1287,9 @@ class ZeszytCrudController extends AbstractCrudController
                     'Wazon' => 'wazon',
                     '2 wazony' => '2w',
                 ], 'kpl')
-            ->renderExpanded()
-            ->setRequired(true)
-            ->hideOnIndex(),
+                ->renderExpanded()
+                ->setRequired(true)
+                ->hideOnIndex(),
 
             ChoiceField::new('rodzaj12')
                 ->setChoices([
@@ -1287,9 +1298,9 @@ class ZeszytCrudController extends AbstractCrudController
                     'Wazon' => 'wazon',
                     '2 wazony' => '2w',
                 ], 'kpl')
-            ->renderExpanded()
-            ->setRequired(true)
-            ->hideOnIndex(),
+                ->renderExpanded()
+                ->setRequired(true)
+                ->hideOnIndex(),
 
             ChoiceField::new('rodzaj13')
                 ->setChoices([
@@ -1298,9 +1309,9 @@ class ZeszytCrudController extends AbstractCrudController
                     'Wazon' => 'wazon',
                     '2 wazony' => '2w',
                 ], 'kpl')
-            ->renderExpanded()
-            ->setRequired(true)
-            ->hideOnIndex(),
+                ->renderExpanded()
+                ->setRequired(true)
+                ->hideOnIndex(),
 
             ChoiceField::new('rodzaj14')
                 ->setChoices([
@@ -1309,9 +1320,9 @@ class ZeszytCrudController extends AbstractCrudController
                     'Wazon' => 'wazon',
                     '2 wazony' => '2w',
                 ], 'kpl')
-            ->renderExpanded()
-            ->setRequired(true)
-            ->hideOnIndex(),
+                ->renderExpanded()
+                ->setRequired(true)
+                ->hideOnIndex(),
 
             ChoiceField::new('rodzaj15')
                 ->setChoices([
@@ -1320,9 +1331,9 @@ class ZeszytCrudController extends AbstractCrudController
                     'Wazon' => 'wazon',
                     '2 wazony' => '2w',
                 ], 'kpl')
-            ->renderExpanded()
-            ->setRequired(true)
-            ->hideOnIndex(),
+                ->renderExpanded()
+                ->setRequired(true)
+                ->hideOnIndex(),
 
             ChoiceField::new('rodzaj16')
                 ->setChoices([
@@ -1331,9 +1342,9 @@ class ZeszytCrudController extends AbstractCrudController
                     'Wazon' => 'wazon',
                     '2 wazony' => '2w',
                 ], 'kpl')
-            ->renderExpanded()
-            ->setRequired(true)
-            ->hideOnIndex(),
+                ->renderExpanded()
+                ->setRequired(true)
+                ->hideOnIndex(),
 
             ChoiceField::new('rodzaj17')
                 ->setChoices([
@@ -1342,9 +1353,9 @@ class ZeszytCrudController extends AbstractCrudController
                     'Wazon' => 'wazon',
                     '2 wazony' => '2w',
                 ], 'kpl')
-            ->renderExpanded()
-            ->setRequired(true)
-            ->hideOnIndex(),
+                ->renderExpanded()
+                ->setRequired(true)
+                ->hideOnIndex(),
 
             ChoiceField::new('rodzaj18')
                 ->setChoices([
@@ -1353,9 +1364,9 @@ class ZeszytCrudController extends AbstractCrudController
                     'Wazon' => 'wazon',
                     '2 wazony' => '2w',
                 ], 'kpl')
-            ->renderExpanded()
-            ->setRequired(true)
-            ->hideOnIndex(),
+                ->renderExpanded()
+                ->setRequired(true)
+                ->hideOnIndex(),
 
             ChoiceField::new('rodzaj19')
                 ->setChoices([
@@ -1364,9 +1375,9 @@ class ZeszytCrudController extends AbstractCrudController
                     'Wazon' => 'wazon',
                     '2 wazony' => '2w',
                 ], 'kpl')
-            ->renderExpanded()
-            ->setRequired(true)
-            ->hideOnIndex(),
+                ->renderExpanded()
+                ->setRequired(true)
+                ->hideOnIndex(),
 
             ChoiceField::new('rodzaj20')
                 ->setChoices([
@@ -1375,9 +1386,9 @@ class ZeszytCrudController extends AbstractCrudController
                     'Wazon' => 'wazon',
                     '2 wazony' => '2w',
                 ], 'kpl')
-            ->renderExpanded()
-            ->setRequired(true)
-            ->hideOnIndex(),
+                ->renderExpanded()
+                ->setRequired(true)
+                ->hideOnIndex(),
 
             ChoiceField::new('rodzaj21')
                 ->setChoices([
@@ -1386,9 +1397,9 @@ class ZeszytCrudController extends AbstractCrudController
                     'Wazon' => 'wazon',
                     '2 wazony' => '2w',
                 ], 'kpl')
-            ->renderExpanded()
-            ->setRequired(true)
-            ->hideOnIndex(),
+                ->renderExpanded()
+                ->setRequired(true)
+                ->hideOnIndex(),
 
             ChoiceField::new('rodzaj22')
                 ->setChoices([
@@ -1397,9 +1408,9 @@ class ZeszytCrudController extends AbstractCrudController
                     'Wazon' => 'wazon',
                     '2 wazony' => '2w',
                 ], 'kpl')
-            ->renderExpanded()
-            ->setRequired(true)
-            ->hideOnIndex(),
+                ->renderExpanded()
+                ->setRequired(true)
+                ->hideOnIndex(),
 
             ChoiceField::new('rodzaj23')
                 ->setChoices([
@@ -1408,9 +1419,9 @@ class ZeszytCrudController extends AbstractCrudController
                     'Wazon' => 'wazon',
                     '2 wazony' => '2w',
                 ], 'kpl')
-            ->renderExpanded()
-            ->setRequired(true)
-            ->hideOnIndex(),
+                ->renderExpanded()
+                ->setRequired(true)
+                ->hideOnIndex(),
 
             ChoiceField::new('rodzaj24')
                 ->setChoices([
@@ -1419,9 +1430,9 @@ class ZeszytCrudController extends AbstractCrudController
                     'Wazon' => 'wazon',
                     '2 wazony' => '2w',
                 ], 'kpl')
-            ->renderExpanded()
-            ->setRequired(true)
-            ->hideOnIndex(),
+                ->renderExpanded()
+                ->setRequired(true)
+                ->hideOnIndex(),
 
             ChoiceField::new('rodzaj25')
                 ->setChoices([
@@ -1430,9 +1441,9 @@ class ZeszytCrudController extends AbstractCrudController
                     'Wazon' => 'wazon',
                     '2 wazony' => '2w',
                 ], 'kpl')
-            ->renderExpanded()
-            ->setRequired(true)
-            ->hideOnIndex(),
+                ->renderExpanded()
+                ->setRequired(true)
+                ->hideOnIndex(),
 
             ChoiceField::new('rodzaj26')
                 ->setChoices([
@@ -1441,9 +1452,9 @@ class ZeszytCrudController extends AbstractCrudController
                     'Wazon' => 'wazon',
                     '2 wazony' => '2w',
                 ], 'kpl')
-            ->renderExpanded()
-            ->setRequired(true)
-            ->hideOnIndex(),
+                ->renderExpanded()
+                ->setRequired(true)
+                ->hideOnIndex(),
 
             ChoiceField::new('rodzaj27')
                 ->setChoices([
@@ -1452,9 +1463,9 @@ class ZeszytCrudController extends AbstractCrudController
                     'Wazon' => 'wazon',
                     '2 wazony' => '2w',
                 ], 'kpl')
-            ->renderExpanded()
-            ->setRequired(true)
-            ->hideOnIndex(),
+                ->renderExpanded()
+                ->setRequired(true)
+                ->hideOnIndex(),
 
             ChoiceField::new('rodzaj28')
                 ->setChoices([
@@ -1463,9 +1474,9 @@ class ZeszytCrudController extends AbstractCrudController
                     'Wazon' => 'wazon',
                     '2 wazony' => '2w',
                 ], 'kpl')
-            ->renderExpanded()
-            ->setRequired(true)
-            ->hideOnIndex(),
+                ->renderExpanded()
+                ->setRequired(true)
+                ->hideOnIndex(),
 
             ChoiceField::new('rodzaj29')
                 ->setChoices([
@@ -1474,9 +1485,9 @@ class ZeszytCrudController extends AbstractCrudController
                     'Wazon' => 'wazon',
                     '2 wazony' => '2w',
                 ], 'kpl')
-            ->renderExpanded()
-            ->setRequired(true)
-            ->hideOnIndex(),
+                ->renderExpanded()
+                ->setRequired(true)
+                ->hideOnIndex(),
 
             ChoiceField::new('rodzaj30')
                 ->setChoices([
@@ -1485,9 +1496,9 @@ class ZeszytCrudController extends AbstractCrudController
                     'Wazon' => 'wazon',
                     '2 wazony' => '2w',
                 ], 'kpl')
-            ->renderExpanded()
-            ->setRequired(true)
-            ->hideOnIndex(),
+                ->renderExpanded()
+                ->setRequired(true)
+                ->hideOnIndex(),
 
             ChoiceField::new('rodzaj31')
                 ->setChoices([
@@ -1496,9 +1507,9 @@ class ZeszytCrudController extends AbstractCrudController
                     'Wazon' => 'wazon',
                     '2 wazony' => '2w',
                 ], 'kpl')
-            ->renderExpanded()
-            ->setRequired(true)
-            ->hideOnIndex(),
+                ->renderExpanded()
+                ->setRequired(true)
+                ->hideOnIndex(),
 
             ChoiceField::new('rodzaj32')
                 ->setChoices([
@@ -1507,9 +1518,9 @@ class ZeszytCrudController extends AbstractCrudController
                     'Wazon' => 'wazon',
                     '2 wazony' => '2w',
                 ], 'kpl')
-            ->renderExpanded()
-            ->setRequired(true)
-            ->hideOnIndex(),
+                ->renderExpanded()
+                ->setRequired(true)
+                ->hideOnIndex(),
 
             ChoiceField::new('rodzaj33')
                 ->setChoices([
@@ -1518,9 +1529,9 @@ class ZeszytCrudController extends AbstractCrudController
                     'Wazon' => 'wazon',
                     '2 wazony' => '2w',
                 ], 'kpl')
-            ->renderExpanded()
-            ->setRequired(true)
-            ->hideOnIndex(),
+                ->renderExpanded()
+                ->setRequired(true)
+                ->hideOnIndex(),
 
             ChoiceField::new('rodzaj34')
                 ->setChoices([
@@ -1529,9 +1540,9 @@ class ZeszytCrudController extends AbstractCrudController
                     'Wazon' => 'wazon',
                     '2 wazony' => '2w',
                 ], 'kpl')
-            ->renderExpanded()
-            ->setRequired(true)
-            ->hideOnIndex(),
+                ->renderExpanded()
+                ->setRequired(true)
+                ->hideOnIndex(),
 
             ChoiceField::new('rodzaj35')
                 ->setChoices([
@@ -1540,9 +1551,9 @@ class ZeszytCrudController extends AbstractCrudController
                     'Wazon' => 'wazon',
                     '2 wazony' => '2w',
                 ], 'kpl')
-            ->renderExpanded()
-            ->setRequired(true)
-            ->hideOnIndex(),
+                ->renderExpanded()
+                ->setRequired(true)
+                ->hideOnIndex(),
 
             ChoiceField::new('rodzaj36')
                 ->setChoices([
@@ -1551,9 +1562,9 @@ class ZeszytCrudController extends AbstractCrudController
                     'Wazon' => 'wazon',
                     '2 wazony' => '2w',
                 ], 'kpl')
-            ->renderExpanded()
-            ->setRequired(true)
-            ->hideOnIndex(),
+                ->renderExpanded()
+                ->setRequired(true)
+                ->hideOnIndex(),
 
             ChoiceField::new('rodzaj37')
                 ->setChoices([
@@ -1562,9 +1573,9 @@ class ZeszytCrudController extends AbstractCrudController
                     'Wazon' => 'wazon',
                     '2 wazony' => '2w',
                 ], 'kpl')
-            ->renderExpanded()
-            ->setRequired(true)
-            ->hideOnIndex(),
+                ->renderExpanded()
+                ->setRequired(true)
+                ->hideOnIndex(),
 
             ChoiceField::new('rodzaj38')
                 ->setChoices([
@@ -1573,9 +1584,9 @@ class ZeszytCrudController extends AbstractCrudController
                     'Wazon' => 'wazon',
                     '2 wazony' => '2w',
                 ], 'kpl')
-            ->renderExpanded()
-            ->setRequired(true)
-            ->hideOnIndex(),
+                ->renderExpanded()
+                ->setRequired(true)
+                ->hideOnIndex(),
 
             ChoiceField::new('rodzaj39')
                 ->setChoices([
@@ -1584,9 +1595,9 @@ class ZeszytCrudController extends AbstractCrudController
                     'Wazon' => 'wazon',
                     '2 wazony' => '2w',
                 ], 'kpl')
-            ->renderExpanded()
-            ->setRequired(true)
-            ->hideOnIndex(),
+                ->renderExpanded()
+                ->setRequired(true)
+                ->hideOnIndex(),
 
             ChoiceField::new('rodzaj40')
                 ->setChoices([
@@ -1595,16 +1606,28 @@ class ZeszytCrudController extends AbstractCrudController
                     'Wazon' => 'wazon',
                     '2 wazony' => '2w',
                 ], 'kpl')
-            ->renderExpanded()
-            ->setRequired(true)
-            ->hideOnIndex(),
+                ->renderExpanded()
+                ->setRequired(true)
+                ->hideOnIndex(),
 
 
         ];
     }
 
+    public function createEntity(string $entityFqcn)
+    {
+        $user = $this->security->getUser();
+        $this->pracownik = $this->entityManager->getRepository(User::class)->find($user->getId());
+
+        $zeszyt = new Zeszyt();
+        $zeszyt->setPracownik($this->pracownik);
+        return $zeszyt;
+    }
+
+
     public function configureCrud(Crud $crud): Crud
     {
+        $pracownikId = 4;
         return $crud
             // ...
             ->setPageTitle('new', 'Zeszyt: miesiąc')
@@ -1617,9 +1640,7 @@ class ZeszytCrudController extends AbstractCrudController
             ->showEntityActionsInlined() //nie ukrywaj edycja i usuń
             ->setDefaultSort([
                 'id' => 'DESC'
-            ])
-
-            ;
+            ]);
     }
 
 
@@ -1635,26 +1656,26 @@ class ZeszytCrudController extends AbstractCrudController
             $entityId = $request->query->get('entityId');
 
 
-        $zamowienie = $this->entityManager->getRepository(Zeszyt::class)->find($entityId);
-        //dd($kompozycja);
+            $zamowienie = $this->entityManager->getRepository(Zeszyt::class)->find($entityId);
+            //dd($kompozycja);
 
-        $queryBuilder = $this->entityManager->createQueryBuilder();
-        $queryBuilder->select('h')
-            ->from(Zeszyt::class, 'h')
-            ->where('h.id = :id')
-            ->setParameter('id', $entityId)
-            ->orderBy('h.id', 'ASC');
+            $queryBuilder = $this->entityManager->createQueryBuilder();
+            $queryBuilder->select('h')
+                ->from(Zeszyt::class, 'h')
+                ->where('h.id = :id')
+                ->setParameter('id', $entityId)
+                ->orderBy('h.id', 'ASC');
 
-        $zeszytEntity = $queryBuilder->getQuery()->getResult();
+            $zeszytEntity = $queryBuilder->getQuery()->getResult();
 
 
-        $wozki = [];
-        for ($i = 1; $i<=40; $i++){
-            if($nr = $zeszytEntity[0]->{"getWozek" . $i}()){
+            $wozki = [];
+            for ($i = 1; $i <= 40; $i++) {
+                if ($nr = $zeszytEntity[0]->{"getWozek" . $i}()) {
 
-                $wozki[] = $nr;
+                    $wozki[] = $nr;
+                }
             }
-        }
 
         }
         if (isset($wozki)) {
@@ -1666,11 +1687,27 @@ class ZeszytCrudController extends AbstractCrudController
             $responseParameters->set('numeryWozkow', $wozki);
             $responseParameters->set('klient', $zeszytEntity[0]->getNazwa());
             return $responseParameters;
-        }else {
+        } else {
             //zwróć  cokolwiek
             $responseParameters->set('test', 'test');
             return $responseParameters;
         }
 
     }
+
+    public function createIndexQueryBuilder(SearchDto $searchDto, EntityDto $entityDto, FieldCollection $fields, FilterCollection $filters): QueryBuilder
+    {
+
+        $qb = $this->entityManager->getRepository(Zeszyt::class)->createQueryBuilder('z');
+
+        // Dodajemy warunek dotyczący zalogowanego użytkownika
+        $user = $this->security->getUser();
+        $qb->andWhere('z.pracownik = :pracownik')
+            ->setParameter('pracownik', $user->getId());
+
+        return $qb;
+        //return parent::createIndexQueryBuilder($searchDto, $entityDto, $fields, $filters); // TODO: Change the autogenerated stub
     }
+
+
+}
