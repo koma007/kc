@@ -23,3 +23,19 @@ app_get_hurtowe_zamowienie:
 app_get_hurtowe_zamowienie_pdf:
     path: /admin/hurtowe-pdf/{id}
     controller: App\Controller\Admin\HurtoweWozekController::getHurtoweZamowieniePdf
+
+app_get_zeszyt_zestawienie:
+    path: /admin/zeszyt/{id}/zestawienie/{zestawienie}
+    controller: App\Controller\Admin\ZeszytZestawienieController::getZeszytZestawienie
+
+app_get_zeszyt_zestawienie_pdf:
+    path: /admin/zeszyt-pdf/{id}/zestawienie/{zestawienie}
+    controller: App\Controller\Admin\ZeszytZestawienieController::getZeszytZestawieniePdf
+
+app_get_zeszyt_zamowienie:
+    path: /admin/zeszyt/{id}
+    controller: App\Controller\Admin\ZeszytZestawienieController::getZeszytZamowienie
+
+app_get_zeszyt_zamowienie_pdf:
+    path: /admin/zeszyt-pdf/{id}
+    controller: App\Controller\Admin\ZeszytZestawienieController::getZeszytZamowieniePdf
