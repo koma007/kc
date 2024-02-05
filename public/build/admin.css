@@ -37,14 +37,14 @@
     margin-top: 0;
 }
 
-#wyceny-table td input, #hurtowe-table td input{
+#wyceny-table td input, #hurtowe-table td input, #zeszyt-table td input{
     padding-left: 3px;
     padding-right: 3px;
     padding-top: 5px;
     padding-bottom: 4px;
 }
 
-#hurtowe-table div.row>*, #wyceny-table div.row>*{
+#hurtowe-table div.row>*, #wyceny-table div.row>*, #zeszyt-table div.row>*{
     padding-right: 0 !important;
 }
 /*wyrównanie całego formularza max do prawej na mobilnych*/
@@ -70,16 +70,16 @@ div.rodzaje_kompozycji>*{
     display: inline-block !important;
 }
 
-#hurtowe-table td, #hurtowe-table th{
+#hurtowe-table td, #hurtowe-table th, #zeszyt-table td, #zeszyt-table th{
     padding: 1px;
     border: none;
 }
 
-#hurtowe-table .form-group {
+#hurtowe-table .form-group, #zeszyt-table .form-group {
     padding: 1px 0;
 }
 
-.table-hurtowe tr:nth-child(even) {
+.table-hurtowe tr:nth-child(even), .table-zeszyt tr:nth-child(even) {
     border-bottom: 3px solid gray !important;
 }
 

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>{{ klient }} - wózek {{ wozekNr }}</title>
+    <style>
+        /* Styl dla całej strony */
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 21px;
+        }
+
+        /* Styl dla tabeli */
+        .wozek-druk {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .wozek-druk th,
+        .wozek-druk td {
+            padding: 8px;
+            border: 1px solid #ddd; /* Dodajemy obramowania tylko dla tej tabeli */
+        }
+
+        .wozek-druk th {
+            background-color: #f2f2f2;
+        }
+
+        .wozek-druk.no-border td {
+            border: none; /* Usuwamy obramowania dla tej klasy */
+        }
+
+        /* Nowy styl dla napisu "Klient" */
+        .klient {
+            font-size: 25px;
+            font-weight: bold;
+        }
+
+        /* Nowy styl dla odstępu między tabelami */
+        .table-gap {
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <table class="wozek-druk no-border">
+        <tr>
+            <td style="text-align: left;">
+                <h2>Wózek {{ wozekNr }}:</h2>
+            </td>
+            <td style="text-align: right;">
+                <span class="klient">{{ klient }}</span>
+            </td>
+        </tr>
+    </table>
+    <table class="wozek-druk table-gap">
+        <thead>
+        <tr>
+            <th>Nazwa</th>
+            <th>Typ</th>
+            <th>Sztuk</th>
+            <th>Cena</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for element in wozki %}
+            <tr>
+                <td>{{ element.nazwa |upper }}</td>
+                <td>{{ element.rodzaj}}</td>
+                <td>{{ element.sztuk |upper }}</td>
+                <td>{{ element.cena |upper }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
