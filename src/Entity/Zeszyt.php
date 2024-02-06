@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\ZeszytRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ZeszytRepository::class)]
@@ -78,8 +79,6 @@ class Zeszyt
     private ?int $wozek1 = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    private ?string $nazwa = null;
-    #[ORM\Column(length: 255, nullable: true)]
     private ?string $nazwa1 = null;
 
     public function getId(): ?int
@@ -147,17 +146,6 @@ class Zeszyt
         return $this;
     }
 
-    public function getNazwa(): ?string
-    {
-        return $this->nazwa;
-    }
-
-    public function setNazwa(?string $nazwa): static
-    {
-        $this->nazwa = $nazwa;
-
-        return $this;
-    }
     public function getNazwa1(): ?string
     {
         return $this->nazwa1;
@@ -4276,6 +4264,132 @@ class Zeszyt
     #[ORM\ManyToOne]
     private ?User $pracownik = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $createdAt = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $updatedAt1 = null;
+
+    #[ORM\Column(type: Types::DATE_IMMUTABLE, nullable: true)]
+    private ?\DateTimeImmutable $miesiac = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $updatedAt2 = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $updatedAt3 = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $updatedAt4 = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $updatedAt5 = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $updatedAt6 = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $updatedAt7 = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $updatedAt8 = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $updatedAt9 = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $updatedAt10 = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $updatedAt11 = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $updatedAt12 = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $updatedAt13 = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $updatedAt14 = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $updatedAt15 = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $updatedAt16 = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $updatedAt17 = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $updatedAt18 = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $updatedAt19 = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $updatedAt20 = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $updatedAt21 = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $updatedAt22 = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $updatedAt23 = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $updatedAt24 = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $updatedAt25 = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $updatedAt26 = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $updatedAt27 = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $updatedAt28 = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $updatedAt29 = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $updatedAt30 = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $updatedAt31 = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $updatedAt32 = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $updatedAt33 = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $updatedAt34 = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $updatedAt35 = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $updatedAt36 = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $updatedAt37 = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $updatedAt38 = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $updatedAt39 = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $updatedAt40 = null;
+
     public function getRodzaj40(): ?string
     {
         return $this->rodzaj40;
@@ -4296,6 +4410,471 @@ class Zeszyt
     {
         $this->pracownik = $pracownik;
 
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(?\DateTimeImmutable $createdAt): static
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getupdatedAt1(): ?\DateTimeImmutable
+    {
+        return $this->updatedAt1;
+    }
+
+    public function setupdatedAt1(?\DateTimeImmutable $updatedAt1): static
+    {
+        $this->updatedAt1 = $updatedAt1;
+
+        return $this;
+    }
+
+    public function getMiesiac(): ?\DateTimeImmutable
+    {
+        return $this->miesiac;
+    }
+
+    public function setMiesiac(?\DateTimeImmutable $miesiac): static
+    {
+        $this->miesiac = $miesiac;
+
+        return $this;
+    }
+
+    public function getupdatedAt2(): ?\DateTimeImmutable
+    {
+        return $this->updatedAt2;
+    }
+
+    public function setupdatedAt2(?\DateTimeImmutable $updatedAt2): static
+    {
+        $this->updatedAt2 = $updatedAt2;
+        return $this;
+    }
+
+    public function getupdatedAt3(): ?\DateTimeImmutable
+    {
+        return $this->updatedAt3;
+    }
+
+    public function setupdatedAt3(?\DateTimeImmutable $updatedAt3): static
+    {
+        $this->updatedAt3 = $updatedAt3;
+        return $this;
+    }
+
+    public function getupdatedAt4(): ?\DateTimeImmutable
+    {
+        return $this->updatedAt4;
+    }
+
+    public function setupdatedAt4(?\DateTimeImmutable $updatedAt4): static
+    {
+        $this->updatedAt4 = $updatedAt4;
+        return $this;
+    }
+
+    public function getupdatedAt5(): ?\DateTimeImmutable
+    {
+        return $this->updatedAt5;
+    }
+
+    public function setupdatedAt5(?\DateTimeImmutable $updatedAt5): static
+    {
+        $this->updatedAt5 = $updatedAt5;
+        return $this;
+    }
+
+    public function getupdatedAt6(): ?\DateTimeImmutable
+    {
+        return $this->updatedAt6;
+    }
+
+    public function setupdatedAt6(?\DateTimeImmutable $updatedAt6): static
+    {
+        $this->updatedAt6 = $updatedAt6;
+        return $this;
+    }
+
+    public function getupdatedAt7(): ?\DateTimeImmutable
+    {
+        return $this->updatedAt7;
+    }
+
+    public function setupdatedAt7(?\DateTimeImmutable $updatedAt7): static
+    {
+        $this->updatedAt7 = $updatedAt7;
+        return $this;
+    }
+
+    public function getupdatedAt8(): ?\DateTimeImmutable
+    {
+        return $this->updatedAt8;
+    }
+
+    public function setupdatedAt8(?\DateTimeImmutable $updatedAt8): static
+    {
+        $this->updatedAt8 = $updatedAt8;
+        return $this;
+    }
+
+    public function getupdatedAt9(): ?\DateTimeImmutable
+    {
+        return $this->updatedAt9;
+    }
+
+    public function setupdatedAt9(?\DateTimeImmutable $updatedAt9): static
+    {
+        $this->updatedAt9 = $updatedAt9;
+        return $this;
+    }
+
+    public function getupdatedAt10(): ?\DateTimeImmutable
+    {
+        return $this->updatedAt10;
+    }
+
+    public function setupdatedAt10(?\DateTimeImmutable $updatedAt10): static
+    {
+        $this->updatedAt10 = $updatedAt10;
+        return $this;
+    }
+
+    public function getupdatedAt11(): ?\DateTimeImmutable
+    {
+        return $this->updatedAt11;
+    }
+
+    public function setupdatedAt11(?\DateTimeImmutable $updatedAt11): static
+    {
+        $this->updatedAt11 = $updatedAt11;
+        return $this;
+    }
+
+    public function getupdatedAt12(): ?\DateTimeImmutable
+    {
+        return $this->updatedAt12;
+    }
+
+    public function setupdatedAt12(?\DateTimeImmutable $updatedAt12): static
+    {
+        $this->updatedAt12 = $updatedAt12;
+        return $this;
+    }
+
+    public function getupdatedAt13(): ?\DateTimeImmutable
+    {
+        return $this->updatedAt13;
+    }
+
+    public function setupdatedAt13(?\DateTimeImmutable $updatedAt13): static
+    {
+        $this->updatedAt13 = $updatedAt13;
+        return $this;
+    }
+
+    public function getupdatedAt14(): ?\DateTimeImmutable
+    {
+        return $this->updatedAt14;
+    }
+
+    public function setupdatedAt14(?\DateTimeImmutable $updatedAt14): static
+    {
+        $this->updatedAt14 = $updatedAt14;
+        return $this;
+    }
+
+    public function getupdatedAt15(): ?\DateTimeImmutable
+    {
+        return $this->updatedAt15;
+    }
+
+    public function setupdatedAt15(?\DateTimeImmutable $updatedAt15): static
+    {
+        $this->updatedAt15 = $updatedAt15;
+        return $this;
+    }
+
+    public function getupdatedAt16(): ?\DateTimeImmutable
+    {
+        return $this->updatedAt16;
+    }
+
+    public function setupdatedAt16(?\DateTimeImmutable $updatedAt16): static
+    {
+        $this->updatedAt16 = $updatedAt16;
+        return $this;
+    }
+
+    public function getupdatedAt17(): ?\DateTimeImmutable
+    {
+        return $this->updatedAt17;
+    }
+
+    public function setupdatedAt17(?\DateTimeImmutable $updatedAt17): static
+    {
+        $this->updatedAt17 = $updatedAt17;
+        return $this;
+    }
+
+    public function getupdatedAt18(): ?\DateTimeImmutable
+    {
+        return $this->updatedAt18;
+    }
+
+    public function setupdatedAt18(?\DateTimeImmutable $updatedAt18): static
+    {
+        $this->updatedAt18 = $updatedAt18;
+        return $this;
+    }
+
+    public function getupdatedAt19(): ?\DateTimeImmutable
+    {
+        return $this->updatedAt19;
+    }
+
+    public function setupdatedAt19(?\DateTimeImmutable $updatedAt19): static
+    {
+        $this->updatedAt19 = $updatedAt19;
+        return $this;
+    }
+
+    public function getupdatedAt20(): ?\DateTimeImmutable
+    {
+        return $this->updatedAt20;
+    }
+
+    public function setupdatedAt20(?\DateTimeImmutable $updatedAt20): static
+    {
+        $this->updatedAt20 = $updatedAt20;
+        return $this;
+    }
+
+    public function getupdatedAt21(): ?\DateTimeImmutable
+    {
+        return $this->updatedAt21;
+    }
+
+    public function setupdatedAt21(?\DateTimeImmutable $updatedAt21): static
+    {
+        $this->updatedAt21 = $updatedAt21;
+        return $this;
+    }
+
+    public function getupdatedAt22(): ?\DateTimeImmutable
+    {
+        return $this->updatedAt22;
+    }
+
+    public function setupdatedAt22(?\DateTimeImmutable $updatedAt22): static
+    {
+        $this->updatedAt22 = $updatedAt22;
+        return $this;
+    }
+
+    public function getupdatedAt23(): ?\DateTimeImmutable
+    {
+        return $this->updatedAt23;
+    }
+
+    public function setupdatedAt23(?\DateTimeImmutable $updatedAt23): static
+    {
+        $this->updatedAt23 = $updatedAt23;
+        return $this;
+    }
+
+    public function getupdatedAt24(): ?\DateTimeImmutable
+    {
+        return $this->updatedAt24;
+    }
+
+    public function setupdatedAt24(?\DateTimeImmutable $updatedAt24): static
+    {
+        $this->updatedAt24 = $updatedAt24;
+        return $this;
+    }
+
+    public function getupdatedAt25(): ?\DateTimeImmutable
+    {
+        return $this->updatedAt25;
+    }
+
+    public function setupdatedAt25(?\DateTimeImmutable $updatedAt25): static
+    {
+        $this->updatedAt25 = $updatedAt25;
+        return $this;
+    }
+
+    public function getupdatedAt26(): ?\DateTimeImmutable
+    {
+        return $this->updatedAt26;
+    }
+
+    public function setupdatedAt26(?\DateTimeImmutable $updatedAt26): static
+    {
+        $this->updatedAt26 = $updatedAt26;
+        return $this;
+    }
+
+    public function getupdatedAt27(): ?\DateTimeImmutable
+    {
+        return $this->updatedAt27;
+    }
+
+    public function setupdatedAt27(?\DateTimeImmutable $updatedAt27): static
+    {
+        $this->updatedAt27 = $updatedAt27;
+        return $this;
+    }
+
+    public function getupdatedAt28(): ?\DateTimeImmutable
+    {
+        return $this->updatedAt28;
+    }
+
+    public function setupdatedAt28(?\DateTimeImmutable $updatedAt28): static
+    {
+        $this->updatedAt28 = $updatedAt28;
+        return $this;
+    }
+
+    public function getupdatedAt29(): ?\DateTimeImmutable
+    {
+        return $this->updatedAt29;
+    }
+
+    public function setupdatedAt29(?\DateTimeImmutable $updatedAt29): static
+    {
+        $this->updatedAt29 = $updatedAt29;
+        return $this;
+    }
+
+    public function getupdatedAt30(): ?\DateTimeImmutable
+    {
+        return $this->updatedAt30;
+    }
+
+    public function setupdatedAt30(?\DateTimeImmutable $updatedAt30): static
+    {
+        $this->updatedAt30 = $updatedAt30;
+        return $this;
+    }
+
+    public function getupdatedAt31(): ?\DateTimeImmutable
+    {
+        return $this->updatedAt31;
+    }
+
+    public function setupdatedAt31(?\DateTimeImmutable $updatedAt31): static
+    {
+        $this->updatedAt31 = $updatedAt31;
+        return $this;
+    }
+
+    public function getupdatedAt32(): ?\DateTimeImmutable
+    {
+        return $this->updatedAt32;
+    }
+
+    public function setupdatedAt32(?\DateTimeImmutable $updatedAt32): static
+    {
+        $this->updatedAt32 = $updatedAt32;
+        return $this;
+    }
+
+    public function getupdatedAt33(): ?\DateTimeImmutable
+    {
+        return $this->updatedAt33;
+    }
+
+    public function setupdatedAt33(?\DateTimeImmutable $updatedAt33): static
+    {
+        $this->updatedAt33 = $updatedAt33;
+        return $this;
+    }
+
+    public function getupdatedAt34(): ?\DateTimeImmutable
+    {
+        return $this->updatedAt34;
+    }
+
+    public function setupdatedAt34(?\DateTimeImmutable $updatedAt34): static
+    {
+        $this->updatedAt34 = $updatedAt34;
+        return $this;
+    }
+
+    public function getupdatedAt35(): ?\DateTimeImmutable
+    {
+        return $this->updatedAt35;
+    }
+
+    public function setupdatedAt35(?\DateTimeImmutable $updatedAt35): static
+    {
+        $this->updatedAt35 = $updatedAt35;
+        return $this;
+    }
+
+    public function getupdatedAt36(): ?\DateTimeImmutable
+    {
+        return $this->updatedAt36;
+    }
+
+    public function setupdatedAt36(?\DateTimeImmutable $updatedAt36): static
+    {
+        $this->updatedAt36 = $updatedAt36;
+        return $this;
+    }
+
+    public function getupdatedAt37(): ?\DateTimeImmutable
+    {
+        return $this->updatedAt37;
+    }
+
+    public function setupdatedAt37(?\DateTimeImmutable $updatedAt37): static
+    {
+        $this->updatedAt37 = $updatedAt37;
+        return $this;
+    }
+
+    public function getupdatedAt38(): ?\DateTimeImmutable
+    {
+        return $this->updatedAt38;
+    }
+
+    public function setupdatedAt38(?\DateTimeImmutable $updatedAt38): static
+    {
+        $this->updatedAt38 = $updatedAt38;
+        return $this;
+    }
+
+    public function getupdatedAt39(): ?\DateTimeImmutable
+    {
+        return $this->updatedAt39;
+    }
+
+    public function setupdatedAt39(?\DateTimeImmutable $updatedAt39): static
+    {
+        $this->updatedAt39 = $updatedAt39;
+        return $this;
+    }
+
+    public function getupdatedAt40(): ?\DateTimeImmutable
+    {
+        return $this->updatedAt40;
+    }
+
+    public function setupdatedAt40(?\DateTimeImmutable $updatedAt40): static
+    {
+        $this->updatedAt40 = $updatedAt40;
         return $this;
     }
 

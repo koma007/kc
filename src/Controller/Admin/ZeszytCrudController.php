@@ -18,6 +18,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\SearchDto;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
@@ -53,9 +54,10 @@ class ZeszytCrudController extends AbstractCrudController
 
 
         return [
-            TextField::new('nazwa')
-                ->setRequired(true)
-                ->setLabel('Klient'),
+            DateTimeField::new('miesiac')
+                ->setLabel('Miesiąc:')
+                ->SetFormat('MM/yyyy')
+                ->setTimezone('Europe/Warsaw'),
             AssociationField::new('kompozycja1')
                 ->autocomplete()
                 ->setLabel('Kompozycja')
@@ -97,6 +99,8 @@ class ZeszytCrudController extends AbstractCrudController
                         ]),
                     ],
                 ]),
+            DateTimeField::new('updatedAt1')
+                ->hideOnIndex(),
 
             AssociationField::new('kompozycja2')
                 ->autocomplete()
@@ -1850,6 +1854,125 @@ class ZeszytCrudController extends AbstractCrudController
                 ->setRequired(true)
                 ->hideOnIndex(),
 
+            DateTimeField::new('updatedAt2')
+                ->hideOnIndex(),
+
+            DateTimeField::new('updatedAt3')
+                ->hideOnIndex(),
+
+            DateTimeField::new('updatedAt4')
+                ->hideOnIndex(),
+
+            DateTimeField::new('updatedAt5')
+                ->hideOnIndex(),
+
+            DateTimeField::new('updatedAt6')
+                ->hideOnIndex(),
+
+            DateTimeField::new('updatedAt7')
+                ->hideOnIndex(),
+
+            DateTimeField::new('updatedAt8')
+                ->hideOnIndex(),
+
+            DateTimeField::new('updatedAt9')
+                ->hideOnIndex(),
+
+            DateTimeField::new('updatedAt10')
+                ->hideOnIndex(),
+
+            DateTimeField::new('updatedAt11')
+                ->hideOnIndex(),
+
+            DateTimeField::new('updatedAt12')
+                ->hideOnIndex(),
+
+            DateTimeField::new('updatedAt13')
+                ->hideOnIndex(),
+
+            DateTimeField::new('updatedAt14')
+                ->hideOnIndex(),
+
+            DateTimeField::new('updatedAt15')
+                ->hideOnIndex(),
+
+            DateTimeField::new('updatedAt16')
+                ->hideOnIndex(),
+
+            DateTimeField::new('updatedAt17')
+                ->hideOnIndex(),
+
+            DateTimeField::new('updatedAt18')
+                ->hideOnIndex(),
+
+            DateTimeField::new('updatedAt19')
+                ->hideOnIndex(),
+
+            DateTimeField::new('updatedAt20')
+                ->hideOnIndex(),
+
+            DateTimeField::new('updatedAt21')
+                ->hideOnIndex(),
+
+            DateTimeField::new('updatedAt22')
+                ->hideOnIndex(),
+
+            DateTimeField::new('updatedAt23')
+                ->hideOnIndex(),
+
+            DateTimeField::new('updatedAt24')
+                ->hideOnIndex(),
+
+            DateTimeField::new('updatedAt25')
+                ->hideOnIndex(),
+
+            DateTimeField::new('updatedAt26')
+                ->hideOnIndex(),
+
+            DateTimeField::new('updatedAt27')
+                ->hideOnIndex(),
+
+            DateTimeField::new('updatedAt28')
+                ->hideOnIndex(),
+
+            DateTimeField::new('updatedAt29')
+                ->hideOnIndex(),
+
+            DateTimeField::new('updatedAt30')
+                ->hideOnIndex(),
+
+            DateTimeField::new('updatedAt31')
+                ->hideOnIndex(),
+
+            DateTimeField::new('updatedAt32')
+                ->hideOnIndex(),
+
+            DateTimeField::new('updatedAt33')
+                ->hideOnIndex(),
+
+            DateTimeField::new('updatedAt34')
+                ->hideOnIndex(),
+
+            DateTimeField::new('updatedAt35')
+                ->hideOnIndex(),
+
+            DateTimeField::new('updatedAt36')
+                ->hideOnIndex(),
+
+            DateTimeField::new('updatedAt37')
+                ->hideOnIndex(),
+
+            DateTimeField::new('updatedAt38')
+                ->hideOnIndex(),
+
+            DateTimeField::new('updatedAt39')
+                ->hideOnIndex(),
+
+            DateTimeField::new('updatedAt40')
+                ->hideOnIndex(),
+
+
+
 
         ];
     }
@@ -1861,13 +1984,23 @@ class ZeszytCrudController extends AbstractCrudController
 
         $zeszyt = new Zeszyt();
         $zeszyt->setPracownik($this->pracownik);
+       // $zeszyt->setCreatedAt(new \DateTimeImmutable());
+        if (!$zeszyt->getMiesiac()) {
+            $zeszyt->setMiesiac(new \DateTimeImmutable()); // Ustaw domyślną wartość na aktualny czas tylko jeśli pole miesiac jest puste
+        }
+//        if (!$zeszyt->getupdatedAt1()) {
+//
+//            $zeszyt->setupdatedAt1(new \DateTimeImmutable()); // Ustaw domyślną wartość na aktualny czas tylko jeśli pole miesiac jest puste
+//        }
+
+
         return $zeszyt;
     }
 
 
     public function configureCrud(Crud $crud): Crud
     {
-        $pracownikId = 4;
+
         return $crud
             // ...
             ->setPageTitle('new', 'Zeszyt: miesiąc')
@@ -1911,9 +2044,9 @@ class ZeszytCrudController extends AbstractCrudController
 
             $wozki = [];
             for ($i = 1; $i <= 40; $i++) {
-                if ($nr = $zeszytEntity[0]->{"getWozek" . $i}()) {
-
-                    $wozki[] = $nr;
+                $updatedAt = $zeszytEntity[0]->{"getupdatedAt" . $i}();
+                if ($updatedAt instanceof \DateTimeImmutable) {
+                    $wozki[] = $updatedAt->format('Y-m-d'); // Formatuj datę jako ciąg znaków reprezentujący datę
                 }
             }
 
@@ -1925,7 +2058,7 @@ class ZeszytCrudController extends AbstractCrudController
             // Sort the array in ascending order
             sort($wozki);
             $responseParameters->set('numeryWozkow', $wozki);
-            $responseParameters->set('klient', $zeszytEntity[0]->getNazwa());
+            //$responseParameters->set('user', $this->security->getUser()->getName());
             return $responseParameters;
         } else {
             //zwróć  cokolwiek

@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <title>{{ klient }} - Dzień {{ wozekNr }}</title>
+    <title>Dzień {{ wozekNr }}</title>
     <style>
         /* Styl dla całej strony */
         body {
@@ -50,10 +50,16 @@
                 <h2>Dzień {{ wozekNr }}:</h2>
             </td>
             <td style="text-align: right;">
-                <span class="klient">{{ klient }}</span>
+                <span class="klient">{{ user }}</span>
             </td>
         </tr>
     </table>
+
+    {% set suma = 0 %}
+    {% set podsuma = 0 %}
+    {% set sb = 0 %}
+    {% set nd = 0 %}
+
     <table class="wozek-druk table-gap">
         <thead>
         <tr>
@@ -61,17 +67,52 @@
             <th>Typ</th>
             <th>Sztuk</th>
             <th>Cena</th>
+            <th>Wartość</th>
         </tr>
         </thead>
         <tbody>
         {% for element in wozki %}
             <tr>
                 <td>{{ element.nazwa |upper }}</td>
-                <td>{{ element.rodzaj}}</td>
+                <td>{{ element.rodzaj }}</td>
                 <td>{{ element.sztuk |upper }}</td>
                 <td>{{ element.cena |upper }}</td>
+                {% set podsuma = podsuma + (element.sztuk * element.cena)  %}
+                <td>{{ podsuma }}</td>
             </tr>
+            {% if czy_wknd.format('w') == '6' %}
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>Dodatek sobota:</td>
+                    {% set sb = (podsuma * 0.5)  %}
+                    <td>{{ sb }}</td>
+                    {% set podsuma = podsuma + sb  %}
+                </tr>
+            {% elseif czy_wknd.format('w') == '0' %}
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>Dodatek niedziela:</td>
+                    {% set nd = podsuma %}
+                    <td>{{ nd }}</td>
+                    {% set podsuma = podsuma + nd  %}
+                </tr>
+            {% endif %}
+
+            {% set suma = podsuma + suma  %}
+            {% set podsuma = 0  %}
+
         {% endfor %}
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>SUMA:</td>
+            <td>{{ suma }} zł</td>
+        </tr>
         </tbody>
     </table>
 </div>

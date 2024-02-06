@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <title>{{ klient }} - zestawienie</title>
+    <title>{{ user }} - {{ miesiac|date('Y-m') }}</title>
     <style>
         /* Styl dla całej strony */
         body {
@@ -25,6 +25,10 @@
 
         .wozek-druk th {
             background-color: #d3d3d3;
+        }
+
+        .wozek-druk.no-border td {
+            border: none; /* Usuwamy obramowania dla tej klasy */
         }
 
         .gray {
@@ -53,21 +57,34 @@
 </head>
 <body>
 <div class="container">
-    <div class="flex-container">
-        <h2 class="my-4">Zamówienie: {{ klient }}</h2>
-    </div>
+    <table class="wozek-druk no-border">
+        <tr>
+            <td style="text-align: left;">
+                <h3>{{ miesiac|date('Y-m') }}:</h3>
+            </td>
+            <td style="text-align: right;">
+                <h3 class="klient">{{ user }}</h3>
+            </td>
+        </tr>
+    </table>
 
+
+    {% set suma = 0 %}
+    {% set podsuma = 0 %}
+    {% set sb = 0 %}
+    {% set nd = 0 %}
 
     <table class="wozek-druk">
         <thead>
         <tr class="more-gray">
             <th>Lp</th>
+            <th>Dzień</th>
             <th>Nazwa</th>
             <th>Typ</th>
             <th>Sztuk</th>
             <th>Cena</th>
             <th class="text-right">Wartość</th>
-            <th>Wózek nr</th>
+
         </tr>
         </thead>
         <tbody>
@@ -90,13 +107,52 @@
                     <tr>
                 {% endif %}
                 <td>{{ lp }}</td>
+                <td>{{ key }}</td>
                 <td>{{ item.nazwa | upper }}</td>
                 <td>{{ item.rodzaj }}</td>
                 <td class="text-right">{{ item.sztuk }}</td>
                 <td class="text-right">{{ item.cena }} zł</td>
                 <td class="text-right">{{ item.wartosc }} zł</td>
-                <td class="text-right">{{ key }}</td>
+                {% set podsuma = item.wartosc  %}
                 </tr>
+                {% if key|date('w') == '6' %}
+                    {% if row_color == 'gray' %}
+                        <tr class="gray">
+                    {% else %}
+                        <tr>
+                    {% endif %}
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    {% set sb = (podsuma * 0.5)  %}
+                    <td class="text-right">Dodatek sobota: {{ sb }} zł</td>
+
+                    {% set podsuma = podsuma + sb  %}
+                    </tr>
+                {% elseif key|date('w') == '0' %}
+                    {% if row_color == 'gray' %}
+                        <tr class="gray">
+                    {% else %}
+                        <tr>
+                    {% endif %}
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    {% set nd = podsuma %}
+                    <td style="text-align: right;">Dodatek niedziela: {{ nd }} zł</td>
+                    {% set podsuma = podsuma + nd  %}
+                    </tr>
+                {% endif %}
+
+                {% set suma = podsuma + suma  %}
+                {% set podsuma = 0  %}
+
                 {% set lp = lp + 1 %}
             {% endfor %}
         {% endfor %}
@@ -106,15 +162,15 @@
             {% else %}
                 <tr>
             {% endif %}
-            <td colspan="5" class="text-right more-gray"><strong>SUMA:</strong></td>
-            <td class="more-gray text-right"><strong>{{ kwota }} zł</strong></td>
+            <td colspan="6" class="text-right more-gray"><strong>SUMA:</strong></td>
+            <td class="more-gray text-right"><strong>{{ suma }} zł</strong></td>
             <td></td>
             </tr>
         {% endif %}
         </tbody>
     </table>
 
-    <p class="text-right small-text">Po zrealizowaniu niniejszego zamówienia faktura zostanie wysłana pocztą.</p>
+    <p class="text-right small-text">Wygenerowano: {{ "now"|date("Y-m-d H:i:s") }}</p>
 </div>
 </body>
 </html>

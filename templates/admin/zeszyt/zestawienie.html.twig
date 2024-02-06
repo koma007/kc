@@ -1,23 +1,29 @@
 {# templates/admin/business_stats/index.html.twig #}
 {% extends '@EasyAdmin/page/content.html.twig' %}
 
-{% block content_title 'Podgląd zamówienia' %}
+{% block content_title 'Zestawienie miesiąca' %}
 {% block main %}
     <div class="container">
         <div class="flex-container">
-            <h1 class="my-4">{{ klient }}</h1>
+            <h4 class="my-4"> {{ miesiac|date('Y-m') }}</h4>
+            <span class="klient">{{ user }}</span>
         </div>
+
+        {% set suma = 0 %}
+        {% set podsuma = 0 %}
+        {% set sb = 0 %}
+        {% set nd = 0 %}
 
         <table class="table wozek-druk">
             <thead>
             <tr class="more-gray">
                 <th>Lp</th>
+                <th class="text-center">Dzień</th>
                 <th>Nazwa</th>
                 <th>Typ</th>
                 <th class="text-center">Sztuk</th>
                 <th class="text-right">Cena</th>
                 <th class="text-right">Wartość</th>
-                <th class="text-center">Wózek nr</th>
             </tr>
             </thead>
             <tbody>
@@ -40,13 +46,52 @@
                         <tr>
                     {% endif %}
                     <td>{{ lp }}</td>
+                    <td class="text-center">{{ key }}</td>
                     <td>{{ item.nazwa }}</td>
                     <td>{{ item.rodzaj }}</td>
                     <td class="text-center">{{ item.sztuk }}</td>
                     <td class="text-right">{{ item.cena }} zł</td>
                     <td class="text-right">{{ item.wartosc }} zł</td>
-                    <td class="text-center">{{ key }}</td>
+                    {% set podsuma = item.wartosc  %}
                     </tr>
+                    {% if key|date('w') == '6' %}
+                        {% if row_color == 'gray' %}
+                            <tr class="gray">
+                        {% else %}
+                            <tr>
+                        {% endif %}
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            {% set sb = (podsuma * 0.5)  %}
+                            <td style="text-align: right;">Dodatek sobota: {{ sb }} zł</td>
+
+                            {% set podsuma = podsuma + sb  %}
+                        </tr>
+                    {% elseif key|date('w') == '0' %}
+                        {% if row_color == 'gray' %}
+                            <tr class="gray">
+                        {% else %}
+                            <tr>
+                        {% endif %}
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            {% set nd = podsuma %}
+                            <td style="text-align: right;">Dodatek niedziela: {{ nd }} zł</td>
+                            {% set podsuma = podsuma + nd  %}
+                        </tr>
+                    {% endif %}
+
+                    {% set suma = podsuma + suma  %}
+                    {% set podsuma = 0  %}
+
                     {% set lp = lp + 1 %}
                 {% endfor %}
             {% endfor %}
@@ -56,15 +101,16 @@
                 {% else %}
                     <tr>
                 {% endif %}
-                <td colspan="5" class="text-right more-gray"><strong>SUMA:</strong></td>
-                <td class="more-gray text-right"><strong>{{ kwota }} zł</strong></td>
+                <td colspan="6" class="text-right more-gray"><strong>SUMA:</strong></td>
+                <td class="more-gray text-right"><strong>{{ suma }} zł</strong></td>
                 </tr>
             {% endif %}
             </tbody>
         </table>
 
 
-        <p class="text-right">Po zrealizowaniu niniejszego zamówienia faktura zostanie wysłana pocztą.</p>
+        <p class="text-right">Wygenerowano: {{ "now"|date("Y-m-d H:i:s") }}
+        </p>
         <a href="admin{{ wstecz }}"><< wstecz</a>
         <hr>
     </div>

@@ -80,9 +80,13 @@
 
             });
 
-            document.getElementById('Zeszyt_nazwa').addEventListener('input', function() {
+            document.getElementById('Zeszyt_miesiac').addEventListener('input', function() {
                 var inputValue = this.value;
-                document.getElementById('tytul_klient').textContent = inputValue;
+                var date = new Date(inputValue);
+                var month = (date.getMonth() + 1).toString().padStart(2, '0'); // Dodaj 1 do miesiąca, ponieważ liczy się od 0
+                var year = date.getFullYear().toString();
+                var formattedDate = month + '/' + year;
+                document.getElementById('tytul_klient').textContent = formattedDate;
             });
 
 
@@ -236,18 +240,30 @@ console.log('fetchAfter');
         </div>
         <div class="row">
             <div class="col-md-9"> <!-- Kolumna po lewej stronie o szerokości 75% -->
-                <div class="col" id="some-custom-id">
+                <div class="col" id="some-custom-id" style="width:125px !important;">
 
-                        {{ form_label(new_form.nazwa) }}
-                        {{ form_widget(new_form.nazwa) }}
+                        {{ form_label(new_form.miesiac) }}
+                        {{ form_widget(new_form.miesiac) }}
 
-                        <small>{{ form_help(new_form.nazwa) }}</small>
+                        <small>{{ form_help(new_form.miesiac) }}</small>
 
                         <div class="form-error">
-                            {{ form_errors(new_form.nazwa) }}
+                            {{ form_errors(new_form.miesiac) }}
                         </div>
 
                 </div>
+{#                <div class="col" id="some-custom-id">#}
+
+{#                        {{ form_label(new_form.nazwa) }}#}
+{#                        {{ form_widget(new_form.nazwa) }}#}
+
+{#                        <small>{{ form_help(new_form.nazwa) }}</small>#}
+
+{#                        <div class="form-error">#}
+{#                            {{ form_errors(new_form.nazwa) }}#}
+{#                        </div>#}
+
+{#                </div>#}
                 <div id="zeszyt-table" class="table-responsive table-zeszyt">
                     <table class="table table-striped" id="zeszyt">
                         <thead>
@@ -257,6 +273,7 @@ console.log('fetchAfter');
                             <th scope="col">Cena</th>
                             <th scope="col">Wartość</th>
                             <th scope="col">Wózek</th>
+                            <th scope="col">Dzień</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -294,6 +311,13 @@ console.log('fetchAfter');
                                     {{ form_widget(new_form.wozek1, {'attr': {'class': 'form-control'}}) }}
                                     <small class="form-text text-muted">{{ form_help(new_form.wozek1) }}</small>
                                     <div class="invalid-feedback">{{ form_errors(new_form.wozek1) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.updatedAt1, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.updatedAt1) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.updatedAt1) }}</div>
                                 </div>
                             </td>
 
@@ -356,6 +380,13 @@ console.log('fetchAfter');
                                     <div class="invalid-feedback">{{ form_errors(new_form.wozek2) }}</div>
                                 </div>
                             </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.updatedAt2, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.updatedAt2) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.updatedAt2) }}</div>
+                                </div>
+                            </td>
                         </tr>
                         <tr>
                             <td style="width: 50%">
@@ -411,6 +442,14 @@ console.log('fetchAfter');
                                     {{ form_widget(new_form.wozek3, {'attr': {'class': 'form-control'}}) }}
                                     <small class="form-text text-muted">{{ form_help(new_form.wozek3) }}</small>
                                     <div class="invalid-feedback">{{ form_errors(new_form.wozek3) }}</div>
+                                </div>
+                            </td>
+
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.updatedAt3, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.updatedAt3) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.updatedAt3) }}</div>
                                 </div>
                             </td>
                         </tr>
@@ -469,6 +508,14 @@ console.log('fetchAfter');
                                     <div class="invalid-feedback">{{ form_errors(new_form.wozek4) }}</div>
                                 </div>
                             </td>
+
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.updatedAt4, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.updatedAt4) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.updatedAt4) }}</div>
+                                </div>
+                            </td>
                         </tr>
                         <tr>
                             <td style="width: 50%">
@@ -523,6 +570,14 @@ console.log('fetchAfter');
                                     {{ form_widget(new_form.wozek5, {'attr': {'class': 'form-control'}}) }}
                                     <small class="form-text text-muted">{{ form_help(new_form.wozek5) }}</small>
                                     <div class="invalid-feedback">{{ form_errors(new_form.wozek5) }}</div>
+                                </div>
+                            </td>
+
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.updatedAt5, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.updatedAt5) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.updatedAt5) }}</div>
                                 </div>
                             </td>
                         </tr>
@@ -580,6 +635,13 @@ console.log('fetchAfter');
                                     <div class="invalid-feedback">{{ form_errors(new_form.wozek6) }}</div>
                                 </div>
                             </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.updatedAt6, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.updatedAt6) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.updatedAt6) }}</div>
+                                </div>
+                            </td>
                         </tr>
                         <tr>
                             <td style="width: 50%">
@@ -633,6 +695,13 @@ console.log('fetchAfter');
                                     {{ form_widget(new_form.wozek7, {'attr': {'class': 'form-control'}}) }}
                                     <small class="form-text text-muted">{{ form_help(new_form.wozek7) }}</small>
                                     <div class="invalid-feedback">{{ form_errors(new_form.wozek7) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.updatedAt7, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.updatedAt7) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.updatedAt7) }}</div>
                                 </div>
                             </td>
                         </tr>
@@ -690,6 +759,13 @@ console.log('fetchAfter');
                                     <div class="invalid-feedback">{{ form_errors(new_form.wozek8) }}</div>
                                 </div>
                             </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.updatedAt8, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.updatedAt8) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.updatedAt8) }}</div>
+                                </div>
+                            </td>
                         </tr>
                         <tr>
                             <td style="width: 50%">
@@ -743,6 +819,13 @@ console.log('fetchAfter');
                                     {{ form_widget(new_form.wozek9, {'attr': {'class': 'form-control'}}) }}
                                     <small class="form-text text-muted">{{ form_help(new_form.wozek9) }}</small>
                                     <div class="invalid-feedback">{{ form_errors(new_form.wozek9) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.updatedAt9, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.updatedAt9) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.updatedAt9) }}</div>
                                 </div>
                             </td>
                         </tr>
@@ -800,6 +883,13 @@ console.log('fetchAfter');
                                     <div class="invalid-feedback">{{ form_errors(new_form.wozek10) }}</div>
                                 </div>
                             </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.updatedAt10, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.updatedAt10) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.updatedAt10) }}</div>
+                                </div>
+                            </td>
                         </tr>
                         <tr>
                             <td style="width: 50%">
@@ -853,6 +943,13 @@ console.log('fetchAfter');
                                     {{ form_widget(new_form.wozek11, {'attr': {'class': 'form-control'}}) }}
                                     <small class="form-text text-muted">{{ form_help(new_form.wozek11) }}</small>
                                     <div class="invalid-feedback">{{ form_errors(new_form.wozek11) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.updatedAt11, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.updatedAt11) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.updatedAt11) }}</div>
                                 </div>
                             </td>
                         </tr>
@@ -910,6 +1007,13 @@ console.log('fetchAfter');
                                     <div class="invalid-feedback">{{ form_errors(new_form.wozek12) }}</div>
                                 </div>
                             </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.updatedAt12, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.updatedAt12) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.updatedAt12) }}</div>
+                                </div>
+                            </td>
                         </tr>
                         <tr>
                             <td style="width: 50%">
@@ -963,6 +1067,13 @@ console.log('fetchAfter');
                                     {{ form_widget(new_form.wozek13, {'attr': {'class': 'form-control'}}) }}
                                     <small class="form-text text-muted">{{ form_help(new_form.wozek13) }}</small>
                                     <div class="invalid-feedback">{{ form_errors(new_form.wozek13) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.updatedAt13, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.updatedAt13) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.updatedAt13) }}</div>
                                 </div>
                             </td>
                         </tr>
@@ -1020,6 +1131,13 @@ console.log('fetchAfter');
                                     <div class="invalid-feedback">{{ form_errors(new_form.wozek14) }}</div>
                                 </div>
                             </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.updatedAt14, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.updatedAt14) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.updatedAt14) }}</div>
+                                </div>
+                            </td>
                         </tr>
                         <tr>
                             <td style="width: 50%">
@@ -1073,6 +1191,13 @@ console.log('fetchAfter');
                                     {{ form_widget(new_form.wozek15, {'attr': {'class': 'form-control'}}) }}
                                     <small class="form-text text-muted">{{ form_help(new_form.wozek15) }}</small>
                                     <div class="invalid-feedback">{{ form_errors(new_form.wozek15) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.updatedAt15, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.updatedAt15) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.updatedAt15) }}</div>
                                 </div>
                             </td>
                         </tr>
@@ -1130,6 +1255,13 @@ console.log('fetchAfter');
                                     <div class="invalid-feedback">{{ form_errors(new_form.wozek16) }}</div>
                                 </div>
                             </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.updatedAt16, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.updatedAt16) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.updatedAt16) }}</div>
+                                </div>
+                            </td>
                         </tr>
                         <tr>
                             <td style="width: 50%">
@@ -1183,6 +1315,13 @@ console.log('fetchAfter');
                                     {{ form_widget(new_form.wozek17, {'attr': {'class': 'form-control'}}) }}
                                     <small class="form-text text-muted">{{ form_help(new_form.wozek17) }}</small>
                                     <div class="invalid-feedback">{{ form_errors(new_form.wozek17) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.updatedAt17, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.updatedAt17) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.updatedAt17) }}</div>
                                 </div>
                             </td>
                         </tr>
@@ -1240,6 +1379,13 @@ console.log('fetchAfter');
                                     <div class="invalid-feedback">{{ form_errors(new_form.wozek18) }}</div>
                                 </div>
                             </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.updatedAt18, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.updatedAt18) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.updatedAt18) }}</div>
+                                </div>
+                            </td>
                         </tr>
                         <tr>
                             <td style="width: 50%">
@@ -1293,6 +1439,13 @@ console.log('fetchAfter');
                                     {{ form_widget(new_form.wozek19, {'attr': {'class': 'form-control'}}) }}
                                     <small class="form-text text-muted">{{ form_help(new_form.wozek19) }}</small>
                                     <div class="invalid-feedback">{{ form_errors(new_form.wozek19) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.updatedAt19, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.updatedAt19) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.updatedAt19) }}</div>
                                 </div>
                             </td>
                         </tr>
@@ -1350,6 +1503,13 @@ console.log('fetchAfter');
                                     <div class="invalid-feedback">{{ form_errors(new_form.wozek20) }}</div>
                                 </div>
                             </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.updatedAt20, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.updatedAt20) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.updatedAt20) }}</div>
+                                </div>
+                            </td>
                         </tr>
                         <tr>
                             <td style="width: 50%">
@@ -1403,6 +1563,13 @@ console.log('fetchAfter');
                                     {{ form_widget(new_form.wozek21, {'attr': {'class': 'form-control'}}) }}
                                     <small class="form-text text-muted">{{ form_help(new_form.wozek21) }}</small>
                                     <div class="invalid-feedback">{{ form_errors(new_form.wozek21) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.updatedAt21, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.updatedAt21) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.updatedAt21) }}</div>
                                 </div>
                             </td>
                         </tr>
@@ -1460,6 +1627,13 @@ console.log('fetchAfter');
                                     <div class="invalid-feedback">{{ form_errors(new_form.wozek22) }}</div>
                                 </div>
                             </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.updatedAt22, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.updatedAt22) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.updatedAt22) }}</div>
+                                </div>
+                            </td>
                         </tr>
                         <tr>
                             <td style="width: 50%">
@@ -1513,6 +1687,13 @@ console.log('fetchAfter');
                                     {{ form_widget(new_form.wozek23, {'attr': {'class': 'form-control'}}) }}
                                     <small class="form-text text-muted">{{ form_help(new_form.wozek23) }}</small>
                                     <div class="invalid-feedback">{{ form_errors(new_form.wozek23) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.updatedAt23, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.updatedAt23) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.updatedAt23) }}</div>
                                 </div>
                             </td>
                         </tr>
@@ -1570,6 +1751,13 @@ console.log('fetchAfter');
                                     <div class="invalid-feedback">{{ form_errors(new_form.wozek24) }}</div>
                                 </div>
                             </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.updatedAt24, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.updatedAt24) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.updatedAt24) }}</div>
+                                </div>
+                            </td>
                         </tr>
                         <tr>
                             <td style="width: 50%">
@@ -1623,6 +1811,13 @@ console.log('fetchAfter');
                                     {{ form_widget(new_form.wozek25, {'attr': {'class': 'form-control'}}) }}
                                     <small class="form-text text-muted">{{ form_help(new_form.wozek25) }}</small>
                                     <div class="invalid-feedback">{{ form_errors(new_form.wozek25) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.updatedAt25, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.updatedAt25) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.updatedAt25) }}</div>
                                 </div>
                             </td>
                         </tr>
@@ -1680,6 +1875,13 @@ console.log('fetchAfter');
                                     <div class="invalid-feedback">{{ form_errors(new_form.wozek26) }}</div>
                                 </div>
                             </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.updatedAt26, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.updatedAt26) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.updatedAt26) }}</div>
+                                </div>
+                            </td>
                         </tr>
                         <tr>
                             <td style="width: 50%">
@@ -1733,6 +1935,13 @@ console.log('fetchAfter');
                                     {{ form_widget(new_form.wozek27, {'attr': {'class': 'form-control'}}) }}
                                     <small class="form-text text-muted">{{ form_help(new_form.wozek27) }}</small>
                                     <div class="invalid-feedback">{{ form_errors(new_form.wozek27) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.updatedAt27, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.updatedAt27) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.updatedAt27) }}</div>
                                 </div>
                             </td>
                         </tr>
@@ -1790,6 +1999,13 @@ console.log('fetchAfter');
                                     <div class="invalid-feedback">{{ form_errors(new_form.wozek28) }}</div>
                                 </div>
                             </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.updatedAt28, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.updatedAt28) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.updatedAt28) }}</div>
+                                </div>
+                            </td>
                         </tr>
                         <tr>
                             <td style="width: 50%">
@@ -1843,6 +2059,13 @@ console.log('fetchAfter');
                                     {{ form_widget(new_form.wozek29, {'attr': {'class': 'form-control'}}) }}
                                     <small class="form-text text-muted">{{ form_help(new_form.wozek29) }}</small>
                                     <div class="invalid-feedback">{{ form_errors(new_form.wozek29) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.updatedAt29, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.updatedAt29) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.updatedAt29) }}</div>
                                 </div>
                             </td>
                         </tr>
@@ -1900,6 +2123,13 @@ console.log('fetchAfter');
                                     <div class="invalid-feedback">{{ form_errors(new_form.wozek30) }}</div>
                                 </div>
                             </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.updatedAt30, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.updatedAt30) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.updatedAt30) }}</div>
+                                </div>
+                            </td>
                         </tr>
                         <tr>
                             <td style="width: 50%">
@@ -1953,6 +2183,13 @@ console.log('fetchAfter');
                                     {{ form_widget(new_form.wozek31, {'attr': {'class': 'form-control'}}) }}
                                     <small class="form-text text-muted">{{ form_help(new_form.wozek31) }}</small>
                                     <div class="invalid-feedback">{{ form_errors(new_form.wozek31) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.updatedAt31, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.updatedAt31) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.updatedAt31) }}</div>
                                 </div>
                             </td>
                         </tr>
@@ -2010,6 +2247,13 @@ console.log('fetchAfter');
                                     <div class="invalid-feedback">{{ form_errors(new_form.wozek32) }}</div>
                                 </div>
                             </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.updatedAt32, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.updatedAt32) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.updatedAt32) }}</div>
+                                </div>
+                            </td>
                         </tr>
                         <tr>
                             <td style="width: 50%">
@@ -2063,6 +2307,13 @@ console.log('fetchAfter');
                                     {{ form_widget(new_form.wozek33, {'attr': {'class': 'form-control'}}) }}
                                     <small class="form-text text-muted">{{ form_help(new_form.wozek33) }}</small>
                                     <div class="invalid-feedback">{{ form_errors(new_form.wozek33) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.updatedAt33, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.updatedAt33) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.updatedAt33) }}</div>
                                 </div>
                             </td>
                         </tr>
@@ -2120,6 +2371,13 @@ console.log('fetchAfter');
                                     <div class="invalid-feedback">{{ form_errors(new_form.wozek34) }}</div>
                                 </div>
                             </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.updatedAt34, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.updatedAt34) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.updatedAt34) }}</div>
+                                </div>
+                            </td>
                         </tr>
                         <tr>
                             <td style="width: 50%">
@@ -2173,6 +2431,13 @@ console.log('fetchAfter');
                                     {{ form_widget(new_form.wozek35, {'attr': {'class': 'form-control'}}) }}
                                     <small class="form-text text-muted">{{ form_help(new_form.wozek35) }}</small>
                                     <div class="invalid-feedback">{{ form_errors(new_form.wozek35) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.updatedAt35, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.updatedAt35) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.updatedAt35) }}</div>
                                 </div>
                             </td>
                         </tr>
@@ -2230,6 +2495,13 @@ console.log('fetchAfter');
                                     <div class="invalid-feedback">{{ form_errors(new_form.wozek36) }}</div>
                                 </div>
                             </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.updatedAt36, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.updatedAt36) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.updatedAt36) }}</div>
+                                </div>
+                            </td>
                         </tr>
                         <tr>
                             <td style="width: 50%">
@@ -2283,6 +2555,13 @@ console.log('fetchAfter');
                                     {{ form_widget(new_form.wozek37, {'attr': {'class': 'form-control'}}) }}
                                     <small class="form-text text-muted">{{ form_help(new_form.wozek37) }}</small>
                                     <div class="invalid-feedback">{{ form_errors(new_form.wozek37) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.updatedAt37, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.updatedAt37) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.updatedAt37) }}</div>
                                 </div>
                             </td>
                         </tr>
@@ -2340,6 +2619,13 @@ console.log('fetchAfter');
                                     <div class="invalid-feedback">{{ form_errors(new_form.wozek38) }}</div>
                                 </div>
                             </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.updatedAt38, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.updatedAt38) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.updatedAt38) }}</div>
+                                </div>
+                            </td>
                         </tr>
                         <tr>
                             <td style="width: 50%">
@@ -2395,6 +2681,13 @@ console.log('fetchAfter');
                                     <div class="invalid-feedback">{{ form_errors(new_form.wozek39) }}</div>
                                 </div>
                             </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.updatedAt39, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.updatedAt39) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.updatedAt39) }}</div>
+                                </div>
+                            </td>
                         </tr>
                         <tr>
                             <td style="width: 50%">
@@ -2448,6 +2741,13 @@ console.log('fetchAfter');
                                     {{ form_widget(new_form.wozek40, {'attr': {'class': 'form-control'}}) }}
                                     <small class="form-text text-muted">{{ form_help(new_form.wozek40) }}</small>
                                     <div class="invalid-feedback">{{ form_errors(new_form.wozek40) }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(new_form.updatedAt40, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.updatedAt40) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.updatedAt40) }}</div>
                                 </div>
                             </td>
                         </tr>
