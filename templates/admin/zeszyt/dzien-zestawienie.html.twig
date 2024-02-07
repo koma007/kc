@@ -21,7 +21,7 @@
                 <th>Typ</th>
                 <th>Sztuk</th>
                 <th>Cena</th>
-                <th>Wartość</th>
+                <th class="text-right">Wartość</th>
             </tr>
             </thead>
             <tbody>
@@ -32,7 +32,7 @@
                     <td>{{ element.sztuk }}</td>
                     <td>{{ element.cena }}</td>
                     {% set podsuma = podsuma + (element.sztuk * element.cena)  %}
-                    <td>{{ podsuma }}</td>
+                    <td class="text-right">{{ podsuma }}</td>
                 </tr>
 
                 {% if czy_wknd.format('w') == '6' %}
@@ -42,7 +42,7 @@
                         <td></td>
                         <td>Dodatek sobota:</td>
                         {% set sb = (podsuma * 0.5)  %}
-                        <td>{{ sb }}</td>
+                        <td class="text-right">{{ sb }}</td>
                         {% set podsuma = podsuma + sb  %}
                     </tr>
                 {% elseif czy_wknd.format('w') == '0' %}
@@ -52,7 +52,7 @@
                         <td></td>
                         <td>Dodatek niedziela:</td>
                         {% set nd = podsuma %}
-                        <td>{{ nd }}</td>
+                        <td class="text-right">{{ nd }}</td>
                         {% set podsuma = podsuma + nd  %}
                     </tr>
                 {% endif %}
@@ -65,8 +65,8 @@
                 <td></td>
                 <td></td>
                 <td></td>
-                <td>SUMA:</td>
-                <td>{{ suma }} zł</td>
+                <td class="text-right">SUMA:</td>
+                <td class="text-right">{{ suma }} zł</td>
             </tr>
             </tbody>
         </table>

@@ -1060,9 +1060,6 @@ class ZeszytCrudController extends AbstractCrudController
                 ->setRequired(false)
                 ->hideOnIndex(),
 
-            NumberField::new('suma')
-                ->setRequired(false),
-
             ChoiceField::new('rodzaj1')
                 ->setChoices([
                     'Kpl' => 'kpl',

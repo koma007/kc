@@ -3032,9 +3032,6 @@ class Zeszyt
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $nazwa40 = null;
 
-    #[ORM\Column(nullable: true)]
-    private ?float $suma = null;
-
     public function getKompozycja40(): ?Wyceny
     {
         return $this->kompozycja40;
@@ -3094,19 +3091,6 @@ class Zeszyt
 
         return $this;
     }
-
-    public function getSuma(): ?float
-    {
-        return $this->suma;
-    }
-
-    public function setSuma(?float $suma): static
-    {
-        $this->suma = $suma;
-
-        return $this;
-    }
-
 
     #[ORM\Column(length: 255, nullable: true)]
     private $rodzaj1;
