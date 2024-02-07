@@ -120,7 +120,6 @@ class DashboardController extends AbstractDashboardController
         if ($this->security->isGranted('ROLE_PRACOWNIK') OR $this->security->isGranted('ROLE_ADMIN')) {
             yield MenuItem::section('PRACOWNIK');
             yield MenuItem::linkToCrud('Zeszyt', 'fa-solid fa-address-book', Zeszyt::class);
-            yield MenuItem::linkToCrud('Zeszyt2', 'fa-solid fa-address-book', Zeszyt2::class);
         }
 
         yield MenuItem::section('------------------');

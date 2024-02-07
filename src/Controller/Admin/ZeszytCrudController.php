@@ -82,23 +82,6 @@ class ZeszytCrudController extends AbstractCrudController
             TextField::new('nazwa1')
                 ->setRequired(false)
                 ->hideOnIndex(),
-            IntegerField::new('wozek1')
-                ->hideOnIndex()
-                ->setFormTypeOptions([
-                    'attr' => [
-                        'min' => 1,
-                        'max' => 10,
-                    ],
-                ])
-                ->setFormTypeOptions([
-                    'constraints' => [
-                        new \Symfony\Component\Validator\Constraints\Range([
-                            'min' => 1,
-                            'max' => 10,
-                            'notInRangeMessage' => 'Wprowadź wartość między 1 a 10.',
-                        ]),
-                    ],
-                ]),
             DateTimeField::new('updatedAt1')
                 ->hideOnIndex(),
 
@@ -126,14 +109,6 @@ class ZeszytCrudController extends AbstractCrudController
             TextField::new('nazwa2')
                 ->setRequired(false)
                 ->hideOnIndex(),
-            IntegerField::new('wozek2')
-                ->hideOnIndex()
-                ->setFormTypeOptions([
-                    'attr' => [
-                        'min' => 1,
-                        'max' => 10,
-                    ],
-                ]),
 
             AssociationField::new('kompozycja3')
                 ->autocomplete()
@@ -159,14 +134,6 @@ class ZeszytCrudController extends AbstractCrudController
             TextField::new('nazwa3')
                 ->setRequired(false)
                 ->hideOnIndex(),
-            IntegerField::new('wozek3')
-                ->hideOnIndex()
-                ->setFormTypeOptions([
-                    'attr' => [
-                        'min' => 1,
-                        'max' => 10,
-                    ],
-                ]),
 
             AssociationField::new('kompozycja4')
                 ->autocomplete()
@@ -192,14 +159,6 @@ class ZeszytCrudController extends AbstractCrudController
             TextField::new('nazwa4')
                 ->setRequired(false)
                 ->hideOnIndex(),
-            IntegerField::new('wozek4')
-                ->hideOnIndex()
-                ->setFormTypeOptions([
-                    'attr' => [
-                        'min' => 1,
-                        'max' => 10,
-                    ],
-                ]),
 
             AssociationField::new('kompozycja5')
                 ->autocomplete()
@@ -225,14 +184,6 @@ class ZeszytCrudController extends AbstractCrudController
             TextField::new('nazwa5')
                 ->setRequired(false)
                 ->hideOnIndex(),
-            IntegerField::new('wozek5')
-                ->hideOnIndex()
-                ->setFormTypeOptions([
-                    'attr' => [
-                        'min' => 1,
-                        'max' => 10,
-                    ],
-                ]),
 
             AssociationField::new('kompozycja6')
                 ->autocomplete()
@@ -258,14 +209,6 @@ class ZeszytCrudController extends AbstractCrudController
             TextField::new('nazwa6')
                 ->setRequired(false)
                 ->hideOnIndex(),
-            IntegerField::new('wozek6')
-                ->hideOnIndex()
-                ->setFormTypeOptions([
-                    'attr' => [
-                        'min' => 1,
-                        'max' => 10,
-                    ],
-                ]),
 
             AssociationField::new('kompozycja7')
                 ->autocomplete()
@@ -291,14 +234,6 @@ class ZeszytCrudController extends AbstractCrudController
             TextField::new('nazwa7')
                 ->setRequired(false)
                 ->hideOnIndex(),
-            IntegerField::new('wozek7')
-                ->hideOnIndex()
-                ->setFormTypeOptions([
-                    'attr' => [
-                        'min' => 1,
-                        'max' => 10,
-                    ],
-                ]),
 
             AssociationField::new('kompozycja8')
                 ->autocomplete()
@@ -324,15 +259,6 @@ class ZeszytCrudController extends AbstractCrudController
             TextField::new('nazwa8')
                 ->setRequired(false)
                 ->hideOnIndex(),
-            IntegerField::new('wozek8')
-                ->hideOnIndex()
-                ->setFormTypeOptions([
-                    'attr' => [
-                        'min' => 1,
-                        'max' => 10,
-                    ],
-                ]),
-
 
             AssociationField::new('kompozycja9')
                 ->autocomplete()
@@ -358,15 +284,6 @@ class ZeszytCrudController extends AbstractCrudController
             TextField::new('nazwa9')
                 ->setRequired(false)
                 ->hideOnIndex(),
-            IntegerField::new('wozek9')
-                ->hideOnIndex()
-                ->setFormTypeOptions([
-                    'attr' => [
-                        'min' => 1,
-                        'max' => 10,
-                    ],
-                ]),
-
 
             AssociationField::new('kompozycja10')
                 ->autocomplete()
@@ -392,15 +309,6 @@ class ZeszytCrudController extends AbstractCrudController
             TextField::new('nazwa10')
                 ->setRequired(false)
                 ->hideOnIndex(),
-            IntegerField::new('wozek10')
-                ->hideOnIndex()
-                ->setFormTypeOptions([
-                    'attr' => [
-                        'min' => 1,
-                        'max' => 10,
-                    ],
-                ]),
-
 
             AssociationField::new('kompozycja11')
                 ->autocomplete()
@@ -426,15 +334,6 @@ class ZeszytCrudController extends AbstractCrudController
             TextField::new('nazwa11')
                 ->setRequired(false)
                 ->hideOnIndex(),
-            IntegerField::new('wozek11')
-                ->hideOnIndex()
-                ->setFormTypeOptions([
-                    'attr' => [
-                        'min' => 1,
-                        'max' => 10,
-                    ],
-                ]),
-
 
             AssociationField::new('kompozycja12')
                 ->autocomplete()
@@ -460,15 +359,6 @@ class ZeszytCrudController extends AbstractCrudController
             TextField::new('nazwa12')
                 ->setRequired(false)
                 ->hideOnIndex(),
-            IntegerField::new('wozek12')
-                ->hideOnIndex()
-                ->setFormTypeOptions([
-                    'attr' => [
-                        'min' => 1,
-                        'max' => 10,
-                    ],
-                ]),
-
 
             AssociationField::new('kompozycja13')
                 ->autocomplete()
@@ -494,15 +384,6 @@ class ZeszytCrudController extends AbstractCrudController
             TextField::new('nazwa13')
                 ->setRequired(false)
                 ->hideOnIndex(),
-            IntegerField::new('wozek13')
-                ->hideOnIndex()
-                ->setFormTypeOptions([
-                    'attr' => [
-                        'min' => 1,
-                        'max' => 10,
-                    ],
-                ]),
-
 
             AssociationField::new('kompozycja14')
                 ->autocomplete()
@@ -528,23 +409,6 @@ class ZeszytCrudController extends AbstractCrudController
             TextField::new('nazwa14')
                 ->setRequired(false)
                 ->hideOnIndex(),
-            IntegerField::new('wozek14')
-                ->hideOnIndex()
-                ->setFormTypeOptions([
-                    'attr' => [
-                        'min' => 1,
-                        'max' => 10,
-                    ],
-                ]),
-            IntegerField::new('wozek15')
-                ->hideOnIndex()
-                ->setFormTypeOptions([
-                    'attr' => [
-                        'min' => 1,
-                        'max' => 10,
-                    ],
-                ]),
-
 
             AssociationField::new('kompozycja15')
                 ->autocomplete()
@@ -570,15 +434,6 @@ class ZeszytCrudController extends AbstractCrudController
             TextField::new('nazwa15')
                 ->setRequired(false)
                 ->hideOnIndex(),
-            IntegerField::new('wozek16')
-                ->hideOnIndex()
-                ->setFormTypeOptions([
-                    'attr' => [
-                        'min' => 1,
-                        'max' => 10,
-                    ],
-                ]),
-
 
             AssociationField::new('kompozycja16')
                 ->autocomplete()
@@ -604,15 +459,6 @@ class ZeszytCrudController extends AbstractCrudController
             TextField::new('nazwa16')
                 ->setRequired(false)
                 ->hideOnIndex(),
-            IntegerField::new('wozek16')
-                ->hideOnIndex()
-                ->setFormTypeOptions([
-                    'attr' => [
-                        'min' => 1,
-                        'max' => 10,
-                    ],
-                ]),
-
 
             AssociationField::new('kompozycja17')
                 ->autocomplete()
@@ -638,15 +484,6 @@ class ZeszytCrudController extends AbstractCrudController
             TextField::new('nazwa17')
                 ->setRequired(false)
                 ->hideOnIndex(),
-            IntegerField::new('wozek17')
-                ->hideOnIndex()
-                ->setFormTypeOptions([
-                    'attr' => [
-                        'min' => 1,
-                        'max' => 10,
-                    ],
-                ]),
-
 
             AssociationField::new('kompozycja18')
                 ->autocomplete()
@@ -672,15 +509,6 @@ class ZeszytCrudController extends AbstractCrudController
             TextField::new('nazwa18')
                 ->setRequired(false)
                 ->hideOnIndex(),
-            IntegerField::new('wozek18')
-                ->hideOnIndex()
-                ->setFormTypeOptions([
-                    'attr' => [
-                        'min' => 1,
-                        'max' => 10,
-                    ],
-                ]),
-
 
             AssociationField::new('kompozycja19')
                 ->autocomplete()
@@ -706,15 +534,6 @@ class ZeszytCrudController extends AbstractCrudController
             TextField::new('nazwa19')
                 ->setRequired(false)
                 ->hideOnIndex(),
-            IntegerField::new('wozek19')
-                ->hideOnIndex()
-                ->setFormTypeOptions([
-                    'attr' => [
-                        'min' => 1,
-                        'max' => 10,
-                    ],
-                ]),
-
 
             AssociationField::new('kompozycja20')
                 ->autocomplete()
@@ -740,15 +559,6 @@ class ZeszytCrudController extends AbstractCrudController
             TextField::new('nazwa20')
                 ->setRequired(false)
                 ->hideOnIndex(),
-            IntegerField::new('wozek20')
-                ->hideOnIndex()
-                ->setFormTypeOptions([
-                    'attr' => [
-                        'min' => 1,
-                        'max' => 10,
-                    ],
-                ]),
-
 
             AssociationField::new('kompozycja21')
                 ->autocomplete()
@@ -774,15 +584,6 @@ class ZeszytCrudController extends AbstractCrudController
             TextField::new('nazwa21')
                 ->setRequired(false)
                 ->hideOnIndex(),
-            IntegerField::new('wozek21')
-                ->hideOnIndex()
-                ->setFormTypeOptions([
-                    'attr' => [
-                        'min' => 1,
-                        'max' => 10,
-                    ],
-                ]),
-
 
             AssociationField::new('kompozycja22')
                 ->autocomplete()
@@ -808,14 +609,6 @@ class ZeszytCrudController extends AbstractCrudController
             TextField::new('nazwa22')
                 ->setRequired(false)
                 ->hideOnIndex(),
-            IntegerField::new('wozek22')
-                ->hideOnIndex()
-                ->setFormTypeOptions([
-                    'attr' => [
-                        'min' => 1,
-                        'max' => 10,
-                    ],
-                ]),
 
             AssociationField::new('kompozycja23')
                 ->autocomplete()
@@ -841,14 +634,6 @@ class ZeszytCrudController extends AbstractCrudController
             TextField::new('nazwa23')
                 ->setRequired(false)
                 ->hideOnIndex(),
-            IntegerField::new('wozek23')
-                ->hideOnIndex()
-                ->setFormTypeOptions([
-                    'attr' => [
-                        'min' => 1,
-                        'max' => 10,
-                    ],
-                ]),
 
             AssociationField::new('kompozycja24')
                 ->autocomplete()
@@ -874,14 +659,6 @@ class ZeszytCrudController extends AbstractCrudController
             TextField::new('nazwa24')
                 ->setRequired(false)
                 ->hideOnIndex(),
-            IntegerField::new('wozek24')
-                ->hideOnIndex()
-                ->setFormTypeOptions([
-                    'attr' => [
-                        'min' => 1,
-                        'max' => 10,
-                    ],
-                ]),
 
             AssociationField::new('kompozycja25')
                 ->autocomplete()
@@ -907,14 +684,6 @@ class ZeszytCrudController extends AbstractCrudController
             TextField::new('nazwa25')
                 ->setRequired(false)
                 ->hideOnIndex(),
-            IntegerField::new('wozek25')
-                ->hideOnIndex()
-                ->setFormTypeOptions([
-                    'attr' => [
-                        'min' => 1,
-                        'max' => 10,
-                    ],
-                ]),
 
             AssociationField::new('kompozycja26')
                 ->autocomplete()
@@ -940,14 +709,6 @@ class ZeszytCrudController extends AbstractCrudController
             TextField::new('nazwa26')
                 ->setRequired(false)
                 ->hideOnIndex(),
-            IntegerField::new('wozek26')
-                ->hideOnIndex()
-                ->setFormTypeOptions([
-                    'attr' => [
-                        'min' => 1,
-                        'max' => 10,
-                    ],
-                ]),
 
             AssociationField::new('kompozycja27')
                 ->autocomplete()
@@ -973,14 +734,6 @@ class ZeszytCrudController extends AbstractCrudController
             TextField::new('nazwa27')
                 ->setRequired(false)
                 ->hideOnIndex(),
-            IntegerField::new('wozek27')
-                ->hideOnIndex()
-                ->setFormTypeOptions([
-                    'attr' => [
-                        'min' => 1,
-                        'max' => 10,
-                    ],
-                ]),
 
             AssociationField::new('kompozycja28')
                 ->autocomplete()
@@ -1006,14 +759,6 @@ class ZeszytCrudController extends AbstractCrudController
             TextField::new('nazwa28')
                 ->setRequired(false)
                 ->hideOnIndex(),
-            IntegerField::new('wozek28')
-                ->hideOnIndex()
-                ->setFormTypeOptions([
-                    'attr' => [
-                        'min' => 1,
-                        'max' => 10,
-                    ],
-                ]),
 
             AssociationField::new('kompozycja29')
                 ->autocomplete()
@@ -1039,14 +784,6 @@ class ZeszytCrudController extends AbstractCrudController
             TextField::new('nazwa29')
                 ->setRequired(false)
                 ->hideOnIndex(),
-            IntegerField::new('wozek29')
-                ->hideOnIndex()
-                ->setFormTypeOptions([
-                    'attr' => [
-                        'min' => 1,
-                        'max' => 10,
-                    ],
-                ]),
 
             AssociationField::new('kompozycja30')
                 ->autocomplete()
@@ -1072,14 +809,6 @@ class ZeszytCrudController extends AbstractCrudController
             TextField::new('nazwa30')
                 ->setRequired(false)
                 ->hideOnIndex(),
-            IntegerField::new('wozek30')
-                ->hideOnIndex()
-                ->setFormTypeOptions([
-                    'attr' => [
-                        'min' => 1,
-                        'max' => 10,
-                    ],
-                ]),
 
             AssociationField::new('kompozycja31')
                 ->autocomplete()
@@ -1105,14 +834,6 @@ class ZeszytCrudController extends AbstractCrudController
             TextField::new('nazwa31')
                 ->setRequired(false)
                 ->hideOnIndex(),
-            IntegerField::new('wozek31')
-                ->hideOnIndex()
-                ->setFormTypeOptions([
-                    'attr' => [
-                        'min' => 1,
-                        'max' => 10,
-                    ],
-                ]),
 
             AssociationField::new('kompozycja32')
                 ->autocomplete()
@@ -1138,14 +859,6 @@ class ZeszytCrudController extends AbstractCrudController
             TextField::new('nazwa32')
                 ->setRequired(false)
                 ->hideOnIndex(),
-            IntegerField::new('wozek32')
-                ->hideOnIndex()
-                ->setFormTypeOptions([
-                    'attr' => [
-                        'min' => 1,
-                        'max' => 10,
-                    ],
-                ]),
 
             AssociationField::new('kompozycja33')
                 ->autocomplete()
@@ -1171,14 +884,6 @@ class ZeszytCrudController extends AbstractCrudController
             TextField::new('nazwa33')
                 ->setRequired(false)
                 ->hideOnIndex(),
-            IntegerField::new('wozek33')
-                ->hideOnIndex()
-                ->setFormTypeOptions([
-                    'attr' => [
-                        'min' => 1,
-                        'max' => 10,
-                    ],
-                ]),
 
             AssociationField::new('kompozycja34')
                 ->autocomplete()
@@ -1204,14 +909,6 @@ class ZeszytCrudController extends AbstractCrudController
             TextField::new('nazwa34')
                 ->setRequired(false)
                 ->hideOnIndex(),
-            IntegerField::new('wozek34')
-                ->hideOnIndex()
-                ->setFormTypeOptions([
-                    'attr' => [
-                        'min' => 1,
-                        'max' => 10,
-                    ],
-                ]),
 
             AssociationField::new('kompozycja35')
                 ->autocomplete()
@@ -1237,14 +934,6 @@ class ZeszytCrudController extends AbstractCrudController
             TextField::new('nazwa35')
                 ->setRequired(false)
                 ->hideOnIndex(),
-            IntegerField::new('wozek35')
-                ->hideOnIndex()
-                ->setFormTypeOptions([
-                    'attr' => [
-                        'min' => 1,
-                        'max' => 10,
-                    ],
-                ]),
 
             AssociationField::new('kompozycja36')
                 ->autocomplete()
@@ -1270,14 +959,6 @@ class ZeszytCrudController extends AbstractCrudController
             TextField::new('nazwa36')
                 ->setRequired(false)
                 ->hideOnIndex(),
-            IntegerField::new('wozek36')
-                ->hideOnIndex()
-                ->setFormTypeOptions([
-                    'attr' => [
-                        'min' => 1,
-                        'max' => 10,
-                    ],
-                ]),
 
             AssociationField::new('kompozycja37')
                 ->autocomplete()
@@ -1303,14 +984,6 @@ class ZeszytCrudController extends AbstractCrudController
             TextField::new('nazwa37')
                 ->setRequired(false)
                 ->hideOnIndex(),
-            IntegerField::new('wozek37')
-                ->hideOnIndex()
-                ->setFormTypeOptions([
-                    'attr' => [
-                        'min' => 1,
-                        'max' => 10,
-                    ],
-                ]),
 
             AssociationField::new('kompozycja38')
                 ->autocomplete()
@@ -1336,14 +1009,6 @@ class ZeszytCrudController extends AbstractCrudController
             TextField::new('nazwa38')
                 ->setRequired(false)
                 ->hideOnIndex(),
-            IntegerField::new('wozek38')
-                ->hideOnIndex()
-                ->setFormTypeOptions([
-                    'attr' => [
-                        'min' => 1,
-                        'max' => 10,
-                    ],
-                ]),
 
             AssociationField::new('kompozycja39')
                 ->autocomplete()
@@ -1369,14 +1034,6 @@ class ZeszytCrudController extends AbstractCrudController
             TextField::new('nazwa39')
                 ->setRequired(false)
                 ->hideOnIndex(),
-            IntegerField::new('wozek39')
-                ->hideOnIndex()
-                ->setFormTypeOptions([
-                    'attr' => [
-                        'min' => 1,
-                        'max' => 10,
-                    ],
-                ]),
 
             AssociationField::new('kompozycja40')
                 ->autocomplete()
@@ -1402,14 +1059,6 @@ class ZeszytCrudController extends AbstractCrudController
             TextField::new('nazwa40')
                 ->setRequired(false)
                 ->hideOnIndex(),
-            IntegerField::new('wozek40')
-                ->hideOnIndex()
-                ->setFormTypeOptions([
-                    'attr' => [
-                        'min' => 1,
-                        'max' => 10,
-                    ],
-                ]),
 
             NumberField::new('suma')
                 ->setRequired(false),

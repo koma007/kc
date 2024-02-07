@@ -70,14 +70,6 @@ class Zeszyt
     #[ORM\Column(nullable: true)]
     private ?float $wartosc1 = null;
 
-    #[ORM\Column(nullable: true)]
-    #[Assert\Range(
-        min: 1,
-        max: 10,
-        notInRangeMessage: 'Wprowadź wartość między 1 a 10.',
-    )]
-    private ?int $wozek1 = null;
-
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $nazwa1 = null;
 
@@ -134,18 +126,6 @@ class Zeszyt
         return $this;
     }
 
-    public function getWozek1(): ?int
-    {
-        return $this->wozek1;
-    }
-
-    public function setWozek1(?int $wozek1): static
-    {
-        $this->wozek1 = $wozek1;
-
-        return $this;
-    }
-
     public function getNazwa1(): ?string
     {
         return $this->nazwa1;
@@ -169,9 +149,6 @@ class Zeszyt
 
     #[ORM\Column(nullable: true)]
     private ?float $wartosc2 = null;
-
-    #[ORM\Column(nullable: true)]
-    private ?int $wozek2 = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $nazwa2 = null;
@@ -224,18 +201,6 @@ class Zeszyt
         return $this;
     }
 
-    public function getWozek2(): ?int
-    {
-        return $this->wozek2;
-    }
-
-    public function setWozek2(?int $wozek2): static
-    {
-        $this->wozek2 = $wozek2;
-
-        return $this;
-    }
-
     public function getNazwa2(): ?string
     {
         return $this->nazwa2;
@@ -260,9 +225,6 @@ class Zeszyt
 
     #[ORM\Column(nullable: true)]
     private ?float $wartosc3 = null;
-
-    #[ORM\Column(nullable: true)]
-    private ?int $wozek3 = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $nazwa3 = null;
@@ -315,18 +277,6 @@ class Zeszyt
         return $this;
     }
 
-    public function getWozek3(): ?int
-    {
-        return $this->wozek3;
-    }
-
-    public function setWozek3(?int $wozek3): static
-    {
-        $this->wozek3 = $wozek3;
-
-        return $this;
-    }
-
     public function getNazwa3(): ?string
     {
         return $this->nazwa3;
@@ -350,9 +300,6 @@ class Zeszyt
 
     #[ORM\Column(nullable: true)]
     private ?float $wartosc4 = null;
-
-    #[ORM\Column(nullable: true)]
-    private ?int $wozek4 = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $nazwa4 = null;
@@ -405,18 +352,6 @@ class Zeszyt
         return $this;
     }
 
-    public function getWozek4(): ?int
-    {
-        return $this->wozek4;
-    }
-
-    public function setWozek4(?int $wozek4): static
-    {
-        $this->wozek4 = $wozek4;
-
-        return $this;
-    }
-
     public function getNazwa4(): ?string
     {
         return $this->nazwa4;
@@ -441,9 +376,6 @@ class Zeszyt
 
     #[ORM\Column(nullable: true)]
     private ?float $wartosc5 = null;
-
-    #[ORM\Column(nullable: true)]
-    private ?int $wozek5 = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $nazwa5 = null;
@@ -496,18 +428,6 @@ class Zeszyt
         return $this;
     }
 
-    public function getWozek5(): ?int
-    {
-        return $this->wozek5;
-    }
-
-    public function setWozek5(?int $wozek5): static
-    {
-        $this->wozek5 = $wozek5;
-
-        return $this;
-    }
-
     public function getNazwa5(): ?string
     {
         return $this->nazwa5;
@@ -531,9 +451,6 @@ class Zeszyt
 
     #[ORM\Column(nullable: true)]
     private ?float $wartosc6 = null;
-
-    #[ORM\Column(nullable: true)]
-    private ?int $wozek6 = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $nazwa6 = null;
@@ -586,18 +503,6 @@ class Zeszyt
         return $this;
     }
 
-    public function getWozek6(): ?int
-    {
-        return $this->wozek6;
-    }
-
-    public function setWozek6(?int $wozek6): static
-    {
-        $this->wozek6 = $wozek6;
-
-        return $this;
-    }
-
     public function getNazwa6(): ?string
     {
         return $this->nazwa6;
@@ -622,9 +527,6 @@ class Zeszyt
 
     #[ORM\Column(nullable: true)]
     private ?float $wartosc7 = null;
-
-    #[ORM\Column(nullable: true)]
-    private ?int $wozek7 = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $nazwa7 = null;
@@ -677,18 +579,6 @@ class Zeszyt
         return $this;
     }
 
-    public function getWozek7(): ?int
-    {
-        return $this->wozek7;
-    }
-
-    public function setWozek7(?int $wozek7): static
-    {
-        $this->wozek7 = $wozek7;
-
-        return $this;
-    }
-
     public function getNazwa7(): ?string
     {
         return $this->nazwa7;
@@ -712,9 +602,6 @@ class Zeszyt
 
     #[ORM\Column(nullable: true)]
     private ?float $wartosc8 = null;
-
-    #[ORM\Column(nullable: true)]
-    private ?int $wozek8 = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $nazwa8 = null;
@@ -767,18 +654,6 @@ class Zeszyt
         return $this;
     }
 
-    public function getWozek8(): ?int
-    {
-        return $this->wozek8;
-    }
-
-    public function setWozek8(?int $wozek8): static
-    {
-        $this->wozek8 = $wozek8;
-
-        return $this;
-    }
-
     public function getNazwa8(): ?string
     {
         return $this->nazwa8;
@@ -802,9 +677,6 @@ class Zeszyt
 
     #[ORM\Column(nullable: true)]
     private ?float $wartosc9 = null;
-
-    #[ORM\Column(nullable: true)]
-    private ?int $wozek9 = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $nazwa9 = null;
@@ -857,18 +729,6 @@ class Zeszyt
         return $this;
     }
 
-    public function getWozek9(): ?int
-    {
-        return $this->wozek9;
-    }
-
-    public function setWozek9(?int $wozek9): static
-    {
-        $this->wozek9 = $wozek9;
-
-        return $this;
-    }
-
     public function getNazwa9(): ?string
     {
         return $this->nazwa9;
@@ -893,9 +753,6 @@ class Zeszyt
 
     #[ORM\Column(nullable: true)]
     private ?float $wartosc10 = null;
-
-    #[ORM\Column(nullable: true)]
-    private ?int $wozek10 = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $nazwa10 = null;
@@ -948,18 +805,6 @@ class Zeszyt
         return $this;
     }
 
-    public function getWozek10(): ?int
-    {
-        return $this->wozek10;
-    }
-
-    public function setWozek10(?int $wozek10): static
-    {
-        $this->wozek10 = $wozek10;
-
-        return $this;
-    }
-
     public function getNazwa10(): ?string
     {
         return $this->nazwa10;
@@ -984,9 +829,6 @@ class Zeszyt
 
     #[ORM\Column(nullable: true)]
     private ?float $wartosc11 = null;
-
-    #[ORM\Column(nullable: true)]
-    private ?int $wozek11 = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $nazwa11 = null;
@@ -1039,18 +881,6 @@ class Zeszyt
         return $this;
     }
 
-    public function getWozek11(): ?int
-    {
-        return $this->wozek11;
-    }
-
-    public function setWozek11(?int $wozek11): static
-    {
-        $this->wozek11 = $wozek11;
-
-        return $this;
-    }
-
     public function getNazwa11(): ?string
     {
         return $this->nazwa11;
@@ -1075,9 +905,6 @@ class Zeszyt
 
     #[ORM\Column(nullable: true)]
     private ?float $wartosc12 = null;
-
-    #[ORM\Column(nullable: true)]
-    private ?int $wozek12 = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $nazwa12 = null;
@@ -1130,18 +957,6 @@ class Zeszyt
         return $this;
     }
 
-    public function getWozek12(): ?int
-    {
-        return $this->wozek12;
-    }
-
-    public function setWozek12(?int $wozek12): static
-    {
-        $this->wozek12 = $wozek12;
-
-        return $this;
-    }
-
     public function getNazwa12(): ?string
     {
         return $this->nazwa12;
@@ -1166,9 +981,6 @@ class Zeszyt
 
     #[ORM\Column(nullable: true)]
     private ?float $wartosc13 = null;
-
-    #[ORM\Column(nullable: true)]
-    private ?int $wozek13 = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $nazwa13 = null;
@@ -1221,18 +1033,6 @@ class Zeszyt
         return $this;
     }
 
-    public function getWozek13(): ?int
-    {
-        return $this->wozek13;
-    }
-
-    public function setWozek13(?int $wozek13): static
-    {
-        $this->wozek13 = $wozek13;
-
-        return $this;
-    }
-
     public function getNazwa13(): ?string
     {
         return $this->nazwa13;
@@ -1256,9 +1056,6 @@ class Zeszyt
 
     #[ORM\Column(nullable: true)]
     private ?float $wartosc14 = null;
-
-    #[ORM\Column(nullable: true)]
-    private ?int $wozek14 = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $nazwa14 = null;
@@ -1311,18 +1108,6 @@ class Zeszyt
         return $this;
     }
 
-    public function getWozek14(): ?int
-    {
-        return $this->wozek14;
-    }
-
-    public function setWozek14(?int $wozek14): static
-    {
-        $this->wozek14 = $wozek14;
-
-        return $this;
-    }
-
     public function getNazwa14(): ?string
     {
         return $this->nazwa14;
@@ -1347,9 +1132,6 @@ class Zeszyt
 
     #[ORM\Column(nullable: true)]
     private ?float $wartosc15 = null;
-
-    #[ORM\Column(nullable: true)]
-    private ?int $wozek15 = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $nazwa15 = null;
@@ -1402,18 +1184,6 @@ class Zeszyt
         return $this;
     }
 
-    public function getWozek15(): ?int
-    {
-        return $this->wozek15;
-    }
-
-    public function setWozek15(?int $wozek15): static
-    {
-        $this->wozek15 = $wozek15;
-
-        return $this;
-    }
-
     public function getNazwa15(): ?string
     {
         return $this->nazwa15;
@@ -1438,9 +1208,6 @@ class Zeszyt
 
     #[ORM\Column(nullable: true)]
     private ?float $wartosc16 = null;
-
-    #[ORM\Column(nullable: true)]
-    private ?int $wozek16 = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $nazwa16 = null;
@@ -1493,18 +1260,6 @@ class Zeszyt
         return $this;
     }
 
-    public function getWozek16(): ?int
-    {
-        return $this->wozek16;
-    }
-
-    public function setWozek16(?int $wozek16): static
-    {
-        $this->wozek16 = $wozek16;
-
-        return $this;
-    }
-
     public function getNazwa16(): ?string
     {
         return $this->nazwa16;
@@ -1529,9 +1284,6 @@ class Zeszyt
 
     #[ORM\Column(nullable: true)]
     private ?float $wartosc17 = null;
-
-    #[ORM\Column(nullable: true)]
-    private ?int $wozek17 = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $nazwa17 = null;
@@ -1584,18 +1336,6 @@ class Zeszyt
         return $this;
     }
 
-    public function getWozek17(): ?int
-    {
-        return $this->wozek17;
-    }
-
-    public function setWozek17(?int $wozek17): static
-    {
-        $this->wozek17 = $wozek17;
-
-        return $this;
-    }
-
     public function getNazwa17(): ?string
     {
         return $this->nazwa17;
@@ -1619,9 +1359,6 @@ class Zeszyt
 
     #[ORM\Column(nullable: true)]
     private ?float $wartosc18 = null;
-
-    #[ORM\Column(nullable: true)]
-    private ?int $wozek18 = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $nazwa18 = null;
@@ -1674,18 +1411,6 @@ class Zeszyt
         return $this;
     }
 
-    public function getWozek18(): ?int
-    {
-        return $this->wozek18;
-    }
-
-    public function setWozek18(?int $wozek18): static
-    {
-        $this->wozek18 = $wozek18;
-
-        return $this;
-    }
-
     public function getNazwa18(): ?string
     {
         return $this->nazwa18;
@@ -1710,9 +1435,6 @@ class Zeszyt
 
     #[ORM\Column(nullable: true)]
     private ?float $wartosc19 = null;
-
-    #[ORM\Column(nullable: true)]
-    private ?int $wozek19 = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $nazwa19 = null;
@@ -1765,18 +1487,6 @@ class Zeszyt
         return $this;
     }
 
-    public function getWozek19(): ?int
-    {
-        return $this->wozek19;
-    }
-
-    public function setWozek19(?int $wozek19): static
-    {
-        $this->wozek19 = $wozek19;
-
-        return $this;
-    }
-
     public function getNazwa19(): ?string
     {
         return $this->nazwa19;
@@ -1801,9 +1511,6 @@ class Zeszyt
 
     #[ORM\Column(nullable: true)]
     private ?float $wartosc20 = null;
-
-    #[ORM\Column(nullable: true)]
-    private ?int $wozek20 = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $nazwa20 = null;
@@ -1856,18 +1563,6 @@ class Zeszyt
         return $this;
     }
 
-    public function getWozek20(): ?int
-    {
-        return $this->wozek20;
-    }
-
-    public function setWozek20(?int $wozek20): static
-    {
-        $this->wozek20 = $wozek20;
-
-        return $this;
-    }
-
     public function getNazwa20(): ?string
     {
         return $this->nazwa20;
@@ -1892,9 +1587,6 @@ class Zeszyt
 
     #[ORM\Column(nullable: true)]
     private ?float $wartosc21 = null;
-
-    #[ORM\Column(nullable: true)]
-    private ?int $wozek21 = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $nazwa21 = null;
@@ -1947,18 +1639,6 @@ class Zeszyt
         return $this;
     }
 
-    public function getWozek21(): ?int
-    {
-        return $this->wozek21;
-    }
-
-    public function setWozek21(?int $wozek21): static
-    {
-        $this->wozek21 = $wozek21;
-
-        return $this;
-    }
-
     public function getNazwa21(): ?string
     {
         return $this->nazwa21;
@@ -1983,9 +1663,6 @@ class Zeszyt
 
     #[ORM\Column(nullable: true)]
     private ?float $wartosc22 = null;
-
-    #[ORM\Column(nullable: true)]
-    private ?int $wozek22 = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $nazwa22 = null;
@@ -2038,18 +1715,6 @@ class Zeszyt
         return $this;
     }
 
-    public function getWozek22(): ?int
-    {
-        return $this->wozek22;
-    }
-
-    public function setWozek22(?int $wozek22): static
-    {
-        $this->wozek22 = $wozek22;
-
-        return $this;
-    }
-
     public function getNazwa22(): ?string
     {
         return $this->nazwa22;
@@ -2074,9 +1739,6 @@ class Zeszyt
 
     #[ORM\Column(nullable: true)]
     private ?float $wartosc23 = null;
-
-    #[ORM\Column(nullable: true)]
-    private ?int $wozek23 = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $nazwa23 = null;
@@ -2129,18 +1791,6 @@ class Zeszyt
         return $this;
     }
 
-    public function getWozek23(): ?int
-    {
-        return $this->wozek23;
-    }
-
-    public function setWozek23(?int $wozek23): static
-    {
-        $this->wozek23 = $wozek23;
-
-        return $this;
-    }
-
     public function getNazwa23(): ?string
     {
         return $this->nazwa23;
@@ -2165,9 +1815,6 @@ class Zeszyt
 
     #[ORM\Column(nullable: true)]
     private ?float $wartosc24 = null;
-
-    #[ORM\Column(nullable: true)]
-    private ?int $wozek24 = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $nazwa24 = null;
@@ -2220,18 +1867,6 @@ class Zeszyt
         return $this;
     }
 
-    public function getWozek24(): ?int
-    {
-        return $this->wozek24;
-    }
-
-    public function setWozek24(?int $wozek24): static
-    {
-        $this->wozek24 = $wozek24;
-
-        return $this;
-    }
-
     public function getNazwa24(): ?string
     {
         return $this->nazwa24;
@@ -2256,9 +1891,6 @@ class Zeszyt
 
     #[ORM\Column(nullable: true)]
     private ?float $wartosc25 = null;
-
-    #[ORM\Column(nullable: true)]
-    private ?int $wozek25 = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $nazwa25 = null;
@@ -2311,18 +1943,6 @@ class Zeszyt
         return $this;
     }
 
-    public function getWozek25(): ?int
-    {
-        return $this->wozek25;
-    }
-
-    public function setWozek25(?int $wozek25): static
-    {
-        $this->wozek25 = $wozek25;
-
-        return $this;
-    }
-
     public function getNazwa25(): ?string
     {
         return $this->nazwa25;
@@ -2347,9 +1967,6 @@ class Zeszyt
 
     #[ORM\Column(nullable: true)]
     private ?float $wartosc26 = null;
-
-    #[ORM\Column(nullable: true)]
-    private ?int $wozek26 = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $nazwa26 = null;
@@ -2402,18 +2019,6 @@ class Zeszyt
         return $this;
     }
 
-    public function getWozek26(): ?int
-    {
-        return $this->wozek26;
-    }
-
-    public function setWozek26(?int $wozek26): static
-    {
-        $this->wozek26 = $wozek26;
-
-        return $this;
-    }
-
     public function getNazwa26(): ?string
     {
         return $this->nazwa26;
@@ -2438,9 +2043,6 @@ class Zeszyt
 
     #[ORM\Column(nullable: true)]
     private ?float $wartosc27 = null;
-
-    #[ORM\Column(nullable: true)]
-    private ?int $wozek27 = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $nazwa27 = null;
@@ -2493,18 +2095,6 @@ class Zeszyt
         return $this;
     }
 
-    public function getWozek27(): ?int
-    {
-        return $this->wozek27;
-    }
-
-    public function setWozek27(?int $wozek27): static
-    {
-        $this->wozek27 = $wozek27;
-
-        return $this;
-    }
-
     public function getNazwa27(): ?string
     {
         return $this->nazwa27;
@@ -2529,9 +2119,6 @@ class Zeszyt
 
     #[ORM\Column(nullable: true)]
     private ?float $wartosc28 = null;
-
-    #[ORM\Column(nullable: true)]
-    private ?int $wozek28 = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $nazwa28 = null;
@@ -2584,18 +2171,6 @@ class Zeszyt
         return $this;
     }
 
-    public function getWozek28(): ?int
-    {
-        return $this->wozek28;
-    }
-
-    public function setWozek28(?int $wozek28): static
-    {
-        $this->wozek28 = $wozek28;
-
-        return $this;
-    }
-
     public function getNazwa28(): ?string
     {
         return $this->nazwa28;
@@ -2619,9 +2194,6 @@ class Zeszyt
 
     #[ORM\Column(nullable: true)]
     private ?float $wartosc29 = null;
-
-    #[ORM\Column(nullable: true)]
-    private ?int $wozek29 = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $nazwa29 = null;
@@ -2674,18 +2246,6 @@ class Zeszyt
         return $this;
     }
 
-    public function getWozek29(): ?int
-    {
-        return $this->wozek29;
-    }
-
-    public function setWozek29(?int $wozek29): static
-    {
-        $this->wozek29 = $wozek29;
-
-        return $this;
-    }
-
     public function getNazwa29(): ?string
     {
         return $this->nazwa29;
@@ -2709,9 +2269,6 @@ class Zeszyt
 
     #[ORM\Column(nullable: true)]
     private ?float $wartosc30 = null;
-
-    #[ORM\Column(nullable: true)]
-    private ?int $wozek30 = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $nazwa30 = null;
@@ -2764,18 +2321,6 @@ class Zeszyt
         return $this;
     }
 
-    public function getWozek30(): ?int
-    {
-        return $this->wozek30;
-    }
-
-    public function setWozek30(?int $wozek30): static
-    {
-        $this->wozek30 = $wozek30;
-
-        return $this;
-    }
-
     public function getNazwa30(): ?string
     {
         return $this->nazwa30;
@@ -2799,9 +2344,6 @@ class Zeszyt
 
     #[ORM\Column(nullable: true)]
     private ?float $wartosc31 = null;
-
-    #[ORM\Column(nullable: true)]
-    private ?int $wozek31 = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $nazwa31 = null;
@@ -2854,18 +2396,6 @@ class Zeszyt
         return $this;
     }
 
-    public function getWozek31(): ?int
-    {
-        return $this->wozek31;
-    }
-
-    public function setWozek31(?int $wozek31): static
-    {
-        $this->wozek31 = $wozek31;
-
-        return $this;
-    }
-
     public function getNazwa31(): ?string
     {
         return $this->nazwa31;
@@ -2890,9 +2420,6 @@ class Zeszyt
 
     #[ORM\Column(nullable: true)]
     private ?float $wartosc32 = null;
-
-    #[ORM\Column(nullable: true)]
-    private ?int $wozek32 = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $nazwa32 = null;
@@ -2945,18 +2472,6 @@ class Zeszyt
         return $this;
     }
 
-    public function getWozek32(): ?int
-    {
-        return $this->wozek32;
-    }
-
-    public function setWozek32(?int $wozek32): static
-    {
-        $this->wozek32 = $wozek32;
-
-        return $this;
-    }
-
     public function getNazwa32(): ?string
     {
         return $this->nazwa32;
@@ -2981,9 +2496,6 @@ class Zeszyt
 
     #[ORM\Column(nullable: true)]
     private ?float $wartosc33 = null;
-
-    #[ORM\Column(nullable: true)]
-    private ?int $wozek33 = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $nazwa33 = null;
@@ -3036,18 +2548,6 @@ class Zeszyt
         return $this;
     }
 
-    public function getWozek33(): ?int
-    {
-        return $this->wozek33;
-    }
-
-    public function setWozek33(?int $wozek33): static
-    {
-        $this->wozek33 = $wozek33;
-
-        return $this;
-    }
-
     public function getNazwa33(): ?string
     {
         return $this->nazwa33;
@@ -3072,9 +2572,6 @@ class Zeszyt
 
     #[ORM\Column(nullable: true)]
     private ?float $wartosc34 = null;
-
-    #[ORM\Column(nullable: true)]
-    private ?int $wozek34 = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $nazwa34 = null;
@@ -3127,18 +2624,6 @@ class Zeszyt
         return $this;
     }
 
-    public function getWozek34(): ?int
-    {
-        return $this->wozek34;
-    }
-
-    public function setWozek34(?int $wozek34): static
-    {
-        $this->wozek34 = $wozek34;
-
-        return $this;
-    }
-
     public function getNazwa34(): ?string
     {
         return $this->nazwa34;
@@ -3163,9 +2648,6 @@ class Zeszyt
 
     #[ORM\Column(nullable: true)]
     private ?float $wartosc35 = null;
-
-    #[ORM\Column(nullable: true)]
-    private ?int $wozek35 = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $nazwa35 = null;
@@ -3218,18 +2700,6 @@ class Zeszyt
         return $this;
     }
 
-    public function getWozek35(): ?int
-    {
-        return $this->wozek35;
-    }
-
-    public function setWozek35(?int $wozek35): static
-    {
-        $this->wozek35 = $wozek35;
-
-        return $this;
-    }
-
     public function getNazwa35(): ?string
     {
         return $this->nazwa35;
@@ -3254,9 +2724,6 @@ class Zeszyt
 
     #[ORM\Column(nullable: true)]
     private ?float $wartosc36 = null;
-
-    #[ORM\Column(nullable: true)]
-    private ?int $wozek36 = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $nazwa36 = null;
@@ -3309,18 +2776,6 @@ class Zeszyt
         return $this;
     }
 
-    public function getWozek36(): ?int
-    {
-        return $this->wozek36;
-    }
-
-    public function setWozek36(?int $wozek36): static
-    {
-        $this->wozek36 = $wozek36;
-
-        return $this;
-    }
-
     public function getNazwa36(): ?string
     {
         return $this->nazwa36;
@@ -3345,9 +2800,6 @@ class Zeszyt
 
     #[ORM\Column(nullable: true)]
     private ?float $wartosc37 = null;
-
-    #[ORM\Column(nullable: true)]
-    private ?int $wozek37 = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $nazwa37 = null;
@@ -3400,18 +2852,6 @@ class Zeszyt
         return $this;
     }
 
-    public function getWozek37(): ?int
-    {
-        return $this->wozek37;
-    }
-
-    public function setWozek37(?int $wozek37): static
-    {
-        $this->wozek37 = $wozek37;
-
-        return $this;
-    }
-
     public function getNazwa37(): ?string
     {
         return $this->nazwa37;
@@ -3436,9 +2876,6 @@ class Zeszyt
 
     #[ORM\Column(nullable: true)]
     private ?float $wartosc38 = null;
-
-    #[ORM\Column(nullable: true)]
-    private ?int $wozek38 = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $nazwa38 = null;
@@ -3491,18 +2928,6 @@ class Zeszyt
         return $this;
     }
 
-    public function getWozek38(): ?int
-    {
-        return $this->wozek38;
-    }
-
-    public function setWozek38(?int $wozek38): static
-    {
-        $this->wozek38 = $wozek38;
-
-        return $this;
-    }
-
     public function getNazwa38(): ?string
     {
         return $this->nazwa38;
@@ -3527,9 +2952,6 @@ class Zeszyt
 
     #[ORM\Column(nullable: true)]
     private ?float $wartosc39 = null;
-
-    #[ORM\Column(nullable: true)]
-    private ?int $wozek39 = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $nazwa39 = null;
@@ -3582,18 +3004,6 @@ class Zeszyt
         return $this;
     }
 
-    public function getWozek39(): ?int
-    {
-        return $this->wozek39;
-    }
-
-    public function setWozek39(?int $wozek39): static
-    {
-        $this->wozek39 = $wozek39;
-
-        return $this;
-    }
-
     public function getNazwa39(): ?string
     {
         return $this->nazwa39;
@@ -3618,9 +3028,6 @@ class Zeszyt
 
     #[ORM\Column(nullable: true)]
     private ?float $wartosc40 = null;
-
-    #[ORM\Column(nullable: true)]
-    private ?int $wozek40 = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $nazwa40 = null;
@@ -3672,18 +3079,6 @@ class Zeszyt
     public function setWartosc40(?float $wartosc40): static
     {
         $this->wartosc40 = $wartosc40;
-
-        return $this;
-    }
-
-    public function getWozek40(): ?int
-    {
-        return $this->wozek40;
-    }
-
-    public function setWozek40(?int $wozek40): static
-    {
-        $this->wozek40 = $wozek40;
 
         return $this;
     }

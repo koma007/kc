@@ -44,9 +44,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\ManyToMany(targetEntity: Wyceny::class, mappedBy: 'pracownik')]
     private Collection $pracownik;
 
-    #[ORM\OneToOne(mappedBy: 'pracownik', cascade: ['persist', 'remove'])]
-    private ?Zeszyt2 $zeszyt = null;
-
     public function __construct()
     {
         $this->pracownik = new ArrayCollection();
@@ -200,20 +197,4 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->getName();
     }
 
-    public function getZeszyt(): ?Zeszyt2
-    {
-        return $this->zeszyt;
-    }
-
-    public function setZeszyt(Zeszyt2 $zeszyt): static
-    {
-        // set the owning side of the relation if necessary
-        if ($zeszyt->getPracownik() !== $this) {
-            $zeszyt->setPracownik($this);
-        }
-
-        $this->zeszyt = $zeszyt;
-
-        return $this;
-    }
 }
