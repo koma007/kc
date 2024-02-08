@@ -18,7 +18,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\SearchDto;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
@@ -54,7 +54,7 @@ class ZeszytCrudController extends AbstractCrudController
 
 
         return [
-            DateTimeField::new('miesiac')
+            DateField::new('miesiac')
                 ->setLabel('Miesiąc:')
                 ->SetFormat('MM/yyyy')
                 ->setTimezone('Europe/Warsaw'),
@@ -82,7 +82,7 @@ class ZeszytCrudController extends AbstractCrudController
             TextField::new('nazwa1')
                 ->setRequired(false)
                 ->hideOnIndex(),
-            DateTimeField::new('updatedAt1')
+            DateField::new('updatedAt1')
                 ->hideOnIndex(),
 
             AssociationField::new('kompozycja2')
@@ -1500,121 +1500,121 @@ class ZeszytCrudController extends AbstractCrudController
                 ->setRequired(true)
                 ->hideOnIndex(),
 
-            DateTimeField::new('updatedAt2')
+            DateField::new('updatedAt2')
                 ->hideOnIndex(),
 
-            DateTimeField::new('updatedAt3')
+            DateField::new('updatedAt3')
                 ->hideOnIndex(),
 
-            DateTimeField::new('updatedAt4')
+            DateField::new('updatedAt4')
                 ->hideOnIndex(),
 
-            DateTimeField::new('updatedAt5')
+            DateField::new('updatedAt5')
                 ->hideOnIndex(),
 
-            DateTimeField::new('updatedAt6')
+            DateField::new('updatedAt6')
                 ->hideOnIndex(),
 
-            DateTimeField::new('updatedAt7')
+            DateField::new('updatedAt7')
                 ->hideOnIndex(),
 
-            DateTimeField::new('updatedAt8')
+            DateField::new('updatedAt8')
                 ->hideOnIndex(),
 
-            DateTimeField::new('updatedAt9')
+            DateField::new('updatedAt9')
                 ->hideOnIndex(),
 
-            DateTimeField::new('updatedAt10')
+            DateField::new('updatedAt10')
                 ->hideOnIndex(),
 
-            DateTimeField::new('updatedAt11')
+            DateField::new('updatedAt11')
                 ->hideOnIndex(),
 
-            DateTimeField::new('updatedAt12')
+            DateField::new('updatedAt12')
                 ->hideOnIndex(),
 
-            DateTimeField::new('updatedAt13')
+            DateField::new('updatedAt13')
                 ->hideOnIndex(),
 
-            DateTimeField::new('updatedAt14')
+            DateField::new('updatedAt14')
                 ->hideOnIndex(),
 
-            DateTimeField::new('updatedAt15')
+            DateField::new('updatedAt15')
                 ->hideOnIndex(),
 
-            DateTimeField::new('updatedAt16')
+            DateField::new('updatedAt16')
                 ->hideOnIndex(),
 
-            DateTimeField::new('updatedAt17')
+            DateField::new('updatedAt17')
                 ->hideOnIndex(),
 
-            DateTimeField::new('updatedAt18')
+            DateField::new('updatedAt18')
                 ->hideOnIndex(),
 
-            DateTimeField::new('updatedAt19')
+            DateField::new('updatedAt19')
                 ->hideOnIndex(),
 
-            DateTimeField::new('updatedAt20')
+            DateField::new('updatedAt20')
                 ->hideOnIndex(),
 
-            DateTimeField::new('updatedAt21')
+            DateField::new('updatedAt21')
                 ->hideOnIndex(),
 
-            DateTimeField::new('updatedAt22')
+            DateField::new('updatedAt22')
                 ->hideOnIndex(),
 
-            DateTimeField::new('updatedAt23')
+            DateField::new('updatedAt23')
                 ->hideOnIndex(),
 
-            DateTimeField::new('updatedAt24')
+            DateField::new('updatedAt24')
                 ->hideOnIndex(),
 
-            DateTimeField::new('updatedAt25')
+            DateField::new('updatedAt25')
                 ->hideOnIndex(),
 
-            DateTimeField::new('updatedAt26')
+            DateField::new('updatedAt26')
                 ->hideOnIndex(),
 
-            DateTimeField::new('updatedAt27')
+            DateField::new('updatedAt27')
                 ->hideOnIndex(),
 
-            DateTimeField::new('updatedAt28')
+            DateField::new('updatedAt28')
                 ->hideOnIndex(),
 
-            DateTimeField::new('updatedAt29')
+            DateField::new('updatedAt29')
                 ->hideOnIndex(),
 
-            DateTimeField::new('updatedAt30')
+            DateField::new('updatedAt30')
                 ->hideOnIndex(),
 
-            DateTimeField::new('updatedAt31')
+            DateField::new('updatedAt31')
                 ->hideOnIndex(),
 
-            DateTimeField::new('updatedAt32')
+            DateField::new('updatedAt32')
                 ->hideOnIndex(),
 
-            DateTimeField::new('updatedAt33')
+            DateField::new('updatedAt33')
                 ->hideOnIndex(),
 
-            DateTimeField::new('updatedAt34')
+            DateField::new('updatedAt34')
                 ->hideOnIndex(),
 
-            DateTimeField::new('updatedAt35')
+            DateField::new('updatedAt35')
                 ->hideOnIndex(),
 
-            DateTimeField::new('updatedAt36')
+            DateField::new('updatedAt36')
                 ->hideOnIndex(),
 
-            DateTimeField::new('updatedAt37')
+            DateField::new('updatedAt37')
                 ->hideOnIndex(),
 
-            DateTimeField::new('updatedAt38')
+            DateField::new('updatedAt38')
                 ->hideOnIndex(),
 
-            DateTimeField::new('updatedAt39')
+            DateField::new('updatedAt39')
                 ->hideOnIndex(),
 
-            DateTimeField::new('updatedAt40')
+            DateField::new('updatedAt40')
                 ->hideOnIndex(),
 
 
@@ -1632,7 +1632,7 @@ class ZeszytCrudController extends AbstractCrudController
         $zeszyt->setPracownik($this->pracownik);
        // $zeszyt->setCreatedAt(new \DateTimeImmutable());
         if (!$zeszyt->getMiesiac()) {
-            $zeszyt->setMiesiac(new \DateTimeImmutable()); // Ustaw domyślną wartość na aktualny czas tylko jeśli pole miesiac jest puste
+            $zeszyt->setMiesiac(new \DateTime()); // Ustaw domyślną wartość na aktualny czas tylko jeśli pole miesiac jest puste
         }
 //        if (!$zeszyt->getupdatedAt1()) {
 //
@@ -1691,7 +1691,7 @@ class ZeszytCrudController extends AbstractCrudController
             $wozki = [];
             for ($i = 1; $i <= 40; $i++) {
                 $updatedAt = $zeszytEntity[0]->{"getupdatedAt" . $i}();
-                if ($updatedAt instanceof \DateTimeImmutable) {
+                if ($updatedAt instanceof \DateTime) {
                     $wozki[] = $updatedAt->format('Y-m-d'); // Formatuj datę jako ciąg znaków reprezentujący datę
                 }
             }
