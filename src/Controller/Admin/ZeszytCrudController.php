@@ -1065,7 +1065,7 @@ class ZeszytCrudController extends AbstractCrudController
                     'Kpl' => 'kpl',
                     'Solo' => 'solo',
                     'Wazon' => 'wazon',
-                    '2 wazony' => '2w',
+                    'Kpl 2w' => '2w',
                 ], 'kpl')
                 ->renderExpanded()
                 ->setRequired(true)
@@ -1076,7 +1076,7 @@ class ZeszytCrudController extends AbstractCrudController
                     'Kpl' => 'kpl',
                     'Solo' => 'solo',
                     'Wazon' => 'wazon',
-                    '2 wazony' => '2w',
+                    'Kpl 2w' => '2w',
                 ], 'kpl')
                 ->renderExpanded()
                 ->setRequired(true)
@@ -1087,7 +1087,7 @@ class ZeszytCrudController extends AbstractCrudController
                     'Kpl' => 'kpl',
                     'Solo' => 'solo',
                     'Wazon' => 'wazon',
-                    '2 wazony' => '2w',
+                    'Kpl 2w' => '2w',
                 ], 'kpl')
                 ->renderExpanded()
                 ->setRequired(true)
@@ -1098,7 +1098,7 @@ class ZeszytCrudController extends AbstractCrudController
                     'Kpl' => 'kpl',
                     'Solo' => 'solo',
                     'Wazon' => 'wazon',
-                    '2 wazony' => '2w',
+                    'Kpl 2w' => '2w',
                 ], 'kpl')
                 ->renderExpanded()
                 ->setRequired(true)
@@ -1109,7 +1109,7 @@ class ZeszytCrudController extends AbstractCrudController
                     'Kpl' => 'kpl',
                     'Solo' => 'solo',
                     'Wazon' => 'wazon',
-                    '2 wazony' => '2w',
+                    'Kpl 2w' => '2w',
                 ], 'kpl')
                 ->renderExpanded()
                 ->setRequired(true)
@@ -1120,7 +1120,7 @@ class ZeszytCrudController extends AbstractCrudController
                     'Kpl' => 'kpl',
                     'Solo' => 'solo',
                     'Wazon' => 'wazon',
-                    '2 wazony' => '2w',
+                    'Kpl 2w' => '2w',
                 ], 'kpl')
                 ->renderExpanded()
                 ->setRequired(true)
@@ -1131,7 +1131,7 @@ class ZeszytCrudController extends AbstractCrudController
                     'Kpl' => 'kpl',
                     'Solo' => 'solo',
                     'Wazon' => 'wazon',
-                    '2 wazony' => '2w',
+                    'Kpl 2w' => '2w',
                 ], 'kpl')
                 ->renderExpanded()
                 ->setRequired(true)
@@ -1142,7 +1142,7 @@ class ZeszytCrudController extends AbstractCrudController
                     'Kpl' => 'kpl',
                     'Solo' => 'solo',
                     'Wazon' => 'wazon',
-                    '2 wazony' => '2w',
+                    'Kpl 2w' => '2w',
                 ], 'kpl')
                 ->renderExpanded()
                 ->setRequired(true)
@@ -1153,7 +1153,7 @@ class ZeszytCrudController extends AbstractCrudController
                     'Kpl' => 'kpl',
                     'Solo' => 'solo',
                     'Wazon' => 'wazon',
-                    '2 wazony' => '2w',
+                    'Kpl 2w' => '2w',
                 ], 'kpl')
                 ->renderExpanded()
                 ->setRequired(true)
@@ -1164,7 +1164,7 @@ class ZeszytCrudController extends AbstractCrudController
                     'Kpl' => 'kpl',
                     'Solo' => 'solo',
                     'Wazon' => 'wazon',
-                    '2 wazony' => '2w',
+                    'Kpl 2w' => '2w',
                 ], 'kpl')
                 ->renderExpanded()
                 ->setRequired(true)
@@ -1175,7 +1175,7 @@ class ZeszytCrudController extends AbstractCrudController
                     'Kpl' => 'kpl',
                     'Solo' => 'solo',
                     'Wazon' => 'wazon',
-                    '2 wazony' => '2w',
+                    'Kpl 2w' => '2w',
                 ], 'kpl')
                 ->renderExpanded()
                 ->setRequired(true)
@@ -1186,7 +1186,7 @@ class ZeszytCrudController extends AbstractCrudController
                     'Kpl' => 'kpl',
                     'Solo' => 'solo',
                     'Wazon' => 'wazon',
-                    '2 wazony' => '2w',
+                    'Kpl 2w' => '2w',
                 ], 'kpl')
                 ->renderExpanded()
                 ->setRequired(true)
@@ -1197,7 +1197,7 @@ class ZeszytCrudController extends AbstractCrudController
                     'Kpl' => 'kpl',
                     'Solo' => 'solo',
                     'Wazon' => 'wazon',
-                    '2 wazony' => '2w',
+                    'Kpl 2w' => '2w',
                 ], 'kpl')
                 ->renderExpanded()
                 ->setRequired(true)
@@ -1208,7 +1208,7 @@ class ZeszytCrudController extends AbstractCrudController
                     'Kpl' => 'kpl',
                     'Solo' => 'solo',
                     'Wazon' => 'wazon',
-                    '2 wazony' => '2w',
+                    'Kpl 2w' => '2w',
                 ], 'kpl')
                 ->renderExpanded()
                 ->setRequired(true)
@@ -1219,7 +1219,7 @@ class ZeszytCrudController extends AbstractCrudController
                     'Kpl' => 'kpl',
                     'Solo' => 'solo',
                     'Wazon' => 'wazon',
-                    '2 wazony' => '2w',
+                    'Kpl 2w' => '2w',
                 ], 'kpl')
                 ->renderExpanded()
                 ->setRequired(true)
@@ -1230,7 +1230,7 @@ class ZeszytCrudController extends AbstractCrudController
                     'Kpl' => 'kpl',
                     'Solo' => 'solo',
                     'Wazon' => 'wazon',
-                    '2 wazony' => '2w',
+                    'Kpl 2w' => '2w',
                 ], 'kpl')
                 ->renderExpanded()
                 ->setRequired(true)
@@ -1241,7 +1241,7 @@ class ZeszytCrudController extends AbstractCrudController
                     'Kpl' => 'kpl',
                     'Solo' => 'solo',
                     'Wazon' => 'wazon',
-                    '2 wazony' => '2w',
+                    'Kpl 2w' => '2w',
                 ], 'kpl')
                 ->renderExpanded()
                 ->setRequired(true)
@@ -1252,7 +1252,7 @@ class ZeszytCrudController extends AbstractCrudController
                     'Kpl' => 'kpl',
                     'Solo' => 'solo',
                     'Wazon' => 'wazon',
-                    '2 wazony' => '2w',
+                    'Kpl 2w' => '2w',
                 ], 'kpl')
                 ->renderExpanded()
                 ->setRequired(true)
@@ -1263,7 +1263,7 @@ class ZeszytCrudController extends AbstractCrudController
                     'Kpl' => 'kpl',
                     'Solo' => 'solo',
                     'Wazon' => 'wazon',
-                    '2 wazony' => '2w',
+                    'Kpl 2w' => '2w',
                 ], 'kpl')
                 ->renderExpanded()
                 ->setRequired(true)
@@ -1274,7 +1274,7 @@ class ZeszytCrudController extends AbstractCrudController
                     'Kpl' => 'kpl',
                     'Solo' => 'solo',
                     'Wazon' => 'wazon',
-                    '2 wazony' => '2w',
+                    'Kpl 2w' => '2w',
                 ], 'kpl')
                 ->renderExpanded()
                 ->setRequired(true)
@@ -1285,7 +1285,7 @@ class ZeszytCrudController extends AbstractCrudController
                     'Kpl' => 'kpl',
                     'Solo' => 'solo',
                     'Wazon' => 'wazon',
-                    '2 wazony' => '2w',
+                    'Kpl 2w' => '2w',
                 ], 'kpl')
                 ->renderExpanded()
                 ->setRequired(true)
@@ -1296,7 +1296,7 @@ class ZeszytCrudController extends AbstractCrudController
                     'Kpl' => 'kpl',
                     'Solo' => 'solo',
                     'Wazon' => 'wazon',
-                    '2 wazony' => '2w',
+                    'Kpl 2w' => '2w',
                 ], 'kpl')
                 ->renderExpanded()
                 ->setRequired(true)
@@ -1307,7 +1307,7 @@ class ZeszytCrudController extends AbstractCrudController
                     'Kpl' => 'kpl',
                     'Solo' => 'solo',
                     'Wazon' => 'wazon',
-                    '2 wazony' => '2w',
+                    'Kpl 2w' => '2w',
                 ], 'kpl')
                 ->renderExpanded()
                 ->setRequired(true)
@@ -1318,7 +1318,7 @@ class ZeszytCrudController extends AbstractCrudController
                     'Kpl' => 'kpl',
                     'Solo' => 'solo',
                     'Wazon' => 'wazon',
-                    '2 wazony' => '2w',
+                    'Kpl 2w' => '2w',
                 ], 'kpl')
                 ->renderExpanded()
                 ->setRequired(true)
@@ -1329,7 +1329,7 @@ class ZeszytCrudController extends AbstractCrudController
                     'Kpl' => 'kpl',
                     'Solo' => 'solo',
                     'Wazon' => 'wazon',
-                    '2 wazony' => '2w',
+                    'Kpl 2w' => '2w',
                 ], 'kpl')
                 ->renderExpanded()
                 ->setRequired(true)
@@ -1340,7 +1340,7 @@ class ZeszytCrudController extends AbstractCrudController
                     'Kpl' => 'kpl',
                     'Solo' => 'solo',
                     'Wazon' => 'wazon',
-                    '2 wazony' => '2w',
+                    'Kpl 2w' => '2w',
                 ], 'kpl')
                 ->renderExpanded()
                 ->setRequired(true)
@@ -1351,7 +1351,7 @@ class ZeszytCrudController extends AbstractCrudController
                     'Kpl' => 'kpl',
                     'Solo' => 'solo',
                     'Wazon' => 'wazon',
-                    '2 wazony' => '2w',
+                    'Kpl 2w' => '2w',
                 ], 'kpl')
                 ->renderExpanded()
                 ->setRequired(true)
@@ -1362,7 +1362,7 @@ class ZeszytCrudController extends AbstractCrudController
                     'Kpl' => 'kpl',
                     'Solo' => 'solo',
                     'Wazon' => 'wazon',
-                    '2 wazony' => '2w',
+                    'Kpl 2w' => '2w',
                 ], 'kpl')
                 ->renderExpanded()
                 ->setRequired(true)
@@ -1373,7 +1373,7 @@ class ZeszytCrudController extends AbstractCrudController
                     'Kpl' => 'kpl',
                     'Solo' => 'solo',
                     'Wazon' => 'wazon',
-                    '2 wazony' => '2w',
+                    'Kpl 2w' => '2w',
                 ], 'kpl')
                 ->renderExpanded()
                 ->setRequired(true)
@@ -1384,7 +1384,7 @@ class ZeszytCrudController extends AbstractCrudController
                     'Kpl' => 'kpl',
                     'Solo' => 'solo',
                     'Wazon' => 'wazon',
-                    '2 wazony' => '2w',
+                    'Kpl 2w' => '2w',
                 ], 'kpl')
                 ->renderExpanded()
                 ->setRequired(true)
@@ -1395,7 +1395,7 @@ class ZeszytCrudController extends AbstractCrudController
                     'Kpl' => 'kpl',
                     'Solo' => 'solo',
                     'Wazon' => 'wazon',
-                    '2 wazony' => '2w',
+                    'Kpl 2w' => '2w',
                 ], 'kpl')
                 ->renderExpanded()
                 ->setRequired(true)
@@ -1406,7 +1406,7 @@ class ZeszytCrudController extends AbstractCrudController
                     'Kpl' => 'kpl',
                     'Solo' => 'solo',
                     'Wazon' => 'wazon',
-                    '2 wazony' => '2w',
+                    'Kpl 2w' => '2w',
                 ], 'kpl')
                 ->renderExpanded()
                 ->setRequired(true)
@@ -1417,7 +1417,7 @@ class ZeszytCrudController extends AbstractCrudController
                     'Kpl' => 'kpl',
                     'Solo' => 'solo',
                     'Wazon' => 'wazon',
-                    '2 wazony' => '2w',
+                    'Kpl 2w' => '2w',
                 ], 'kpl')
                 ->renderExpanded()
                 ->setRequired(true)
@@ -1428,7 +1428,7 @@ class ZeszytCrudController extends AbstractCrudController
                     'Kpl' => 'kpl',
                     'Solo' => 'solo',
                     'Wazon' => 'wazon',
-                    '2 wazony' => '2w',
+                    'Kpl 2w' => '2w',
                 ], 'kpl')
                 ->renderExpanded()
                 ->setRequired(true)
@@ -1439,7 +1439,7 @@ class ZeszytCrudController extends AbstractCrudController
                     'Kpl' => 'kpl',
                     'Solo' => 'solo',
                     'Wazon' => 'wazon',
-                    '2 wazony' => '2w',
+                    'Kpl 2w' => '2w',
                 ], 'kpl')
                 ->renderExpanded()
                 ->setRequired(true)
@@ -1450,7 +1450,7 @@ class ZeszytCrudController extends AbstractCrudController
                     'Kpl' => 'kpl',
                     'Solo' => 'solo',
                     'Wazon' => 'wazon',
-                    '2 wazony' => '2w',
+                    'Kpl 2w' => '2w',
                 ], 'kpl')
                 ->renderExpanded()
                 ->setRequired(true)
@@ -1461,7 +1461,7 @@ class ZeszytCrudController extends AbstractCrudController
                     'Kpl' => 'kpl',
                     'Solo' => 'solo',
                     'Wazon' => 'wazon',
-                    '2 wazony' => '2w',
+                    'Kpl 2w' => '2w',
                 ], 'kpl')
                 ->renderExpanded()
                 ->setRequired(true)
@@ -1472,7 +1472,7 @@ class ZeszytCrudController extends AbstractCrudController
                     'Kpl' => 'kpl',
                     'Solo' => 'solo',
                     'Wazon' => 'wazon',
-                    '2 wazony' => '2w',
+                    'Kpl 2w' => '2w',
                 ], 'kpl')
                 ->renderExpanded()
                 ->setRequired(true)
@@ -1483,7 +1483,7 @@ class ZeszytCrudController extends AbstractCrudController
                     'Kpl' => 'kpl',
                     'Solo' => 'solo',
                     'Wazon' => 'wazon',
-                    '2 wazony' => '2w',
+                    'Kpl 2w' => '2w',
                 ], 'kpl')
                 ->renderExpanded()
                 ->setRequired(true)
@@ -1494,7 +1494,7 @@ class ZeszytCrudController extends AbstractCrudController
                     'Kpl' => 'kpl',
                     'Solo' => 'solo',
                     'Wazon' => 'wazon',
-                    '2 wazony' => '2w',
+                    'Kpl 2w' => '2w',
                 ], 'kpl')
                 ->renderExpanded()
                 ->setRequired(true)
