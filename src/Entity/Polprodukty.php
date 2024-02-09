@@ -81,7 +81,14 @@ class Polprodukty
 
     public function __toString(): string
     {
-        return $this->nazwa . $this->getDostawca();
+        $nazwa = $this->nazwa ?? '';
+        $dostawca = $this->getDostawca();
+
+        if ($dostawca !== null) {
+            return $nazwa . '-' . $dostawca;
+        }
+
+        return $nazwa;
     }
 
     public function getDostawcy(): ?Dostawcy
