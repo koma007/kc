@@ -99,6 +99,10 @@
                     "background-color": "#C9E4C9",
                     "font-weight": "bold",
                 });
+                $('.zielony-prawa, .zielony-prawa input, span.zielony').css({
+                    "background-color": "#C9E4C9",
+                    "font-weight": "bold",
+                });
                 //zapis
                 $('#Wyceny_cena_kpl').val(kpl_total);
                 $('#Wyceny_cena_kpl_2w').val(kpl_total_2w);
@@ -626,7 +630,7 @@
         </div>
         <div class="row">
             <div class="col-md-9"> <!-- Kolumna po lewej stronie o szerokości 75% -->
-                <div class="col" id="some-custom-id">
+                <div class="col" id="nazwa_kompozycji">
 
                         {{ form_label(new_form.nazwa) }}
                         {{ form_widget(new_form.nazwa) }}
@@ -2098,47 +2102,168 @@
                                 </div>
                             </td></tr>
 
-                            <tr>
-                                <td>
-                                    <div class="form-group">
-                                        {{ form_widget(new_form.cena_solo) }}
-                                        <small class="form-text text-muted">{{ form_help(new_form.cena_solo) }}</small>
-                                        <div class="invalid-feedback">{{ form_errors(new_form.cena_solo) }}</div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="form-group">
-                                        {{ form_widget(new_form.cena_wazon) }}
-                                        <small class="form-text text-muted">{{ form_help(new_form.cena_wazon) }}</small>
-                                        <div class="invalid-feedback">{{ form_errors(new_form.cena_wazon) }}</div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="form-group">
-                                        {{ form_widget(new_form.cena_kpl) }}
-                                        <small class="form-text text-muted">{{ form_help(new_form.cena_kpl) }}</small>
-                                        <div class="invalid-feedback">{{ form_errors(new_form.cena_kpl) }}</div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="form-group">
-                                        {{ form_widget(new_form.cena_kpl_2w) }}
-                                        <small class="form-text text-muted">{{ form_help(new_form.cena_kpl_2w) }}</small>
-                                        <div class="invalid-feedback">{{ form_errors(new_form.cena_kpl_2w) }}</div>
-                                    </div>
-                                </td>
-                            </tr>
+{#                            <tr>#}
+{#                                <td>#}
+{#                                    <div class="form-group">#}
+{#                                        {{ form_widget(new_form.cena_solo) }}#}
+{#                                        <small class="form-text text-muted">{{ form_help(new_form.cena_solo) }}</small>#}
+{#                                        <div class="invalid-feedback">{{ form_errors(new_form.cena_solo) }}</div>#}
+{#                                    </div>#}
+{#                                </td>#}
+{#                                <td>#}
+{#                                    <div class="form-group">#}
+{#                                        {{ form_widget(new_form.cena_wazon) }}#}
+{#                                        <small class="form-text text-muted">{{ form_help(new_form.cena_wazon) }}</small>#}
+{#                                        <div class="invalid-feedback">{{ form_errors(new_form.cena_wazon) }}</div>#}
+{#                                    </div>#}
+{#                                </td>#}
+{#                                <td>#}
+{#                                    <div class="form-group">#}
+{#                                        {{ form_widget(new_form.cena_kpl) }}#}
+{#                                        <small class="form-text text-muted">{{ form_help(new_form.cena_kpl) }}</small>#}
+{#                                        <div class="invalid-feedback">{{ form_errors(new_form.cena_kpl) }}</div>#}
+{#                                    </div>#}
+{#                                </td>#}
+{#                                <td>#}
+{#                                    <div class="form-group">#}
+{#                                        {{ form_widget(new_form.cena_kpl_2w) }}#}
+{#                                        <small class="form-text text-muted">{{ form_help(new_form.cena_kpl_2w) }}</small>#}
+{#                                        <div class="invalid-feedback">{{ form_errors(new_form.cena_kpl_2w) }}</div>#}
+{#                                    </div>#}
+{#                                </td>#}
+{#                            </tr>#}
                         </tbody>
                     </table>
                 </div>
             </div>
-            <div class="col-md-3 d-flex align-items-center justify-content-center"> <!-- Kolumna po prawej stronie o szerokości 25% -->
-                <div class="">
-                    {{ form_widget(new_form.zdjecie) }}
-                    <small class="form-text text-muted">{{ form_help(new_form.zdjecie) }}</small>
-                    <div class="invalid-feedback">{{ form_errors(new_form.zdjecie) }}</div>
+            <div class="col-md-3"> <!-- Kolumna po prawej stronie o szerokości 25% -->
+                <div id="kompozycja_zdj" class="sticky-image">
+                    <h3 class="text-center">{{ new_form.vars.value.nazwa }}</h3>
+
+                    <div class="row p-1 border">
+                        <div class="col-md-6">
+                            <div class="form-group2 pastel-fiolet">
+                                <label>{{ form_label(new_form.cena_solo) }}:</label>
+                                {{ form_widget(new_form.cena_solo, {'attr': {'class': 'form-control'}}) }}
+                            </div>
+
+                            <div class="form-group2 pastel-yellow">
+                                <label>{{ form_label(new_form.cena_wazon) }}:</label>
+                                {{ form_widget(new_form.cena_wazon, {'attr': {'class': 'form-control'}}) }}
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 zielony-prawa">
+                            <div class="form-group2 zielony">
+                                <label>{{ form_label(new_form.cena_kpl) }}:</label>
+                                {{ form_widget(new_form.cena_kpl, {'attr': {'class': 'form-control'}}) }}
+                            </div>
+
+                            <div class="form-group2">
+                                <label>{{ form_label(new_form.cena_kpl_2w) }}:</label>
+                                {{ form_widget(new_form.cena_kpl_2w, {'attr': {'class': 'form-control'}}) }}
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="d-flex flex-column p-1">
+
+
+                        {% set imagePath = asset('uploads/kompozycje/' ~ new_form.vars.value.zdjecieSolo) %}
+                        {% if new_form.vars.value.zdjecieSolo %}
+                            <div class="my-2 d-flex-container">
+                                <a href="#" class="ea-lightbox-thumbnail" data-ea-lightbox-content-selector="#ea-lightbox-01H4N6K15A3NSHY5KB400FQAMP-2">
+                                    <img src="{{ imagePath }}" alt="Nazwa obrazka" class="img-fluid">
+                                </a>
+                                <div id="ea-lightbox-01H4N6K15A3NSHY5KB400FQAMP-2" class="ea-lightbox">
+                                    <img src="{{ imagePath }}" class="img-fluid">
+                                </div>
+                            </div>
+                            <div class="edycja_zdjecia">
+                                {{ form_widget(new_form.zdjecie_solo) }}
+                                <small class="form-text text-muted">{{ form_help(new_form.zdjecie_solo) }}</small>
+                                <div class="invalid-feedback">{{ form_errors(new_form.zdjecie_solo) }}</div>
+                            </div>
+                        {% else %}
+                            <div class="edycja_zdjecia">
+                                {{ form_label(new_form.zdjecie_solo) }}
+                                {{ form_widget(new_form.zdjecie_solo) }}
+                                <small class="form-text text-muted">{{ form_help(new_form.zdjecie_solo) }}</small>
+                                <div class="invalid-feedback">{{ form_errors(new_form.zdjecie_solo) }}</div>
+                            </div>
+                        {% endif %}
+
+
+
+
+                        {% set imagePath = asset('uploads/kompozycje/' ~ new_form.vars.value.zdjecie) %}
+                        {% if new_form.vars.value.zdjecie %}
+                            <div class="my-2 d-flex-container">
+                                <a href="#" class="ea-lightbox-thumbnail" data-ea-lightbox-content-selector="#ea-lightbox-01H4N6K15A3NSHY5KB400FQAMP-1">
+                                    <img src="{{ imagePath }}" alt="Nazwa obrazka" class="img-fluid">
+                                </a>
+                                <div id="ea-lightbox-01H4N6K15A3NSHY5KB400FQAMP-1" class="ea-lightbox">
+                                    <img src="{{ imagePath }}" class="img-fluid">
+                                </div>
+                            </div>
+                            <div class="edycja_zdjecia">
+                                {{ form_widget(new_form.zdjecie) }}
+                                <small class="form-text text-muted">{{ form_help(new_form.zdjecie) }}</small>
+                                <div class="invalid-feedback">{{ form_errors(new_form.zdjecie) }}</div>
+                            </div>
+                        {% else %}
+                            <div class="edycja_zdjecia">
+                                {{ form_label(new_form.zdjecie) }}
+                                {{ form_widget(new_form.zdjecie) }}
+                                <small class="form-text text-muted">{{ form_help(new_form.zdjecie) }}</small>
+                                <div class="invalid-feedback">{{ form_errors(new_form.zdjecie) }}</div>
+                            </div>
+                        {% endif %}
+
+
+                        {% set imagePath = asset('uploads/kompozycje/' ~ new_form.vars.value.zdjecieWazon) %}
+                        {% if new_form.vars.value.zdjecieWazon %}
+                            <div class="my-2 d-flex-container">
+                                <a href="#" class="ea-lightbox-thumbnail" data-ea-lightbox-content-selector="#ea-lightbox-01H4N6K15A3NSHY5KB400FQAMP-3">
+                                    <img src="{{ imagePath }}" alt="Nazwa obrazka" class="img-fluid ">
+                                </a>
+                                <div id="ea-lightbox-01H4N6K15A3NSHY5KB400FQAMP-3" class="ea-lightbox">
+                                    <img src="{{ imagePath }}" class="img-fluid">
+                                </div>
+                            </div>
+                            <div class="edycja_zdjecia">
+                                {{ form_widget(new_form.zdjecie_wazon) }}
+                                <small class="form-text text-muted">{{ form_help(new_form.zdjecie_wazon) }}</small>
+                                <div class="invalid-feedback">{{ form_errors(new_form.zdjecie_wazon) }}</div>
+                            </div>
+                        {% else %}
+                            <div class="edycja_zdjecia">
+                                {{ form_label(new_form.zdjecie_wazon) }}
+                                {{ form_widget(new_form.zdjecie_wazon) }}
+                                <small class="form-text text-muted">{{ form_help(new_form.zdjecie_wazon) }}</small>
+                                <div class="invalid-feedback">{{ form_errors(new_form.zdjecie_wazon) }}</div>
+                            </div>
+                        {% endif %}
+                    </div>
+
                 </div>
+
+
+
+                {#                    <a href="#" class="ea-lightbox-thumbnail" data-ea-lightbox-content-selector="#ea-lightbox-01H4N6K15A3NSHY5KB400FQAMP-1">#}
+                {#                        <img src="/uploads/kompozycje/img-20230622-141057-851-[kompozycja]-1688563171.jpg" class="img-fluid">#}
+                {#                    </a>#}
+
+                {#                    <div id="ea-lightbox-01H4N6K15A3NSHY5KB400FQAMP-1" class="ea-lightbox">#}
+                {#                        <img src="/uploads/kompozycje/img-20230622-141057-851-[kompozycja]-1688563171.jpg">#}
+                {#                    </div>#}
+
+
+
             </div>
+
+
 
 
             <input type="hidden" id="idPracownikow" value="{{ idPracownikow|json_encode|e }}">

@@ -2176,6 +2176,34 @@
 
 
                 <div class="d-flex flex-column p-1">
+
+
+                    {% set imagePath = asset('uploads/kompozycje/' ~ edit_form.vars.value.zdjecieSolo) %}
+                    {% if edit_form.vars.value.zdjecieSolo %}
+                        <div class="my-2 d-flex-container">
+                            <a href="#" class="ea-lightbox-thumbnail" data-ea-lightbox-content-selector="#ea-lightbox-01H4N6K15A3NSHY5KB400FQAMP-2">
+                                <img src="{{ imagePath }}" alt="Nazwa obrazka" class="img-fluid">
+                            </a>
+                            <div id="ea-lightbox-01H4N6K15A3NSHY5KB400FQAMP-2" class="ea-lightbox">
+                                <img src="{{ imagePath }}" class="img-fluid">
+                            </div>
+                        </div>
+                        <div class="edycja_zdjecia">
+                            {{ form_widget(edit_form.zdjecie_solo) }}
+                            <small class="form-text text-muted">{{ form_help(edit_form.zdjecie_solo) }}</small>
+                            <div class="invalid-feedback">{{ form_errors(edit_form.zdjecie_solo) }}</div>
+                        </div>
+                    {% else %}
+                        <div class="edycja_zdjecia">
+                            {{ form_label(edit_form.zdjecie_solo) }}
+                            {{ form_widget(edit_form.zdjecie_solo) }}
+                            <small class="form-text text-muted">{{ form_help(edit_form.zdjecie_solo) }}</small>
+                            <div class="invalid-feedback">{{ form_errors(edit_form.zdjecie_solo) }}</div>
+                        </div>
+                    {% endif %}
+
+
+
                     {% set imagePath = asset('uploads/kompozycje/' ~ edit_form.vars.value.zdjecie) %}
                     {% if edit_form.vars.value.zdjecie %}
                         <div class="my-2 d-flex-container">
@@ -2201,29 +2229,6 @@
                     {% endif %}
 
 
-                        {% set imagePath = asset('uploads/kompozycje/' ~ edit_form.vars.value.zdjecieSolo) %}
-                        {% if edit_form.vars.value.zdjecieSolo %}
-                            <div class="my-2 d-flex-container">
-                                <a href="#" class="ea-lightbox-thumbnail" data-ea-lightbox-content-selector="#ea-lightbox-01H4N6K15A3NSHY5KB400FQAMP-2">
-                                    <img src="{{ imagePath }}" alt="Nazwa obrazka" class="img-fluid">
-                                </a>
-                                <div id="ea-lightbox-01H4N6K15A3NSHY5KB400FQAMP-2" class="ea-lightbox">
-                                    <img src="{{ imagePath }}" class="img-fluid">
-                                </div>
-                            </div>
-                            <div class="edycja_zdjecia">
-                                {{ form_widget(edit_form.zdjecie_solo) }}
-                                <small class="form-text text-muted">{{ form_help(edit_form.zdjecie_solo) }}</small>
-                                <div class="invalid-feedback">{{ form_errors(edit_form.zdjecie_solo) }}</div>
-                            </div>
-                        {% else %}
-                            <div class="edycja_zdjecia">
-                                {{ form_label(edit_form.zdjecie_solo) }}
-                                {{ form_widget(edit_form.zdjecie_solo) }}
-                                <small class="form-text text-muted">{{ form_help(edit_form.zdjecie_solo) }}</small>
-                                <div class="invalid-feedback">{{ form_errors(edit_form.zdjecie_solo) }}</div>
-                            </div>
-                        {% endif %}
 
                         {% set imagePath = asset('uploads/kompozycje/' ~ edit_form.vars.value.zdjecieWazon) %}
                         {% if edit_form.vars.value.zdjecieWazon %}

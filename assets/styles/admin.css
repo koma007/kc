@@ -11,7 +11,7 @@
 /*}*/
 
 #wyceny-table tr {
-    border-bottom: 3px solid gray;
+    border-bottom: 2px solid black;
 }
 .bg-custom-green {
     background-color: #C9E4C9 !important;
@@ -39,6 +39,7 @@
     padding-right: 3px;
     padding-top: 5px;
     padding-bottom: 4px;
+    border: 1px solid black;
 }
 
 #hurtowe-table div.row>*, #wyceny-table div.row>*{
@@ -256,3 +257,32 @@ body.ea-edit-Zeszyt .content-header, body.ea-new-Zeszyt .content-header {
     justify-content: space-between;
     padding: 36px 0 16px;
 }
+
+
+body.ea-edit .content-header, body.ea-new .content-header
+{
+    position: sticky;
+    top: -20px;
+    z-index: 999;
+    background: var(--body-bg);
+    align-items: flex-start;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 36px 0 16px;
+}
+@media (max-width: 768px) {
+    div#tytul_wycena{
+        display: none;
+    }
+    div.naglowek {
+        font-size: 15px !important;
+    }
+}
+
+#edit-Wyceny-form div[id^="Wyceny_skladowa"], #new-Wyceny-form div[id^="Wyceny_skladowa"]{
+    border: 1px solid black !important;
+    height: 100%
+}
+
+

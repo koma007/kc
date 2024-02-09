@@ -690,20 +690,20 @@ $userRepository = $this->entityManager->getRepository(User::class);
                 ->hideOnIndex(),
 
             ImageField::new('zdjecie')
-                ->setLabel('Kpl. / główne zdjęcie')
+                ->setLabel('Zdj. Kpl.')
                 ->setBasePath('uploads/kompozycje')
                 ->setUploadDir('public/uploads/kompozycje')
-                ->setUploadedFileNamePattern('kpl-[slug]-[timestamp].[extension]'),
-
-            ImageField::new('zdjecie_solo')
-                ->setLabel('Zdjęcie solo')
-                ->setBasePath('uploads/kompozycje')
-                ->setUploadDir('public/uploads/kompozycje')
-                ->setUploadedFileNamePattern('solo-[slug]-[timestamp].[extension]')
+                ->setUploadedFileNamePattern('kpl-[slug]-[timestamp].[extension]')
                 ->hideOnIndex(),
 
+            ImageField::new('zdjecie_solo')
+                ->setLabel('Zdj. solo /główne')
+                ->setBasePath('uploads/kompozycje')
+                ->setUploadDir('public/uploads/kompozycje')
+                ->setUploadedFileNamePattern('solo-[slug]-[timestamp].[extension]'),
+
             ImageField::new('zdjecie_wazon')
-                ->setLabel('Zdjęcie wazon')
+                ->setLabel('Zdj. wazon')
                 ->setBasePath('uploads/kompozycje')
                 ->setUploadDir('public/uploads/kompozycje')
                 ->setUploadedFileNamePattern('wazon-[slug]-[timestamp].[extension]')
@@ -777,7 +777,7 @@ $userRepository = $this->entityManager->getRepository(User::class);
             ->overrideTemplate('crud/new', 'admin/wyceny/new.html.twig')
             ->overrideTemplate('crud/edit', 'admin/wyceny/edit.html.twig')
             ->setEntityLabelInPlural('Wyceny')
-            ->setEntityLabelInSingular('wycenę')
+            ->setEntityLabelInSingular('nową wycenę')
             ->showEntityActionsInlined() //nie ukrywaj edycja i usuń
             ->setDefaultSort([
                 'id' => 'DESC'

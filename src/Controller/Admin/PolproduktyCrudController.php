@@ -67,10 +67,15 @@ class PolproduktyCrudController extends AbstractCrudController
 
     public function configureCrud(Crud $crud): Crud
     {
-        return parent::configureCrud($crud)
+        return $crud
+            ->setPageTitle('new', 'Nowy półprodukt')
+            ->setPageTitle('index', 'Półprodukty')
+            ->setPageTitle('edit', 'Edycja półproduktu')
+            ->setEntityLabelInPlural('Półprodukty')
+            ->setEntityLabelInSingular('nowy półprodukt')
+            ->showEntityActionsInlined() //nie ukrywaj edycja i usuń
             ->setDefaultSort([
                 'id' => 'DESC'
             ]);
     }
-
 }
