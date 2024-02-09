@@ -2944,7 +2944,7 @@ class Wyceny
 
     public function __toString(): string
     {
-        return $this->nazwa;
+        return 'wyce';
     }
 
 

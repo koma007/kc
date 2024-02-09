@@ -2,10 +2,12 @@
 
 namespace App\EventSubscriber;
 
+use App\Entity\Polprodukty;
 use Doctrine\ORM\EntityManagerInterface;
+use EasyCorp\Bundle\EasyAdminBundle\Event\BeforeEntityPersistedEvent;
 use EasyCorp\Bundle\EasyAdminBundle\Event\BeforeEntityDeletedEvent;
+use EasyCorp\Bundle\EasyAdminBundle\Event\BeforeEntityUpdatedEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 class PolproduktyEventSubscriber implements EventSubscriberInterface
@@ -19,8 +21,11 @@ class PolproduktyEventSubscriber implements EventSubscriberInterface
 
     public static function getSubscribedEvents(): array
     {
+
         return [
             BeforeEntityDeletedEvent::class => 'onBeforeEntityDeleted',
+            BeforeEntityPersistedEvent::class => 'onBeforeEntityPersisted',
+            BeforeEntityUpdatedEvent::class => 'onBeforeEntityUpdated',
         ];
     }
 
@@ -28,7 +33,6 @@ class PolproduktyEventSubscriber implements EventSubscriberInterface
     {
         $entity = $event->getEntityInstance();
 
-        // Sprawdź, czy jest to Polprodukty
         if ($entity instanceof \App\Entity\Polprodukty) {
             $id = $entity->getId();
 
@@ -45,5 +49,38 @@ class PolproduktyEventSubscriber implements EventSubscriberInterface
         $blockedIds = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
         return in_array($id, $blockedIds);
+    }
+
+    public function onBeforeEntityUpdated(BeforeEntityUpdatedEvent $event)
+    {
+        $entity = $event->getEntityInstance();
+
+        if ($entity instanceof Polprodukty) {
+
+            $dostawca = $entity->getDostawcy();
+
+            if ($dostawca !== null) {
+                $entity->setDostawca($dostawca);
+            }
+
+            $this->entityManager->persist($entity);
+            $this->entityManager->flush();
+        }
+    }
+    public function onBeforeEntityPersisted(BeforeEntityPersistedEvent $event)
+    {
+        $entity = $event->getEntityInstance();
+
+        if ($entity instanceof Polprodukty) {
+
+            $dostawca = $entity->getDostawcy();
+
+            if ($dostawca !== null) {
+                $entity->setDostawca($dostawca);
+            }
+
+            $this->entityManager->persist($entity);
+            $this->entityManager->flush();
+        }
     }
 }

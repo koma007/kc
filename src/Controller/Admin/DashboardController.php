@@ -5,6 +5,7 @@ namespace App\Controller\Admin;
 use App\Entity\ArrangementPrice;
 use App\Entity\Comment;
 use App\Entity\DomyslnaGrupa;
+use App\Entity\Dostawcy;
 use App\Entity\Grupy;
 use App\Entity\Hurtowe;
 use App\Entity\Polprodukty;
@@ -85,7 +86,8 @@ class DashboardController extends AbstractDashboardController
 
             yield MenuItem::subMenu('Konfiguracja', 'fa fa-article')->setSubItems([
                 MenuItem::linkToCrud('Grupy kompozycji', 'fa fa-tags', Grupy::class),
-                MenuItem::linkToCrud('Domyślna grupa', 'fa fa-tags', DomyslnaGrupa::class),
+                MenuItem::linkToCrud('Domyślna grupa', 'fa fa-star', DomyslnaGrupa::class),
+                MenuItem::linkToCrud('Dostawcy', 'fa fa-car', Dostawcy::class),
 //                MenuItem::linkToCrud('Domyślna grupa', 'fa fa-tags', Grupy::class)
 //                    ->setController(GrupyDomyslnaCrudController::class)
             ]);

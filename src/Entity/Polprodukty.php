@@ -22,6 +22,12 @@ class Polprodukty
     #[ORM\OneToOne(mappedBy: 'skladowa1', cascade: ['persist', 'remove'])]
     private ?Wyceny $wyceny = null;
 
+    #[ORM\ManyToOne(inversedBy: 'polprodukt')]
+    private ?Dostawcy $dostawcy = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $dostawca = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -75,6 +81,30 @@ class Polprodukty
 
     public function __toString(): string
     {
-        return $this->nazwa;
+        return $this->nazwa . $this->getDostawca();
+    }
+
+    public function getDostawcy(): ?Dostawcy
+    {
+        return $this->dostawcy;
+    }
+
+    public function setDostawcy(?Dostawcy $dostawcy): static
+    {
+        $this->dostawcy = $dostawcy;
+
+        return $this;
+    }
+
+    public function getDostawca(): ?string
+    {
+        return $this->dostawca;
+    }
+
+    public function setDostawca(?string $dostawca): static
+    {
+        $this->dostawca = $dostawca;
+
+        return $this;
     }
 }

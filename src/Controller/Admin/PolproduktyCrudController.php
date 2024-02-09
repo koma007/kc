@@ -12,6 +12,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -77,5 +78,24 @@ class PolproduktyCrudController extends AbstractCrudController
             ->setDefaultSort([
                 'id' => 'DESC'
             ]);
+    }
+
+    public function configureFields(string $pageName): iterable
+    {
+        return [
+            TextField::new('nazwa')
+                ->setRequired(true),
+
+//            TextField::new('dostawca')
+//                ->setRequired(true),
+
+            NumberField::new('cena')
+                ->setRequired(true),
+
+            AssociationField::new('dostawcy')
+                ->setLabel('Dostawca (opcjonalne)')
+                ->autocomplete(),
+
+        ];
     }
 }
