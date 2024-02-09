@@ -72,7 +72,8 @@ $userRepository = $this->entityManager->getRepository(User::class);
             AssociationField::new('skladowa1')
                 ->autocomplete()
                 ->setLabel('Składowa')
-                ->hideOnIndex(),
+                ->hideOnIndex()
+                ->setRequired(1),
 //                ->setQueryBuilder(function ($queryBuilder) use ($id) {
 //                    $queryBuilder
 //                        ->select('p')

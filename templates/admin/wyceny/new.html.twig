@@ -401,6 +401,7 @@
             document.getElementById('Wyceny_nazwa').addEventListener('input', function() {
                 var inputValue = this.value;
                 document.getElementById('tytul_wycena').textContent = inputValue;
+                document.getElementById('tytul_wycena2').textContent = inputValue;
             });
 
 
@@ -630,6 +631,7 @@
         </div>
         <div class="row">
             <div class="col-md-9"> <!-- Kolumna po lewej stronie o szerokości 75% -->
+
                 <div class="col" id="nazwa_kompozycji">
 
                         {{ form_label(new_form.nazwa) }}
@@ -643,7 +645,7 @@
 
                 </div>
                 <div id="wyceny-table" class="table-responsive">
-                    <table class="table table-striped" id="wyceny">
+                    <table class="table" id="wyceny">
                         <thead>
                         <tr>
                             <th scope="col">Składowa</th>
@@ -2138,7 +2140,7 @@
             </div>
             <div class="col-md-3"> <!-- Kolumna po prawej stronie o szerokości 25% -->
                 <div id="kompozycja_zdj" class="sticky-image">
-                    <h3 class="text-center">{{ new_form.vars.value.nazwa }}</h3>
+                    <h3 id="tytul_wycena2" class="text-center">{{ new_form.vars.value.nazwa }}</h3>
 
                     <div class="row p-1 border">
                         <div class="col-md-6">
@@ -2187,7 +2189,7 @@
                             </div>
                         {% else %}
                             <div class="edycja_zdjecia">
-                                {{ form_label(new_form.zdjecie_solo) }}
+                               <strong> {{ form_label(new_form.zdjecie_solo) }}</strong>
                                 {{ form_widget(new_form.zdjecie_solo) }}
                                 <small class="form-text text-muted">{{ form_help(new_form.zdjecie_solo) }}</small>
                                 <div class="invalid-feedback">{{ form_errors(new_form.zdjecie_solo) }}</div>
@@ -2214,7 +2216,7 @@
                             </div>
                         {% else %}
                             <div class="edycja_zdjecia">
-                                {{ form_label(new_form.zdjecie) }}
+                                <strong> {{ form_label(new_form.zdjecie) }}</strong>
                                 {{ form_widget(new_form.zdjecie) }}
                                 <small class="form-text text-muted">{{ form_help(new_form.zdjecie) }}</small>
                                 <div class="invalid-feedback">{{ form_errors(new_form.zdjecie) }}</div>
@@ -2239,7 +2241,7 @@
                             </div>
                         {% else %}
                             <div class="edycja_zdjecia">
-                                {{ form_label(new_form.zdjecie_wazon) }}
+                                <strong>{{ form_label(new_form.zdjecie_wazon) }}</strong>
                                 {{ form_widget(new_form.zdjecie_wazon) }}
                                 <small class="form-text text-muted">{{ form_help(new_form.zdjecie_wazon) }}</small>
                                 <div class="invalid-feedback">{{ form_errors(new_form.zdjecie_wazon) }}</div>
@@ -2265,19 +2267,34 @@
 
 
 
-
+<div id="pozostale">
             <input type="hidden" id="idPracownikow" value="{{ idPracownikow|json_encode|e }}">
             <div class="">
-               <strong> {{ form_label(new_form.pracownik) }}</strong>
-{#                {{ dump(new_form.vars.form.children.pracownik.vars.form.vars.choices|keys) }}#}
+                <strong> {{ form_label(new_form.pracownik) }}</strong>
+                {#                {{ dump(new_form.vars.form.children.pracownik.vars.form.vars.choices|keys) }}#}
                 {{ form_widget(new_form.pracownik) }}
                 <small class="form-text text-muted">{{ form_help(new_form.pracownik) }}</small>
                 <div class="invalid-feedback">{{ form_errors(new_form.pracownik) }}</div>
             </div>
 
 
+            <div class="form-group mt-3">
+                <strong>{{ form_label(new_form.grupa) }}</strong>
+                {{ form_widget(new_form.grupa) }}
+                <small class="form-text text-muted">{{ form_help(new_form.grupa) }}</small>
+                <div class="invalid-feedback">{{ form_errors(new_form.grupa) }}</div>
+            </div>
 
 
+
+            <h6>Pokazać na stronie?</h6>
+            <div class="form-group">
+                {{ form_widget(new_form.aktywny) }}
+                <small class="form-text text-muted">{{ form_help(new_form.aktywny) }}</small>
+                <div class="invalid-feedback">{{ form_errors(new_form.aktywny) }}</div>
+            </div>
+
+</div>
 
 
 

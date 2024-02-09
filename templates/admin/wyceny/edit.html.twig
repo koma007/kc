@@ -332,6 +332,7 @@
 
                 var inputValue = this.value;
                 document.getElementById('tytul_wycena').textContent = inputValue;
+                document.getElementById('tytul_wycena2').textContent = inputValue;
             });
 
 
@@ -667,21 +668,21 @@
         </div>
         <div class="row">
             <div class="col-md-9"> <!-- Kolumna po lewej stronie o szerokości 75% -->
-                <div class="col" id="some-custom-id">
-                    <div class="form-control">
-                        {{ form_label(edit_form.nazwa) }}
-                        {{ form_widget(edit_form.nazwa) }}
+                <div class="col" id="nazwa_kompozycji">
 
-                        <small>{{ form_help(edit_form.nazwa) }}</small>
+                    {{ form_label(edit_form.nazwa) }}
+                    {{ form_widget(edit_form.nazwa) }}
 
-                        <div class="form-error">
-                            {{ form_errors(edit_form.nazwa) }}
-                        </div>
+                    <small>{{ form_help(edit_form.nazwa) }}</small>
+
+                    <div class="form-error">
+                        {{ form_errors(edit_form.nazwa) }}
                     </div>
+
                 </div>
 
                 <div id="wyceny-table" class="table-responsive">
-                    <table class="table table-striped" id="wyceny">
+                    <table class="table " id="wyceny">
                         <thead>
                         <tr>
                             <th scope="col">Składowa</th>
@@ -2146,7 +2147,7 @@
             </div>
             <div class="col-md-3"> <!-- Kolumna po prawej stronie o szerokości 25% -->
                 <div id="kompozycja_zdj" class="sticky-image">
-                    <h3 class="text-center">{{ edit_form.vars.value.nazwa }}</h3>
+                    <h3 id="tytul_wycena2" class="text-center">{{ edit_form.vars.value.nazwa }}</h3>
 
                     <div class="row p-1 border">
                         <div class="col-md-6">
@@ -2195,7 +2196,7 @@
                         </div>
                     {% else %}
                         <div class="edycja_zdjecia">
-                            {{ form_label(edit_form.zdjecie_solo) }}
+                            <strong>{{ form_label(edit_form.zdjecie_solo) }} </strong>
                             {{ form_widget(edit_form.zdjecie_solo) }}
                             <small class="form-text text-muted">{{ form_help(edit_form.zdjecie_solo) }}</small>
                             <div class="invalid-feedback">{{ form_errors(edit_form.zdjecie_solo) }}</div>
@@ -2221,7 +2222,7 @@
                         </div>
                     {% else %}
                         <div class="edycja_zdjecia">
-                            {{ form_label(edit_form.zdjecie) }}
+                            <strong>{{ form_label(edit_form.zdjecie) }} </strong>
                             {{ form_widget(edit_form.zdjecie) }}
                             <small class="form-text text-muted">{{ form_help(edit_form.zdjecie) }}</small>
                             <div class="invalid-feedback">{{ form_errors(edit_form.zdjecie) }}</div>
@@ -2247,7 +2248,7 @@
                             </div>
                         {% else %}
                             <div class="edycja_zdjecia">
-                                {{ form_label(edit_form.zdjecie_wazon) }}
+                                <strong> {{ form_label(edit_form.zdjecie_wazon) }} </strong>
                                 {{ form_widget(edit_form.zdjecie_wazon) }}
                                 <small class="form-text text-muted">{{ form_help(edit_form.zdjecie_wazon) }}</small>
                                 <div class="invalid-feedback">{{ form_errors(edit_form.zdjecie_wazon) }}</div>
@@ -2270,14 +2271,34 @@
 
 
             </div>
-
+        <div id="pozostale">
             <input type="hidden" id="idPracownikow" value="{{ idPracownikow|json_encode|e }}">
-            <div class="">
+            <div class="mt-3">
                 <strong>{{ form_label(edit_form.pracownik) }}</strong>
                 {{ form_widget(edit_form.pracownik) }}
                 <small class="form-text text-muted">{{ form_help(edit_form.pracownik) }}</small>
                 <div class="invalid-feedback">{{ form_errors(edit_form.pracownik) }}</div>
             </div>
+
+
+            <div class="form-group mt-3">
+                <strong>{{ form_label(edit_form.grupa) }}</strong>
+                {{ form_widget(edit_form.grupa) }}
+                <small class="form-text text-muted">{{ form_help(edit_form.grupa) }}</small>
+                <div class="invalid-feedback">{{ form_errors(edit_form.grupa) }}</div>
+            </div>
+
+
+
+            <h6>Pokazać na stronie?</h6>
+            <div class="form-group">
+                {{ form_widget(edit_form.aktywny) }}
+                <small class="form-text text-muted">{{ form_help(edit_form.aktywny) }}</small>
+                <div class="invalid-feedback">{{ form_errors(edit_form.aktywny) }}</div>
+            </div>
+
+        </div>
+
         </div>
 
         {{ form_end(edit_form) }}

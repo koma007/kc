@@ -286,3 +286,39 @@ body.ea-edit .content-header, body.ea-new .content-header
 }
 
 
+/* Stylizacja dla pustego pola */
+#nazwa_kompozycji.invalid-feedback input {
+    border: 1px solid red; /* Obramowanie czerwone */
+}
+
+/* Stylizacja dla błędu */
+#nazwa_kompozycji .invalid-feedback {
+    color: red; /* Kolor tekstu czerwony */
+}
+#nazwa_kompozycji label{
+    font-weight: bold;
+}
+#nazwa_kompozycji input{
+    border: 1px solid black;
+}
+
+.bg-custom-red td {
+    background-color: #FFEBEE !important;
+    font-weight: bold;
+}
+
+.bg-custom-green td {
+    background-color: #C9E4C9 !important;
+    font-weight: bold;
+}
+
+#wyceny-table td{
+ background-color: #F3F3F3FF;
+}
+
+#pozostale input,
+#pozostale select,
+#pozostale .ts-wrapper,
+#pozostale .edycja_zdjecia{
+    border: 1px solid black !important;
+}
