@@ -585,20 +585,26 @@
                 type: 'POST',
                 success: (data) => {
 
-                    $('#' + cenaFieldId).val(data.cena);
+                    $('#' + cenaFieldId).val(data.cena.toString().replace('.', ','));
 
-                    var sztukValue = ($('#' + sztukFieldId).val().replace(',', '.')); // Parsowanie wartości do liczby zmiennoprzecinkowej
-                    var cena = parseFloat(data.cena);
-                    var newValue = (cena * sztukValue).toFixed(2);
-                    $('#' + wartoscFieldId).val(newValue);
+                    var cena = parseFloat(data.cena.toString().replace(',', '.'));
+                    var sztuk = ($('#' + sztukFieldId).val().replace(',', '.'));
+
+                    if (!isNaN(cena) && !isNaN(sztuk)) {
+                        var wynik = cena*sztuk
+                        $('#' + wartoscFieldId).val((wynik.toFixed(2)).toString().replace('.', ','));
+
+                    } else {
+                        $('#' + wartoscFieldId).val('');
+                    }
 
 
 
                     //wazon
                     if (where >= 8 && where <= 18) {
-                        $('#' + cenaFieldIdWazon).val(data.cena);
+                        $('#' + cenaFieldIdWazon).val(data.cena.toString().replace('.', ','));
                         $('#' + sztukFieldIdWazon).val(1);
-                        $('#' + wartoscFieldIdWazon).val(data.cena);
+                        $('#' + wartoscFieldIdWazon).val(data.cena.toString().replace('.', ','));
                         $('#' + skladowaFieldIdWazon).attr('placeholder', data.nazwa);
                     }
 
