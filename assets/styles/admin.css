@@ -190,37 +190,6 @@ div#some-custom-id > *{
 div.has-error{
     background-color: crimson !important;
 }
-/*@media (max-width: 768px) {*/
-/*    #row-zeszyt > * {*/
-/*        padding-left: 0;*/
-/*        padding-right: 0;*/
-/*    }*/
-/*    !*powodowało poziomy pasek*!*/
-/*    #row-zeszyt2{*/
-/*        margin-right: 0;*/
-/*    }*/
-
-/*    .form-group{*/
-/*        padding: 0;*/
-/*    }*/
-
-/*    .ts-wrapper .ts-control {*/
-/*        height: 36px;*/
-/*    }*/
-
-/*    tr {*/
-/*        overflow: hidden;*/
-/*    }*/
-
-/*    td {*/
-/*        white-space: nowrap;*/
-/*    }*/
-
-/*    .date-row {*/
-/*        display: none;*/
-/*    }*/
-
-/*}*/
 
 div.thick-separator {
     padding: 0 !important;
@@ -321,4 +290,18 @@ body.ea-edit .content-header, body.ea-new .content-header
 #pozostale .ts-wrapper,
 #pozostale .edycja_zdjecia{
     border: 1px solid black !important;
+}
+@media (max-width: 768px) {
+    .dodajPolprodukt *{
+        padding:0 !important;
+        margin: 0 !important;
+        font-weight: normal !important;
+
+    }
+    .dodajPolprodukt .form-check-input{
+        float:left;
+    }
+    .dodajPolprodukt input{
+        margin-top:5px !important;
+    }
 }
