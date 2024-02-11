@@ -291,6 +291,67 @@ body.ea-edit .content-header, body.ea-new .content-header
 #pozostale .edycja_zdjecia{
     border: 1px solid black !important;
 }
+
+
+/* Kolor zielony dla placeholdera */
+.form-control::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+    color: #999;
+}
+.form-control::-moz-placeholder { /* Firefox 19+ */
+    color: #999;
+}
+.form-control:-ms-input-placeholder { /* IE 10+ */
+    color: #999;
+}
+.form-control:-moz-placeholder { /* Firefox 18- */
+    color: #999;
+}
+
+
+ .disabled {
+     background-color: #f0f0f0;
+     pointer-events: none;
+ }
+
+
+
+/* Elementy akordeonu */
+.accordion-item {
+    margin-bottom: 10px;
+}
+
+/* Elementy akordeonu, które są wypełnione */
+.accordion-item.filled .accordion-button {
+    background-color: lightgray; /* Dodaj dowolne style dla rozwiniętych wpisów */
+}
+
+/* Elementy akordeonu, które są zwinięte */
+.accordion-item:not(.filled) .accordion-button {
+    background-color: lightblue; /* Dodaj dowolne style dla zwiniętych wpisów */
+}
+
+#edit-Zeszyt-form div.ts-wrapper .ts-control, #new-Zeszyt-form div.ts-wrapper .ts-control {
+    height: 36px !important;
+}
+
+#accordionZeszyt input[type="number"],
+#accordionZeszyt input[type="text"],
+#accordionZeszyt .datetime-widget input[type="date"],
+#accordionZeszyt .form-select,
+#accordionZeszyt div[id^="Zeszyt_rodzaj"] {
+    border: 1px solid black;
+}{
+    border: 1px solid black !important;
+}
+
+#accordionZeszyt .accordion-body {
+    background-color: #f2f2f2;
+}
+
+#accordionZeszyt .moja-nazwa{
+    margin-top: -16px;
+}
+
 @media (max-width: 768px) {
     .dodajPolprodukt *{
         padding:0 !important;
@@ -305,3 +366,4 @@ body.ea-edit .content-header, body.ea-new .content-header
         margin-top:5px !important;
     }
 }
+

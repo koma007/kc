@@ -261,9 +261,24 @@
             {{ form_errors(edit_form) }}
         </div>
 
+        <div class="accordion" id="accordionZeszyt">
         {% for i in 1..40 %}
-            <div class="col-12 {% if i is even %} bg-my-dark {% endif %}">
-                <div class="row g-2">
+            {% set sztukNotEmpty = attribute(edit_form, 'sztuk' ~ i).vars.value is not empty %}
+            {% set cenaNotEmpty = attribute(edit_form, 'cena' ~ i).vars.value is not empty %}
+            {% set wartoscNotEmpty = attribute(edit_form, 'wartosc' ~ i).vars.value is not empty %}
+            {% set updatedAtNotEmpty = attribute(edit_form, 'updatedAt' ~ i).vars.value is not empty %}
+
+            {% set allFieldsFilled = sztukNotEmpty and cenaNotEmpty and wartoscNotEmpty and updatedAtNotEmpty %}
+
+            <div class="accordion-item {% if not allFieldsFilled %}collapsed{% endif %}">
+                <h2 class="accordion-header" id="heading{{ i }}">
+                    <button class="accordion-button {% if allFieldsFilled %}collapsed{% endif %}" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ i }}" aria-expanded="{{ not allFieldsFilled ? 'true' : 'false' }}" aria-controls="collapse{{ i }}">
+                        Wpis {{ i }}
+                    </button>
+                </h2>
+                <div id="collapse{{ i }}" class="accordion-collapse {% if not allFieldsFilled %}"{% else %}collapse{% endif %}" aria-labelledby="heading{{ i }}" data-bs-parent="#accordionExample">
+                <div class="accordion-body">
+                    <div class="row g-2">
                         <div class="col-8">
                             {{ form_widget(attribute(edit_form, 'kompozycja' ~ i), {attr: {'onchange': 'fetchCena(this,' ~ i ~ ')', 'placeholder': 'kompozycja'}})}}
                             <small class="form-text text-muted">{{ form_help(attribute(edit_form, 'kompozycja' ~ i)) }}</small>
@@ -296,19 +311,26 @@
                             <small class="form-text text-muted">{{ form_help(attribute(edit_form, 'wartosc' ~ i)) }}</small>
                             <div class="invalid-feedback">{{ form_errors(attribute(edit_form, 'wartosc' ~ i)) }}</div>
                         </div>
-                        <div class="col-12">
+                        <div class="col-12 moja-nazwa">
                             {{ form_widget(attribute(edit_form, 'nazwa' ~ i), {'attr': {'placeholder': 'opcjonalnie: niewycenione/uwagi'}}) }}
                             <small>{{ form_help(attribute(edit_form, 'nazwa' ~ i)) }}</small>
                             <div class="form-error">
                                 {{ form_errors(attribute(edit_form, 'nazwa' ~ i)) }}
                             </div>
                         </div>
+                    </div>
                 </div>
             </div>
-            <div class="col-12 thick-separator">
-                <hr class="my-4">
             </div>
         {% endfor %}
+        </div>
+
+
+
+
+
+
+
 
         <div class="col-12">
             <div class="col-6">
