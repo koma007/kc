@@ -1655,7 +1655,7 @@ class ZeszytCrudController extends AbstractCrudController
             ->overrideTemplate('crud/new', 'admin/zeszyt/new.html.twig')
             ->overrideTemplate('crud/edit', 'admin/zeszyt/edit.html.twig')
             ->setEntityLabelInPlural('miesiące')
-            ->setEntityLabelInSingular('miesiąc')
+            ->setEntityLabelInSingular('nowy miesiąc')
             ->showEntityActionsInlined() //nie ukrywaj edycja i usuń
             ->setDefaultSort([
                 'id' => 'DESC'

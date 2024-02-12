@@ -254,16 +254,6 @@ body.ea-edit .content-header, body.ea-new .content-header
     height: 100%
 }
 
-
-/* Stylizacja dla pustego pola */
-#nazwa_kompozycji.invalid-feedback input {
-    border: 1px solid red; /* Obramowanie czerwone */
-}
-
-/* Stylizacja dla błędu */
-#nazwa_kompozycji .invalid-feedback {
-    color: red; /* Kolor tekstu czerwony */
-}
 #nazwa_kompozycji label{
     font-weight: bold;
 }
@@ -339,13 +329,24 @@ body.ea-edit .content-header, body.ea-new .content-header
 #accordionZeszyt .datetime-widget input[type="date"],
 #accordionZeszyt .form-select,
 #accordionZeszyt div[id^="Zeszyt_rodzaj"] {
-    border: 1px solid black;
-}{
     border: 1px solid black !important;
 }
 
 #accordionZeszyt .accordion-body {
     background-color: #f2f2f2;
+}
+
+
+#new-Hurtowe-form .ts-wrapper,
+#edit-Hurtowe-form .ts-wrapper,
+#edit-Hurtowe-form div[id^="Hurtowe_rodzaj"],
+#new-Hurtowe-form div[id^="Hurtowe_rodzaj"] {
+    border: 1px solid black !important;
+}
+#edit-Hurtowe-form .ts-wrapper,
+#new-Hurtowe-form .ts-wrapper
+{
+    height: 34px;
 }
 
 #accordionZeszyt .moja-nazwa{

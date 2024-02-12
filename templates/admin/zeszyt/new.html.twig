@@ -252,7 +252,9 @@
 
 {% block page_actions %}
     {% for action in entity.actions %}
-        {{ include(action.templatePath, { action: action }, with_context = false) }}
+        {% if action.name == 'saveAndReturn'%}
+            {{ include(action.templatePath, { action: action }, with_context = false) }}
+        {% endif %}
     {% endfor %}
 {% endblock %}
 
