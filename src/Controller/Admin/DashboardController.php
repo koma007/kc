@@ -94,10 +94,10 @@ class DashboardController extends AbstractDashboardController
 
             yield MenuItem::section('ZAMÓWIENIA');
             yield MenuItem::linkToCrud('Hurtowe', 'fa fa-shop', Hurtowe::class);
-            yield MenuItem::linkToCrud('Detal', 'fa fa-receipt', Zamowienie::class);
+//            yield MenuItem::linkToCrud('Detal', 'fa fa-receipt', Zamowienie::class);
 
 
-            yield MenuItem::section('FV');
+//            yield MenuItem::section('FV');
 //            yield MenuItem::linkToCrud('FV', 'fa fa-money', Hurtowe::class);
 //            yield MenuItem::linkToCrud('FV - konfiguracja', 'fa fa-gear', Hurtowe::class);
 

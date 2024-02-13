@@ -19,6 +19,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -27,12 +28,13 @@ class HurtoweCrudController extends AbstractCrudController
 
     private $entityManager;
     private $requestStack;
+    private $security;
 
-    public function __construct(EntityManagerInterface $entityManager, RequestStack $requestStack)
+    public function __construct(EntityManagerInterface $entityManager, RequestStack $requestStack, Security $security)
     {
         $this->entityManager = $entityManager;
         $this->requestStack = $requestStack;
-
+        $this->security = $security;
     }
 
 
@@ -1686,22 +1688,24 @@ class HurtoweCrudController extends AbstractCrudController
     }
 
 
-    public function configureActions(Actions $actions): Actions
-    {
 
         //link z id
+    public function configureActions(Actions $actions): Actions
+    {
+        $security = $this->security; // Zapisujemy referencję do serwisu Security
+
         $fvAction = Action::new('viewFV', 'FV', 'fa fa-money')
             ->linkToRoute('app_get_hurtowe_zamowienie', function ($hurtowe) {
                 return ['id' => $hurtowe->getId()];
             })
             ->setIcon('fa fa-money')
             ->setLabel('FV')
-            ->displayIf(static function ($hurtowe) {
-                return $hurtowe->isFv() == true;
-            });
+            ->displayIf(static function ($hurtowe) use ($security) {
+                return $hurtowe->isFv() == true && ($security->getUser()->getUserIdentifier() == 'j@j.pl' || $security->getUser()->getUserIdentifier() == 'admin@admin.pl'); });
 
         return $actions->add(Crud::PAGE_INDEX, $fvAction);
     }
+
 
 
 
