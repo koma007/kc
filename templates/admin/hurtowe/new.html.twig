@@ -99,7 +99,15 @@
                         var selectedOption = $('#Hurtowe_kompozycja'+idCalegoElementu+'_autocomplete').val();
                 fetchCenaAfterRadioChange(selectedOption,selectedValue,idCalegoElementu);
             });
-        });
+
+            $('input[name^="Hurtowe[wozek"]').change(function(){
+                if($(this).val() > 10){
+                    alert("Max numer wózków to 10");
+                    $(this).val('');
+                }
+            });
+
+        }); //on ready
 
         const sztukFields = document.querySelectorAll('[id^="Hurtowe_sztuk"]');
         const cenaFields = document.querySelectorAll('[id^="Hurtowe_cena"]');

@@ -3,16 +3,21 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Hurtowe;
+use App\Entity\User;
 use App\Entity\Wyceny;
 use App\Repository\HurtoweRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\KeyValueStore;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -27,6 +32,7 @@ class HurtoweCrudController extends AbstractCrudController
     {
         $this->entityManager = $entityManager;
         $this->requestStack = $requestStack;
+
     }
 
 
@@ -42,8 +48,8 @@ class HurtoweCrudController extends AbstractCrudController
 
         return [
             TextField::new('nazwa')
-            ->setRequired(true)
-            ->setLabel('Klient'),
+                ->setRequired(true)
+                ->setLabel('Klient'),
             AssociationField::new('kompozycja1')
                 ->autocomplete()
                 ->setLabel('Kompozycja')
@@ -500,7 +506,6 @@ class HurtoweCrudController extends AbstractCrudController
                         'max' => 10,
                     ],
                 ]),
-
 
 
             AssociationField::new('kompozycja17')
@@ -1166,9 +1171,9 @@ class HurtoweCrudController extends AbstractCrudController
                     'Wazon' => 'wazon',
                     '2 wazony' => '2w',
                 ], 'kpl')
-            ->renderExpanded()
-            ->setRequired(true)
-            ->hideOnIndex(),
+                ->renderExpanded()
+                ->setRequired(true)
+                ->hideOnIndex(),
 
             ChoiceField::new('rodzaj2')
                 ->setChoices([
@@ -1177,20 +1182,20 @@ class HurtoweCrudController extends AbstractCrudController
                     'Wazon' => 'wazon',
                     '2 wazony' => '2w',
                 ], 'kpl')
-            ->renderExpanded()
-            ->setRequired(true)
-            ->hideOnIndex(),
+                ->renderExpanded()
+                ->setRequired(true)
+                ->hideOnIndex(),
 
             ChoiceField::new('rodzaj3')
                 ->setChoices([
                     'Kpl' => 'kpl',
-                                        'Solo' => 'solo',
+                    'Solo' => 'solo',
                     'Wazon' => 'wazon',
                     '2 wazony' => '2w',
                 ], 'kpl')
-            ->renderExpanded()
-            ->setRequired(true)
-            ->hideOnIndex(),
+                ->renderExpanded()
+                ->setRequired(true)
+                ->hideOnIndex(),
 
             ChoiceField::new('rodzaj4')
                 ->setChoices([
@@ -1199,9 +1204,9 @@ class HurtoweCrudController extends AbstractCrudController
                     'Wazon' => 'wazon',
                     '2 wazony' => '2w',
                 ], 'kpl')
-            ->renderExpanded()
-            ->setRequired(true)
-            ->hideOnIndex(),
+                ->renderExpanded()
+                ->setRequired(true)
+                ->hideOnIndex(),
 
             ChoiceField::new('rodzaj5')
                 ->setChoices([
@@ -1210,9 +1215,9 @@ class HurtoweCrudController extends AbstractCrudController
                     'Wazon' => 'wazon',
                     '2 wazony' => '2w',
                 ], 'kpl')
-            ->renderExpanded()
-            ->setRequired(true)
-            ->hideOnIndex(),
+                ->renderExpanded()
+                ->setRequired(true)
+                ->hideOnIndex(),
 
             ChoiceField::new('rodzaj6')
                 ->setChoices([
@@ -1221,9 +1226,9 @@ class HurtoweCrudController extends AbstractCrudController
                     'Wazon' => 'wazon',
                     '2 wazony' => '2w',
                 ], 'kpl')
-            ->renderExpanded()
-            ->setRequired(true)
-            ->hideOnIndex(),
+                ->renderExpanded()
+                ->setRequired(true)
+                ->hideOnIndex(),
 
             ChoiceField::new('rodzaj7')
                 ->setChoices([
@@ -1232,9 +1237,9 @@ class HurtoweCrudController extends AbstractCrudController
                     'Wazon' => 'wazon',
                     '2 wazony' => '2w',
                 ], 'kpl')
-            ->renderExpanded()
-            ->setRequired(true)
-            ->hideOnIndex(),
+                ->renderExpanded()
+                ->setRequired(true)
+                ->hideOnIndex(),
 
             ChoiceField::new('rodzaj8')
                 ->setChoices([
@@ -1243,9 +1248,9 @@ class HurtoweCrudController extends AbstractCrudController
                     'Wazon' => 'wazon',
                     '2 wazony' => '2w',
                 ], 'kpl')
-            ->renderExpanded()
-            ->setRequired(true)
-            ->hideOnIndex(),
+                ->renderExpanded()
+                ->setRequired(true)
+                ->hideOnIndex(),
 
             ChoiceField::new('rodzaj9')
                 ->setChoices([
@@ -1254,9 +1259,9 @@ class HurtoweCrudController extends AbstractCrudController
                     'Wazon' => 'wazon',
                     '2 wazony' => '2w',
                 ], 'kpl')
-            ->renderExpanded()
-            ->setRequired(true)
-            ->hideOnIndex(),
+                ->renderExpanded()
+                ->setRequired(true)
+                ->hideOnIndex(),
 
             ChoiceField::new('rodzaj10')
                 ->setChoices([
@@ -1265,9 +1270,9 @@ class HurtoweCrudController extends AbstractCrudController
                     'Wazon' => 'wazon',
                     '2 wazony' => '2w',
                 ], 'kpl')
-            ->renderExpanded()
-            ->setRequired(true)
-            ->hideOnIndex(),
+                ->renderExpanded()
+                ->setRequired(true)
+                ->hideOnIndex(),
 
             ChoiceField::new('rodzaj11')
                 ->setChoices([
@@ -1276,9 +1281,9 @@ class HurtoweCrudController extends AbstractCrudController
                     'Wazon' => 'wazon',
                     '2 wazony' => '2w',
                 ], 'kpl')
-            ->renderExpanded()
-            ->setRequired(true)
-            ->hideOnIndex(),
+                ->renderExpanded()
+                ->setRequired(true)
+                ->hideOnIndex(),
 
             ChoiceField::new('rodzaj12')
                 ->setChoices([
@@ -1287,9 +1292,9 @@ class HurtoweCrudController extends AbstractCrudController
                     'Wazon' => 'wazon',
                     '2 wazony' => '2w',
                 ], 'kpl')
-            ->renderExpanded()
-            ->setRequired(true)
-            ->hideOnIndex(),
+                ->renderExpanded()
+                ->setRequired(true)
+                ->hideOnIndex(),
 
             ChoiceField::new('rodzaj13')
                 ->setChoices([
@@ -1298,9 +1303,9 @@ class HurtoweCrudController extends AbstractCrudController
                     'Wazon' => 'wazon',
                     '2 wazony' => '2w',
                 ], 'kpl')
-            ->renderExpanded()
-            ->setRequired(true)
-            ->hideOnIndex(),
+                ->renderExpanded()
+                ->setRequired(true)
+                ->hideOnIndex(),
 
             ChoiceField::new('rodzaj14')
                 ->setChoices([
@@ -1309,9 +1314,9 @@ class HurtoweCrudController extends AbstractCrudController
                     'Wazon' => 'wazon',
                     '2 wazony' => '2w',
                 ], 'kpl')
-            ->renderExpanded()
-            ->setRequired(true)
-            ->hideOnIndex(),
+                ->renderExpanded()
+                ->setRequired(true)
+                ->hideOnIndex(),
 
             ChoiceField::new('rodzaj15')
                 ->setChoices([
@@ -1320,9 +1325,9 @@ class HurtoweCrudController extends AbstractCrudController
                     'Wazon' => 'wazon',
                     '2 wazony' => '2w',
                 ], 'kpl')
-            ->renderExpanded()
-            ->setRequired(true)
-            ->hideOnIndex(),
+                ->renderExpanded()
+                ->setRequired(true)
+                ->hideOnIndex(),
 
             ChoiceField::new('rodzaj16')
                 ->setChoices([
@@ -1331,9 +1336,9 @@ class HurtoweCrudController extends AbstractCrudController
                     'Wazon' => 'wazon',
                     '2 wazony' => '2w',
                 ], 'kpl')
-            ->renderExpanded()
-            ->setRequired(true)
-            ->hideOnIndex(),
+                ->renderExpanded()
+                ->setRequired(true)
+                ->hideOnIndex(),
 
             ChoiceField::new('rodzaj17')
                 ->setChoices([
@@ -1342,9 +1347,9 @@ class HurtoweCrudController extends AbstractCrudController
                     'Wazon' => 'wazon',
                     '2 wazony' => '2w',
                 ], 'kpl')
-            ->renderExpanded()
-            ->setRequired(true)
-            ->hideOnIndex(),
+                ->renderExpanded()
+                ->setRequired(true)
+                ->hideOnIndex(),
 
             ChoiceField::new('rodzaj18')
                 ->setChoices([
@@ -1353,9 +1358,9 @@ class HurtoweCrudController extends AbstractCrudController
                     'Wazon' => 'wazon',
                     '2 wazony' => '2w',
                 ], 'kpl')
-            ->renderExpanded()
-            ->setRequired(true)
-            ->hideOnIndex(),
+                ->renderExpanded()
+                ->setRequired(true)
+                ->hideOnIndex(),
 
             ChoiceField::new('rodzaj19')
                 ->setChoices([
@@ -1364,9 +1369,9 @@ class HurtoweCrudController extends AbstractCrudController
                     'Wazon' => 'wazon',
                     '2 wazony' => '2w',
                 ], 'kpl')
-            ->renderExpanded()
-            ->setRequired(true)
-            ->hideOnIndex(),
+                ->renderExpanded()
+                ->setRequired(true)
+                ->hideOnIndex(),
 
             ChoiceField::new('rodzaj20')
                 ->setChoices([
@@ -1375,9 +1380,9 @@ class HurtoweCrudController extends AbstractCrudController
                     'Wazon' => 'wazon',
                     '2 wazony' => '2w',
                 ], 'kpl')
-            ->renderExpanded()
-            ->setRequired(true)
-            ->hideOnIndex(),
+                ->renderExpanded()
+                ->setRequired(true)
+                ->hideOnIndex(),
 
             ChoiceField::new('rodzaj21')
                 ->setChoices([
@@ -1386,9 +1391,9 @@ class HurtoweCrudController extends AbstractCrudController
                     'Wazon' => 'wazon',
                     '2 wazony' => '2w',
                 ], 'kpl')
-            ->renderExpanded()
-            ->setRequired(true)
-            ->hideOnIndex(),
+                ->renderExpanded()
+                ->setRequired(true)
+                ->hideOnIndex(),
 
             ChoiceField::new('rodzaj22')
                 ->setChoices([
@@ -1397,9 +1402,9 @@ class HurtoweCrudController extends AbstractCrudController
                     'Wazon' => 'wazon',
                     '2 wazony' => '2w',
                 ], 'kpl')
-            ->renderExpanded()
-            ->setRequired(true)
-            ->hideOnIndex(),
+                ->renderExpanded()
+                ->setRequired(true)
+                ->hideOnIndex(),
 
             ChoiceField::new('rodzaj23')
                 ->setChoices([
@@ -1408,9 +1413,9 @@ class HurtoweCrudController extends AbstractCrudController
                     'Wazon' => 'wazon',
                     '2 wazony' => '2w',
                 ], 'kpl')
-            ->renderExpanded()
-            ->setRequired(true)
-            ->hideOnIndex(),
+                ->renderExpanded()
+                ->setRequired(true)
+                ->hideOnIndex(),
 
             ChoiceField::new('rodzaj24')
                 ->setChoices([
@@ -1419,9 +1424,9 @@ class HurtoweCrudController extends AbstractCrudController
                     'Wazon' => 'wazon',
                     '2 wazony' => '2w',
                 ], 'kpl')
-            ->renderExpanded()
-            ->setRequired(true)
-            ->hideOnIndex(),
+                ->renderExpanded()
+                ->setRequired(true)
+                ->hideOnIndex(),
 
             ChoiceField::new('rodzaj25')
                 ->setChoices([
@@ -1430,9 +1435,9 @@ class HurtoweCrudController extends AbstractCrudController
                     'Wazon' => 'wazon',
                     '2 wazony' => '2w',
                 ], 'kpl')
-            ->renderExpanded()
-            ->setRequired(true)
-            ->hideOnIndex(),
+                ->renderExpanded()
+                ->setRequired(true)
+                ->hideOnIndex(),
 
             ChoiceField::new('rodzaj26')
                 ->setChoices([
@@ -1441,9 +1446,9 @@ class HurtoweCrudController extends AbstractCrudController
                     'Wazon' => 'wazon',
                     '2 wazony' => '2w',
                 ], 'kpl')
-            ->renderExpanded()
-            ->setRequired(true)
-            ->hideOnIndex(),
+                ->renderExpanded()
+                ->setRequired(true)
+                ->hideOnIndex(),
 
             ChoiceField::new('rodzaj27')
                 ->setChoices([
@@ -1452,9 +1457,9 @@ class HurtoweCrudController extends AbstractCrudController
                     'Wazon' => 'wazon',
                     '2 wazony' => '2w',
                 ], 'kpl')
-            ->renderExpanded()
-            ->setRequired(true)
-            ->hideOnIndex(),
+                ->renderExpanded()
+                ->setRequired(true)
+                ->hideOnIndex(),
 
             ChoiceField::new('rodzaj28')
                 ->setChoices([
@@ -1463,9 +1468,9 @@ class HurtoweCrudController extends AbstractCrudController
                     'Wazon' => 'wazon',
                     '2 wazony' => '2w',
                 ], 'kpl')
-            ->renderExpanded()
-            ->setRequired(true)
-            ->hideOnIndex(),
+                ->renderExpanded()
+                ->setRequired(true)
+                ->hideOnIndex(),
 
             ChoiceField::new('rodzaj29')
                 ->setChoices([
@@ -1474,9 +1479,9 @@ class HurtoweCrudController extends AbstractCrudController
                     'Wazon' => 'wazon',
                     '2 wazony' => '2w',
                 ], 'kpl')
-            ->renderExpanded()
-            ->setRequired(true)
-            ->hideOnIndex(),
+                ->renderExpanded()
+                ->setRequired(true)
+                ->hideOnIndex(),
 
             ChoiceField::new('rodzaj30')
                 ->setChoices([
@@ -1485,9 +1490,9 @@ class HurtoweCrudController extends AbstractCrudController
                     'Wazon' => 'wazon',
                     '2 wazony' => '2w',
                 ], 'kpl')
-            ->renderExpanded()
-            ->setRequired(true)
-            ->hideOnIndex(),
+                ->renderExpanded()
+                ->setRequired(true)
+                ->hideOnIndex(),
 
             ChoiceField::new('rodzaj31')
                 ->setChoices([
@@ -1496,9 +1501,9 @@ class HurtoweCrudController extends AbstractCrudController
                     'Wazon' => 'wazon',
                     '2 wazony' => '2w',
                 ], 'kpl')
-            ->renderExpanded()
-            ->setRequired(true)
-            ->hideOnIndex(),
+                ->renderExpanded()
+                ->setRequired(true)
+                ->hideOnIndex(),
 
             ChoiceField::new('rodzaj32')
                 ->setChoices([
@@ -1507,9 +1512,9 @@ class HurtoweCrudController extends AbstractCrudController
                     'Wazon' => 'wazon',
                     '2 wazony' => '2w',
                 ], 'kpl')
-            ->renderExpanded()
-            ->setRequired(true)
-            ->hideOnIndex(),
+                ->renderExpanded()
+                ->setRequired(true)
+                ->hideOnIndex(),
 
             ChoiceField::new('rodzaj33')
                 ->setChoices([
@@ -1518,9 +1523,9 @@ class HurtoweCrudController extends AbstractCrudController
                     'Wazon' => 'wazon',
                     '2 wazony' => '2w',
                 ], 'kpl')
-            ->renderExpanded()
-            ->setRequired(true)
-            ->hideOnIndex(),
+                ->renderExpanded()
+                ->setRequired(true)
+                ->hideOnIndex(),
 
             ChoiceField::new('rodzaj34')
                 ->setChoices([
@@ -1529,9 +1534,9 @@ class HurtoweCrudController extends AbstractCrudController
                     'Wazon' => 'wazon',
                     '2 wazony' => '2w',
                 ], 'kpl')
-            ->renderExpanded()
-            ->setRequired(true)
-            ->hideOnIndex(),
+                ->renderExpanded()
+                ->setRequired(true)
+                ->hideOnIndex(),
 
             ChoiceField::new('rodzaj35')
                 ->setChoices([
@@ -1540,9 +1545,9 @@ class HurtoweCrudController extends AbstractCrudController
                     'Wazon' => 'wazon',
                     '2 wazony' => '2w',
                 ], 'kpl')
-            ->renderExpanded()
-            ->setRequired(true)
-            ->hideOnIndex(),
+                ->renderExpanded()
+                ->setRequired(true)
+                ->hideOnIndex(),
 
             ChoiceField::new('rodzaj36')
                 ->setChoices([
@@ -1551,9 +1556,9 @@ class HurtoweCrudController extends AbstractCrudController
                     'Wazon' => 'wazon',
                     '2 wazony' => '2w',
                 ], 'kpl')
-            ->renderExpanded()
-            ->setRequired(true)
-            ->hideOnIndex(),
+                ->renderExpanded()
+                ->setRequired(true)
+                ->hideOnIndex(),
 
             ChoiceField::new('rodzaj37')
                 ->setChoices([
@@ -1562,9 +1567,9 @@ class HurtoweCrudController extends AbstractCrudController
                     'Wazon' => 'wazon',
                     '2 wazony' => '2w',
                 ], 'kpl')
-            ->renderExpanded()
-            ->setRequired(true)
-            ->hideOnIndex(),
+                ->renderExpanded()
+                ->setRequired(true)
+                ->hideOnIndex(),
 
             ChoiceField::new('rodzaj38')
                 ->setChoices([
@@ -1573,9 +1578,9 @@ class HurtoweCrudController extends AbstractCrudController
                     'Wazon' => 'wazon',
                     '2 wazony' => '2w',
                 ], 'kpl')
-            ->renderExpanded()
-            ->setRequired(true)
-            ->hideOnIndex(),
+                ->renderExpanded()
+                ->setRequired(true)
+                ->hideOnIndex(),
 
             ChoiceField::new('rodzaj39')
                 ->setChoices([
@@ -1584,9 +1589,9 @@ class HurtoweCrudController extends AbstractCrudController
                     'Wazon' => 'wazon',
                     '2 wazony' => '2w',
                 ], 'kpl')
-            ->renderExpanded()
-            ->setRequired(true)
-            ->hideOnIndex(),
+                ->renderExpanded()
+                ->setRequired(true)
+                ->hideOnIndex(),
 
             ChoiceField::new('rodzaj40')
                 ->setChoices([
@@ -1595,9 +1600,16 @@ class HurtoweCrudController extends AbstractCrudController
                     'Wazon' => 'wazon',
                     '2 wazony' => '2w',
                 ], 'kpl')
-            ->renderExpanded()
-            ->setRequired(true)
-            ->hideOnIndex(),
+                ->renderExpanded()
+                ->setRequired(true)
+                ->hideOnIndex(),
+
+            BooleanField::new('fv')
+                ->renderAsSwitch(true),
+
+            TextareaField::new('uwagi')
+                ->setLabel('Informacje/uwagi')
+                ->hideOnIndex(),
 
 
         ];
@@ -1617,9 +1629,7 @@ class HurtoweCrudController extends AbstractCrudController
             ->showEntityActionsInlined() //nie ukrywaj edycja i usuń
             ->setDefaultSort([
                 'id' => 'DESC'
-            ])
-
-            ;
+            ]);
     }
 
 
@@ -1635,26 +1645,26 @@ class HurtoweCrudController extends AbstractCrudController
             $entityId = $request->query->get('entityId');
 
 
-        $zamowienie = $this->entityManager->getRepository(Hurtowe::class)->find($entityId);
-        //dd($kompozycja);
+            $zamowienie = $this->entityManager->getRepository(Hurtowe::class)->find($entityId);
+            //dd($kompozycja);
 
-        $queryBuilder = $this->entityManager->createQueryBuilder();
-        $queryBuilder->select('h')
-            ->from(Hurtowe::class, 'h')
-            ->where('h.id = :id')
-            ->setParameter('id', $entityId)
-            ->orderBy('h.id', 'ASC');
+            $queryBuilder = $this->entityManager->createQueryBuilder();
+            $queryBuilder->select('h')
+                ->from(Hurtowe::class, 'h')
+                ->where('h.id = :id')
+                ->setParameter('id', $entityId)
+                ->orderBy('h.id', 'ASC');
 
-        $hurtoweEntity = $queryBuilder->getQuery()->getResult();
+            $hurtoweEntity = $queryBuilder->getQuery()->getResult();
 
 
-        $wozki = [];
-        for ($i = 1; $i<=40; $i++){
-            if($nr = $hurtoweEntity[0]->{"getWozek" . $i}()){
+            $wozki = [];
+            for ($i = 1; $i <= 40; $i++) {
+                if ($nr = $hurtoweEntity[0]->{"getWozek" . $i}()) {
 
-                $wozki[] = $nr;
+                    $wozki[] = $nr;
+                }
             }
-        }
 
         }
         if (isset($wozki)) {
@@ -1664,13 +1674,36 @@ class HurtoweCrudController extends AbstractCrudController
             // Sort the array in ascending order
             sort($wozki);
             $responseParameters->set('numeryWozkow', $wozki);
+            $responseParameters->set('suma', $hurtoweEntity[0]->getSuma());
             $responseParameters->set('klient', $hurtoweEntity[0]->getNazwa());
             return $responseParameters;
-        }else {
+        } else {
             //zwróć  cokolwiek
             $responseParameters->set('test', 'test');
             return $responseParameters;
         }
 
     }
+
+
+    public function configureActions(Actions $actions): Actions
+    {
+
+        //link z id
+        $fvAction = Action::new('viewFV', 'FV', 'fa fa-money')
+            ->linkToRoute('app_get_hurtowe_zamowienie', function ($hurtowe) {
+                return ['id' => $hurtowe->getId()];
+            })
+            ->setIcon('fa fa-money')
+            ->setLabel('FV')
+            ->displayIf(static function ($hurtowe) {
+                return $hurtowe->isFv() == true;
+            });
+
+        return $actions->add(Crud::PAGE_INDEX, $fvAction);
     }
+
+
+
+
+}

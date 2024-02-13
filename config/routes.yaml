@@ -19,6 +19,8 @@ app_get_hurtowe_wozek_pdf:
 app_get_hurtowe_zamowienie:
     path: /admin/hurtowe/{id}
     controller: App\Controller\Admin\HurtoweWozekController::getHurtoweZamowienie
+    requirements:
+        id: '\d+'
 
 app_get_hurtowe_zamowienie_pdf:
     path: /admin/hurtowe-pdf/{id}

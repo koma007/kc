@@ -197,6 +197,38 @@ class HurtoweWozekController extends AbstractController
         }
         ksort($wozki);
 
+        //bez numerów wózków
+        for ($i = 1; $i<=40; $i++) {
+            if (!$hurtoweEntity[0]->{"getWozek" . $i}()) {
+
+                if ($hurtoweEntity[0]->{"getWartosc" . $i}()) { //gdy jst wartosc jakakolwiek w wierszu
+                    $kompozycjaId = $hurtoweEntity[0]->{"getKompozycja" . $i}();
+
+                    //gdy nie ma wybranej nazwy
+                    if (null != $hurtoweEntity[0]->{"getKompozycja" . $i}()) {
+                        $kompozycjaId = $hurtoweEntity[0]->{"getKompozycja" . $i}();
+
+                        $kompozycja = $this->entityManager->getRepository(Wyceny::class)->find($kompozycjaId);
+                        $kompozycja = $kompozycja->getNazwa();
+                    } else {
+                        //własna nazwa
+                        if (null == $hurtoweEntity[0]->{"getNazwa" . $i}()) {
+                            $kompozycja = '-';
+                        } else {
+                            $kompozycja = $hurtoweEntity[0]->{"getNazwa" . $i}();
+                        }
+                    }
+
+                    $wozki['-'][] = array('nazwa' => $kompozycja,
+                        'rodzaj' => $hurtoweEntity[0]->{"getRodzaj" . $i}(),
+                        'sztuk' => $hurtoweEntity[0]->{"getSztuk" . $i}(),
+                        'cena' => str_replace('.', ',', $hurtoweEntity[0]->{"getCena" . $i}()),
+                        'wartosc' => str_replace('.', ',', $hurtoweEntity[0]->{"getWartosc" . $i}()),
+                    );
+                }
+            }
+        }
+
         //wstecz
         $link = $this->generateUrl(
             'index',
@@ -261,6 +293,38 @@ class HurtoweWozekController extends AbstractController
             }
         }
         ksort($wozki);
+
+        //bez numerów wózków
+        for ($i = 1; $i<=40; $i++) {
+            if (!$hurtoweEntity[0]->{"getWozek" . $i}()) {
+
+                if ($hurtoweEntity[0]->{"getWartosc" . $i}()) { //gdy jst wartosc jakakolwiek w wierszu
+                    $kompozycjaId = $hurtoweEntity[0]->{"getKompozycja" . $i}();
+
+                    //gdy nie ma wybranej nazwy
+                    if (null != $hurtoweEntity[0]->{"getKompozycja" . $i}()) {
+                        $kompozycjaId = $hurtoweEntity[0]->{"getKompozycja" . $i}();
+
+                        $kompozycja = $this->entityManager->getRepository(Wyceny::class)->find($kompozycjaId);
+                        $kompozycja = $kompozycja->getNazwa();
+                    } else {
+                        //własna nazwa
+                        if (null == $hurtoweEntity[0]->{"getNazwa" . $i}()) {
+                            $kompozycja = '-';
+                        } else {
+                            $kompozycja = $hurtoweEntity[0]->{"getNazwa" . $i}();
+                        }
+                    }
+
+                    $wozki['-'][] = array('nazwa' => $kompozycja,
+                        'rodzaj' => $hurtoweEntity[0]->{"getRodzaj" . $i}(),
+                        'sztuk' => $hurtoweEntity[0]->{"getSztuk" . $i}(),
+                        'cena' => str_replace('.', ',', $hurtoweEntity[0]->{"getCena" . $i}()),
+                        'wartosc' => str_replace('.', ',', $hurtoweEntity[0]->{"getWartosc" . $i}()),
+                    );
+                }
+            }
+        }
 
         //wstecz
         $link = $this->generateUrl(

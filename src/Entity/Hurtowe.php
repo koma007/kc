@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\HurtoweRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: HurtoweRepository::class)]
@@ -4273,6 +4274,12 @@ class Hurtowe
     #[ORM\Column(length: 255, nullable: true)]
     private $rodzaj40;
 
+    #[ORM\Column(nullable: true)]
+    private ?bool $fv = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $uwagi = null;
+
     public function getRodzaj40(): ?string
     {
         return $this->rodzaj40;
@@ -4281,6 +4288,30 @@ class Hurtowe
     public function setRodzaj40(string $rodzaj40): self
     {
         $this->rodzaj40 = $rodzaj40;
+        return $this;
+    }
+
+    public function isFv(): ?bool
+    {
+        return $this->fv;
+    }
+
+    public function setFv(?bool $fv): static
+    {
+        $this->fv = $fv;
+
+        return $this;
+    }
+
+    public function getUwagi(): ?string
+    {
+        return $this->uwagi;
+    }
+
+    public function setUwagi(?string $uwagi): static
+    {
+        $this->uwagi = $uwagi;
+
         return $this;
     }
 
