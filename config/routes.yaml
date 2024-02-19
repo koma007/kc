@@ -26,6 +26,30 @@ app_get_hurtowe_zamowienie_pdf:
     path: /admin/hurtowe-pdf/{id}
     controller: App\Controller\Admin\HurtoweWozekController::getHurtoweZamowieniePdf
 
+fv_krok_1:
+    path: /admin/fv_krok_1/{id}
+    controller: App\Controller\Admin\HurtoweWozekController::getHurtoweZamowienieFvKrok1
+    requirements:
+        id: '\d+'
+
+fv_krok_2:
+    path: /admin/fv_krok_2/{id}
+    controller: App\Controller\Admin\HurtoweWozekController::getHurtoweZamowienieFvBeforeApi
+    requirements:
+        id: '\d+'
+
+fv_krok_3:
+    path: /admin/fv_krok_3/{id}
+    controller: App\Controller\Admin\HurtoweWozekController::getHurtoweZamowienieFvPreview
+    requirements:
+        id: '\d+'
+
+fv_krok_4:
+    path: /admin/fv_krok_4/{id}
+    controller: App\Controller\Admin\HurtoweWozekController::sendToFakturaXL
+    requirements:
+        id: '\d+'
+
 app_get_zeszyt_zestawienie:
     path: /admin/zeszyt/{id}/zestawienie/{zestawienie}
     controller: App\Controller\Admin\ZeszytZestawienieController::getZeszytZestawienie

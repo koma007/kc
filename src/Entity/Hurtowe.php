@@ -4280,6 +4280,9 @@ class Hurtowe
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $uwagi = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $fvWystawiono = null;
+
     public function getRodzaj40(): ?string
     {
         return $this->rodzaj40;
@@ -4311,6 +4314,18 @@ class Hurtowe
     public function setUwagi(?string $uwagi): static
     {
         $this->uwagi = $uwagi;
+
+        return $this;
+    }
+
+    public function getFvWystawiono(): ?\DateTimeImmutable
+    {
+        return $this->fvWystawiono;
+    }
+
+    public function setFvWystawiono(?\DateTimeImmutable $fvWystawiono): static
+    {
+        $this->fvWystawiono = $fvWystawiono;
 
         return $this;
     }

@@ -18,6 +18,7 @@
         "google/apiclient": "*",
         "mpdf/mpdf": "8.1.*",
         "nelmio/cors-bundle": "^2.3",
+        "php-curl-class/php-curl-class": "^9.19",
         "phpdocumentor/reflection-docblock": "^5.3",
         "phpoffice/phpspreadsheet": "*",
         "phpstan/phpdoc-parser": "^1.15",

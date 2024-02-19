@@ -6,6 +6,7 @@ use App\Entity\ArrangementPrice;
 use App\Entity\Comment;
 use App\Entity\DomyslnaGrupa;
 use App\Entity\Dostawcy;
+use App\Entity\FvKody;
 use App\Entity\Grupy;
 use App\Entity\Hurtowe;
 use App\Entity\Polprodukty;
@@ -73,6 +74,8 @@ class DashboardController extends AbstractDashboardController
 
     public function configureMenuItems(): iterable
     {
+        //dodaj rowniez do HurtoweWozekController!!!!!!!!!!!
+
             yield MenuItem::section('Główne');
             yield MenuItem::linkToUrl('Panel', 'fa fa-home', $this->generateUrl('admin_dashboard'));
             yield MenuItem::linkToUrl('Sklep', 'fa fa-shopping-cart', $this->generateUrl('app_sklep'));
@@ -81,28 +84,19 @@ class DashboardController extends AbstractDashboardController
             yield MenuItem::section('CENNIK');
             yield MenuItem::linkToCrud('Półprodukty', 'fa fa-fan', Polprodukty::class);
             yield MenuItem::linkToCrud('Wycena kompozycji', 'fa fa-tags', Wyceny::class);
-//            yield MenuItem::linkToCrud('Kompozycje', 'fa fa-fan', Kompozycje::class);
-//            yield MenuItem::linkToCrud('Kompozycje', 'fa fa-fan', Kompozycje::class);
 
             yield MenuItem::subMenu('Konfiguracja', 'fa fa-article')->setSubItems([
                 MenuItem::linkToCrud('Grupy kompozycji', 'fa fa-tags', Grupy::class),
                 MenuItem::linkToCrud('Domyślna grupa', 'fa fa-star', DomyslnaGrupa::class),
                 MenuItem::linkToCrud('Dostawcy', 'fa fa-car', Dostawcy::class),
-//                MenuItem::linkToCrud('Domyślna grupa', 'fa fa-tags', Grupy::class)
-//                    ->setController(GrupyDomyslnaCrudController::class)
             ]);
 
             yield MenuItem::section('ZAMÓWIENIA');
             yield MenuItem::linkToCrud('Hurtowe', 'fa fa-shop', Hurtowe::class);
 //            yield MenuItem::linkToCrud('Detal', 'fa fa-receipt', Zamowienie::class);
 
-
-//            yield MenuItem::section('FV');
-//            yield MenuItem::linkToCrud('FV', 'fa fa-money', Hurtowe::class);
-//            yield MenuItem::linkToCrud('FV - konfiguracja', 'fa fa-gear', Hurtowe::class);
-
-
-
+            yield MenuItem::section('FV');
+            yield MenuItem::linkToCrud('Kody na FV', 'fa fa-money', FvKody::class);
 
 
             yield MenuItem::section('UŻYTKOWNICY');
@@ -110,16 +104,11 @@ class DashboardController extends AbstractDashboardController
             yield MenuItem::linkToCrud('Lista użytkowników', 'fa fa-users', User::class);
 
 
-
-
-
             if ($this->security->getUser()->getUserIdentifier() == 'admin@admin.pl') {
                 yield MenuItem::section('TESTY MARIUSZA');
                 yield MenuItem::linkToRoute('API GOOGLE', 'fa-solid fa-magnifying-glass', 'app_es');
                 yield MenuItem::linkToCrud('comment', 'fa-solid fa-address-book', Comment::class);
             }
-
-
         }
 
         if ($this->security->isGranted('ROLE_PRACOWNIK') OR $this->security->isGranted('ROLE_ADMIN')) {
@@ -131,9 +120,6 @@ class DashboardController extends AbstractDashboardController
 
         yield MenuItem::linkToLogout('Wyloguj', 'fa fa-sign-out');
 
-
-//        yield MenuItem::linkToCrud('Categories', 'fa fa-tags', Category::class)
-//            ->setDefaultSort(['createdAt' => 'DESC']);
     }
 
     public function configureUserMenu(UserInterface $user): UserMenu

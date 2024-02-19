@@ -362,6 +362,18 @@ body.ea-edit .content-header, body.ea-new .content-header
     margin-top: -16px;
 }
 
+.btn-wider {
+    width: 150px !important;
+}
+
+
+
+
+
+
+
+
+
 @media (max-width: 768px) {
     .dodajPolprodukt *{
         padding:0 !important;

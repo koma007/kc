@@ -15,6 +15,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
@@ -1609,6 +1610,10 @@ class HurtoweCrudController extends AbstractCrudController
             BooleanField::new('fv')
                 ->renderAsSwitch(true),
 
+            DateTimeField::new('fvWystawiono')
+                ->setLabel('FV wystawiono')
+                ->onlyOnIndex(),
+
             TextareaField::new('uwagi')
                 ->setLabel('Informacje/uwagi')
                 ->hideOnIndex(),
@@ -1695,7 +1700,7 @@ class HurtoweCrudController extends AbstractCrudController
         $security = $this->security; // Zapisujemy referencję do serwisu Security
 
         $fvAction = Action::new('viewFV', 'FV', 'fa fa-money')
-            ->linkToRoute('app_get_hurtowe_zamowienie', function ($hurtowe) {
+            ->linkToRoute('fv_krok_1', function ($hurtowe) {
                 return ['id' => $hurtowe->getId()];
             })
             ->setIcon('fa fa-money')

@@ -52,7 +52,7 @@ class UserCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
 
-        $roles = ['ROLE_ADMIN', 'ROLE_DETAL', 'ROLE_HURT', 'ROLE_USER', 'ROLE_PRACOWNIK'];
+        $roles = ['ROLE_ADMIN', 'ROLE_DETAL', 'ROLE_KLIENT', 'ROLE_USER', 'ROLE_PRACOWNIK'];
         return [
             TextField::new('Name')
                 ->setLabel('Imię')
@@ -64,6 +64,7 @@ class UserCrudController extends AbstractCrudController
                 ->renderAsSwitch(true),
             ChoiceField::new('roles')
                 ->setChoices(array_combine($roles, $roles))
+                ->setLabel('Role')
                 ->allowMultipleChoices()
                 ->renderExpanded()
                 ->onlyOnForms(),
