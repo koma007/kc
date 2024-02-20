@@ -52,10 +52,10 @@ class UserCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
 
-        $roles = ['ROLE_ADMIN', 'ROLE_DETAL', 'ROLE_KLIENT', 'ROLE_USER', 'ROLE_PRACOWNIK'];
+        $roles = ['ROLE_ADMIN', 'ROLE_KLIENT_DETAL', 'ROLE_KLIENT_FIRMA', 'ROLE_USER', 'ROLE_PRACOWNIK'];
         return [
             TextField::new('Name')
-                ->setLabel('Imię')
+                ->setLabel('Imię /Firma')
                 ->setRequired('true'),
             TextField::new('Email')
             ->setRequired('true'),
@@ -72,13 +72,12 @@ class UserCrudController extends AbstractCrudController
                 ->setLabel('Zdjęcie')
                 ->setBasePath('uploads/avatars')
                 ->setUploadDir('public/uploads/avatars')
-                ->setUploadedFileNamePattern('[slug]-[timestamp].[extension]'),
+                ->setUploadedFileNamePattern('[slug]-[timestamp].[extension]')
+                ->hideOnIndex(),
             TextField::new('short_name')
-                ->setLabel('Nazwa skrócona')
-                ->onlyOnForms(),
+                ->setLabel('Nazwa skrócona'),
             TextField::new('nip')
-                ->setLabel('NIP')
-                ->onlyOnForms(),
+                ->setLabel('NIP'),
             TextField::new('street_and_number')
                 ->setLabel('Ulica i nr')
                 ->onlyOnForms(),
@@ -104,7 +103,7 @@ class UserCrudController extends AbstractCrudController
             // ...
             ->setPageTitle('index', 'Użytkownicy ')
             ->setPageTitle('edit', 'Użytkownik')
-            ->setEntityLabelInSingular('Użytkownicy')
+            ->setEntityLabelInSingular('Użytkownika')
             ->showEntityActionsInlined() //nie ukrywaj edycja i usuń
             ;
     }

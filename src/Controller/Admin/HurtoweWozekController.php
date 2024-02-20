@@ -771,7 +771,7 @@ class HurtoweWozekController extends AbstractDashboardController
   <rodzaj_platnosci>Przelewy24</rodzaj_platnosci>
   <jezyk>0</jezyk>
   <szablon>0</szablon>
-  <imie_nazwisko_wystawcy>Zbigniew Nazwiskoo</imie_nazwisko_wystawcy>
+  <imie_nazwisko_wystawcy></imie_nazwisko_wystawcy>
   <imie_nazwisko_odbiorcy></imie_nazwisko_odbiorcy>
   <nr_zamowienia></nr_zamowienia>
   <dodatkowe_uwagi></dodatkowe_uwagi>
