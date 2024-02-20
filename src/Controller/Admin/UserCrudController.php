@@ -72,7 +72,28 @@ class UserCrudController extends AbstractCrudController
                 ->setLabel('Zdjęcie')
                 ->setBasePath('uploads/avatars')
                 ->setUploadDir('public/uploads/avatars')
-                ->setUploadedFileNamePattern('[slug]-[timestamp].[extension]')
+                ->setUploadedFileNamePattern('[slug]-[timestamp].[extension]'),
+            TextField::new('short_name')
+                ->setLabel('Nazwa skrócona')
+                ->onlyOnForms(),
+            TextField::new('nip')
+                ->setLabel('NIP')
+                ->onlyOnForms(),
+            TextField::new('street_and_number')
+                ->setLabel('Ulica i nr')
+                ->onlyOnForms(),
+            TextField::new('postal_code')
+                ->setLabel('Kod pocztowy')
+                ->onlyOnForms(),
+            TextField::new('country_id')
+                ->setLabel('Kraj')
+                ->onlyOnForms(),
+            TextField::new('phone')
+                ->setLabel('Telefon')
+                ->onlyOnForms(),
+            TextField::new('bank_account_number')
+                ->setLabel('Nr konta bankowego')
+                ->onlyOnForms(),
 
         ];
     }

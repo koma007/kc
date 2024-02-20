@@ -44,6 +44,27 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\ManyToMany(targetEntity: Wyceny::class, mappedBy: 'pracownik')]
     private Collection $pracownik;
 
+    #[ORM\Column(length: 50, nullable: true)]
+    private ?string $short_name = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $nip = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $street_and_number = null;
+
+    #[ORM\Column(length: 10, nullable: true)]
+    private ?string $postal_code = null;
+
+    #[ORM\Column(length: 2, nullable: true)]
+    private ?string $country_id = null;
+
+    #[ORM\Column(length: 26, nullable: true)]
+    private ?string $phone = null;
+
+    #[ORM\Column(length: 45, nullable: true)]
+    private ?string $bank_account_number = null;
+
     public function __construct()
     {
         $this->pracownik = new ArrayCollection();
@@ -195,6 +216,90 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function __toString(){
         return $this->getName();
+    }
+
+    public function getShortName(): ?string
+    {
+        return $this->short_name;
+    }
+
+    public function setShortName(?string $short_name): static
+    {
+        $this->short_name = $short_name;
+
+        return $this;
+    }
+
+    public function getNip(): ?string
+    {
+        return $this->nip;
+    }
+
+    public function setNip(?string $nip): static
+    {
+        $this->nip = $nip;
+
+        return $this;
+    }
+
+    public function getStreetAndNumber(): ?string
+    {
+        return $this->street_and_number;
+    }
+
+    public function setStreetAndNumber(?string $street_and_number): static
+    {
+        $this->street_and_number = $street_and_number;
+
+        return $this;
+    }
+
+    public function getPostalCode(): ?string
+    {
+        return $this->postal_code;
+    }
+
+    public function setPostalCode(?string $postal_code): static
+    {
+        $this->postal_code = $postal_code;
+
+        return $this;
+    }
+
+    public function getCountryId(): ?string
+    {
+        return $this->country_id;
+    }
+
+    public function setCountryId(?string $country_id): static
+    {
+        $this->country_id = $country_id;
+
+        return $this;
+    }
+
+    public function getPhone(): ?string
+    {
+        return $this->phone;
+    }
+
+    public function setPhone(?string $phone): static
+    {
+        $this->phone = $phone;
+
+        return $this;
+    }
+
+    public function getBankAccountNumber(): ?string
+    {
+        return $this->bank_account_number;
+    }
+
+    public function setBankAccountNumber(?string $bank_account_number): static
+    {
+        $this->bank_account_number = $bank_account_number;
+
+        return $this;
     }
 
 }

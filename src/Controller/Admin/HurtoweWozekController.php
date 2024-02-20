@@ -802,7 +802,7 @@ class HurtoweWozekController extends AbstractDashboardController
 
         // Dodajemy pozycje faktury
         foreach ($nazwy as $index => $nazwa) {
-            $wartosc_brutto = (float)$ceny[$index] * (1 + ($vat / 100)) * (float)$sztuki[$index];
+            $wartosc_brutto = (float)$ceny[$index] * (float)$sztuki[$index];
 
 
             $input_xml .= "
@@ -825,6 +825,8 @@ class HurtoweWozekController extends AbstractDashboardController
   <tag>nazwa 2</tag>
 </dokument>";
 
+
+
         // Wysyłamy żądanie POST do API fakturaxl
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, 'https://program.fakturaxl.pl/api/dokument_dodaj.php');
@@ -837,16 +839,16 @@ class HurtoweWozekController extends AbstractDashboardController
 
 
 
-//OK:
-$return_xml = "
-<dokument>
-<kod>1</kod>
-<dokument_id>16617932</dokument_id>
-<dokumnet_nr>FV 2/02/2024</dokumnet_nr>
-<dokument_nr>FV 2/02/2024</dokument_nr>
-<unikatowy_kod>51QXG57PyTbDhrROMyEt5HGzyokOO22YtmoB0m5hoWdS2K48TSacxsSpVEWVwR8Kxw80eF17KqZt7VvZ</unikatowy_kod>
-</dokument>
-";
+//LOCAL - OK:
+//$return_xml = "
+//<dokument>
+//<kod>1</kod>
+//<dokument_id>16617932</dokument_id>
+//<dokumnet_nr>FV 2/02/2024</dokumnet_nr>
+//<dokument_nr>FV 2/02/2024</dokument_nr>
+//<unikatowy_kod>51QXG57PyTbDhrROMyEt5HGzyokOO22YtmoB0m5hoWdS2K48TSacxsSpVEWVwR8Kxw80eF17KqZt7VvZ</unikatowy_kod>
+//</dokument>
+//";
 
         $xml = simplexml_load_string($return_xml);
 

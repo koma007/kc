@@ -7,54 +7,54 @@
 
 
     <script>
-        $(document).ready(function() {
 
-// Funkcja przeliczająca wartość brutto na podstawie ceny netto, stawki VAT i ilości sztuk
-            function obliczBrutto(cena, vat, sztuki) {
-                if (!isNaN(cena) && !isNaN(vat) && !isNaN(sztuki)) {
-                    return cena.replace(',', '.') * sztuki * (1 + (vat / 100));
-                } else {
-                    return '';
-                }
+        function obliczSume(cenaBrutto, sztuki) {
+            if (!isNaN(sztuki) && !isNaN(cenaBrutto)) {
+                return sztuki * cenaBrutto;
+            } else {
+                return '';
             }
+        }
 
-            // Funkcja obliczająca sumę brutto dla wszystkich wierszy
-            function obliczSumeBrutto() {
+        $(document).ready(function() {
+            // Funkcja przeliczająca wartość brutto na podstawie ceny netto, stawki VAT i ilości sztuk
+
+            $('input[name^="ceny"], input[name^="sztuki"]').change(function() {
                 var sumaBrutto = 0;
-                $('input[name^="brutto[]"]').each(function() {
-                    var brutto = $(this).val().replace(',', '.');
-                    if (!isNaN(brutto)) {
+
+                // Iteracja przez wszystkie wiersze formularza
+                $('.row').each(function(index) {
+                    var cenaBrutto = $(this).find('input[name="ceny[]"]').val();
+                    var vat = $('input[name="vat"]').val();
+                    var sztuki = $(this).find('input[name="sztuki[]"]').val();
+
+                    // Jeśli cenaBrutto jest undefined lub pusta, przypisz mu wartość zero
+                    cenaBrutto = cenaBrutto ? parseFloat(cenaBrutto.replace(',', '.')) : 0;
+                    // Jeśli sztuki są undefined lub puste, przypisz im wartość zero
+                    sztuki = sztuki ? parseFloat(sztuki.replace(',', '.')) : 0;
+
+                    // Sprawdź czy wartości są zdefiniowane i niepuste
+                    if (!isNaN(cenaBrutto) && !isNaN(sztuki) && vat !== undefined && vat !== '') {
+                        vat = parseFloat(vat.replace(',', '.'));
+
+                        var brutto = obliczSume(cenaBrutto, sztuki);
+                        $(this).find('input[name="brutto[]"]').val(brutto === '' ? '' : brutto.toFixed(2).replace('.', ','));
                         sumaBrutto += parseFloat(brutto);
                     }
                 });
-                return sumaBrutto.toFixed(2).replace('.', ',');
-            }
 
-            // Obsługa zmiany wartości w polach "ceny", "vat" i "sztuki"
-            $('input[name^="ceny"], input[name="vat"], input[name^="sztuki"]').change(function() {
-                // Pobierz indeks wiersza
-                var index = $(this).closest('.row').index();
+                // Ustawienie sumy brutto
+                $('#suma_brutto').val(sumaBrutto.toFixed(2).replace('.', ','));
+            }).trigger('change');
 
-                // Pobierz wartość ceny netto
-                var cenaNetto = $('input[name="ceny[]"]').eq(index).val().replace(',', '.');
 
-                // Pobierz wartość stawki VAT
-                var vat = $('input[name="vat"]').val().replace(',', '.');
 
-                // Pobierz ilość sztuk
-                var sztuki = $('input[name="sztuki[]"]').eq(index).val().replace(',', '.');
 
-                // Oblicz wartość brutto
-                var brutto = obliczBrutto(cenaNetto, vat, sztuki);
 
-                // Ustaw wartość brutto w odpowiednim polu
-                $('input[name="brutto[]"]').eq(index).val(brutto === '' ? '' : brutto.toFixed(2).replace('.', ','));
 
-                // Oblicz i ustaw sumę brutto
-                var sumaBrutto = obliczSumeBrutto();
-                $('#suma_brutto').val(sumaBrutto);
-            }).trigger('change'); // Wywołan
-        });
+
+        }); //on ready
+
 
     </script>
 {% endblock %}
@@ -182,15 +182,16 @@
                         {% endif %}
 
                     {% endfor %}
-
+                    {% if maxArrayLength >0 %}
                         <div class="col-2">
                             <div class="form-group">
                                 {% if i == 0 %}
                                 <label for="" class="form-label">Brutto</label>
                                 {% endif %}
-                                <input type="text" id="brutto_{{ maxArrayLength+i }}" name="brutto[]" class="form-control" value="" placeholder="brutto">
+                                <input type="text" id="brutto_{{ maxArrayLength+i }}" name="brutto[]" class="form-control" value="{{ i }}" placeholder="brutto">
                             </div>
                         </div>
+                    {% endif %}
 
                 </div>
 
