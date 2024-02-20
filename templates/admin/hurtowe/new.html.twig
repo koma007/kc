@@ -80,6 +80,22 @@
 
             });
 
+            $('#Hurtowe_kontrahent_autocomplete').change(function() {
+                var selectedOption = $(this).find('option:selected');
+                if (selectedOption.length > 0) {
+                    var selectedValue = selectedOption.val();
+                    var selectedText = selectedOption.text();
+                    var lastIndex = selectedText.lastIndexOf('-');
+
+                    if (lastIndex !== -1) {
+                        var trimmedValue = selectedText.substr(lastIndex + 1).trim();
+
+                        $('#Hurtowe_nazwa').val(trimmedValue);
+                        $('#tytul_klient').text(trimmedValue);
+                    }
+                }
+            });
+
             document.getElementById('Hurtowe_nazwa').addEventListener('input', function() {
                 var inputValue = this.value;
                 document.getElementById('tytul_klient').textContent = inputValue;
@@ -243,17 +259,23 @@
         </div>
         <div class="row">
             <div class="col-md-9"> <!-- Kolumna po lewej stronie o szerokości 75% -->
-                <div class="col" id="some-custom-id">
-
-                        {{ form_label(new_form.nazwa) }}
-                        {{ form_widget(new_form.nazwa) }}
-
-                        <small>{{ form_help(new_form.nazwa) }}</small>
-
+                <div class="row mb-3">
+                    <div class="col-8" style="height:46px;">
+                        <strong>{{ form_label(new_form.kontrahent) }}</strong>
+                        {{ form_widget(new_form.kontrahent) }}
+                        <small>{{ form_help(new_form.kontrahent) }}</small>
                         <div class="form-error">
-                            {{ form_errors(new_form.nazwa) }}
+                            {{ form_errors(new_form.kontrahent) }}
                         </div>
-
+                    </div>
+                    <div class="col-4 mt-3">
+                            {{ form_label(new_form.nazwa) }}
+                            {{ form_widget(new_form.nazwa) }}
+                            <small>{{ form_help(new_form.nazwa) }}</small>
+                            <div class="form-error">
+                                {{ form_errors(new_form.nazwa) }}
+                            </div>
+                    </div>
                 </div>
                 <div id="hurtowe-table" class="table-responsive table-hurtowe">
                     <table class="table table" id="hurtowe">

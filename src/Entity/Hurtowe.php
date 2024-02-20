@@ -4283,6 +4283,9 @@ class Hurtowe
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $fvWystawiono = null;
 
+    #[ORM\ManyToOne(inversedBy: 'hurtowes')]
+    private ?User $kontrahent = null;
+
     public function getRodzaj40(): ?string
     {
         return $this->rodzaj40;
@@ -4326,6 +4329,18 @@ class Hurtowe
     public function setFvWystawiono(?\DateTimeImmutable $fvWystawiono): static
     {
         $this->fvWystawiono = $fvWystawiono;
+
+        return $this;
+    }
+
+    public function getKontrahent(): ?User
+    {
+        return $this->kontrahent;
+    }
+
+    public function setKontrahent(?User $kontrahent): static
+    {
+        $this->kontrahent = $kontrahent;
 
         return $this;
     }

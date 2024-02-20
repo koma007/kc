@@ -358,6 +358,13 @@ body.ea-edit .content-header, body.ea-new .content-header
     height: 34px;
 }
 
+#edit-Hurtowe-form #Hurtowe_kontrahent_autocomplete + .ts-wrapper,
+#new-Hurtowe-form #Hurtowe_kontrahent_autocomplete + .ts-wrapper
+{
+    background-color: #C9E4C9;
+    height: 39px !important;
+}
+
 #accordionZeszyt .moja-nazwa{
     margin-top: -16px;
 }

@@ -84,6 +84,9 @@ class UserCrudController extends AbstractCrudController
             TextField::new('postal_code')
                 ->setLabel('Kod pocztowy')
                 ->onlyOnForms(),
+            TextField::new('city')
+                ->setLabel('Miejscowość')
+                ->onlyOnForms(),
             TextField::new('country_id')
                 ->setLabel('Kraj')
                 ->onlyOnForms(),

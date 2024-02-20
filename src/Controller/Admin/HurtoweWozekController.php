@@ -731,18 +731,10 @@ class HurtoweWozekController extends AbstractDashboardController
 //        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 300);
 //        $return_xml = curl_exec($ch);
 //        curl_close($ch);
-//
-//
-//        dd($return_xml);
-
-
-       // dd($return_xml);
-
-
-
-
 
 //     //   dd($request->request);
+
+
         // Dane otrzymane z żądania
         $ceny = $request->request->all()['ceny'] ?? [];
         $nazwy = $request->request->all()['nazwa'] ?? [];
@@ -751,6 +743,18 @@ class HurtoweWozekController extends AbstractDashboardController
         $sztuki = $request->request->all()['sztuki'] ?? [];
         $ceny = $request->request->all()['ceny'] ?? [];
         $vat = $request->request->get('vat');
+        $rodzaj_platnosci = $request->request->get('rodzaj_platnosci');
+        $today = date('Y-m-d');
+        // Data płatności (14 dni po dzisiejszej dacie)
+        $paymentDueDate = date('Y-m-d', strtotime($today . ' + 14 days'));
+
+        $hurtowe = $this->entityManager->getRepository(Hurtowe::class)->find($id);
+        $id_usera = $hurtowe->getKontrahent()->getId();
+
+        $kontrahent = $this->entityManager->getRepository(User::class)->find($id_usera);
+
+        $roles = $kontrahent->getRoles();
+        $firma = in_array('ROLE_KLIENT_FIRMA', $roles) ? 0 : 1;
 
         // Tworzymy XML na podstawie otrzymanych danych
         $input_xml = "
@@ -760,15 +764,15 @@ class HurtoweWozekController extends AbstractDashboardController
   <typ_faktur_podtyp>0</typ_faktur_podtyp>
   <obliczaj_sume_wartosci_faktury_wg>0</obliczaj_sume_wartosci_faktury_wg>
   <numer_faktury></numer_faktury>
-  <data_wystawienia>2024-02-01</data_wystawienia>
-  <data_sprzedazy>2024-02-01</data_sprzedazy>
-  <termin_platnosci_data>2024-02-08</termin_platnosci_data>
+  <data_wystawienia>{$today}</data_wystawienia>
+  <data_sprzedazy>{$today}</data_sprzedazy>
+  <termin_platnosci_data>{$paymentDueDate}</termin_platnosci_data>
   <data_oplacenia></data_oplacenia>
   <kwota_oplacona>0</kwota_oplacona>
   <uwagi></uwagi>
   <waluta>PLN</waluta>
   <kurs></kurs>
-  <rodzaj_platnosci>Przelewy24</rodzaj_platnosci>
+  <rodzaj_platnosci>{$rodzaj_platnosci}</rodzaj_platnosci>
   <jezyk>0</jezyk>
   <szablon>0</szablon>
   <imie_nazwisko_wystawcy></imie_nazwisko_wystawcy>
@@ -783,15 +787,15 @@ class HurtoweWozekController extends AbstractDashboardController
   <notatka_prywatna></notatka_prywatna>
   
     <nabywca>
-    <firma_lub_osoba_prywatna>0</firma_lub_osoba_prywatna>
-    <nazwa>Marel - przyklad</nazwa>
-    <imie>Imie</imie>
-    <nazwisko>Nazwisko</nazwisko>
-    <nip>5771005742</nip>
-    <ulica_i_numer>Żarecka</ulica_i_numer>
-    <kod_pocztowy>42-350</kod_pocztowy>
-    <miejscowosc>Koziegłowy</miejscowosc>
-    <kraj>PL</kraj>
+    <firma_lub_osoba_prywatna>{$firma}</firma_lub_osoba_prywatna>
+    <nazwa>{$kontrahent->getName()}</nazwa>
+    <imie></imie>
+    <nazwisko></nazwisko>
+    <nip>{$kontrahent->getNip()}</nip>
+    <ulica_i_numer>{$kontrahent->getStreetAndNumber()}</ulica_i_numer>
+    <kod_pocztowy>{$kontrahent->getPostalCode()}</kod_pocztowy>
+    <miejscowosc>{$kontrahent->getCity()}</miejscowosc>
+    <kraj>{$kontrahent->getCountryId()}</kraj>
     <email></email>
     <telefon></telefon>
     <fax></fax>
@@ -826,7 +830,7 @@ class HurtoweWozekController extends AbstractDashboardController
 </dokument>";
 
 
-
+//dd($input_xml);
         // Wysyłamy żądanie POST do API fakturaxl
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, 'https://program.fakturaxl.pl/api/dokument_dodaj.php');
@@ -857,7 +861,7 @@ class HurtoweWozekController extends AbstractDashboardController
 
         if ($errorCode == 1){
 
-            $hurtowe = $this->entityManager->getRepository(Hurtowe::class)->find($id);
+
             $hurtowe->setFvWystawiono(new \DateTimeImmutable());
             $hurtowe->setFv(false);
 

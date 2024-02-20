@@ -6,11 +6,16 @@ use App\Entity\ArrangementPrice;
 use App\Entity\FvKody;
 use App\Entity\Polprodukty;
 use App\Entity\User;
+use App\Entity\Wyceny;
+use App\Repository\HurtoweRepository;
+use App\Repository\UserRepository;
 use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ObjectManager;
 
 //xlsx import
 use PhpOffice\PhpSpreadsheet\IOFactory;
+use Symfony\Bundle\SecurityBundle\Security;
 
 class AppFixtures extends Fixture
 {
@@ -157,9 +162,277 @@ class AppFixtures extends Fixture
 
 
 //zasilanie kontrahentami z FakturaXL
+    public function __construct(EntityManagerInterface $entityManager, UserRepository $userRepository)
+    {
+        $this->entityManager = $entityManager;
+        $this->userRepository = $userRepository;
 
+    }
 
     public function load(ObjectManager $manager)
+    {
+
+
+
+
+
+
+        // Załóżmy, że masz zestaw danych zapisany w tablicy
+        $dataSet = [
+            'ABARIS, Łódź',
+            'ABTON, Łódź',
+            'ADAMCZYK, Łódź',
+            'ADAMCZYK2, Łódź',
+            'AGROHURT, Zgierz',
+            'ALDONA, Krośniewice',
+            'ALDONA Krośniewice, Krośniewice',
+            'AMPOL, Zduńska Wola',
+            'ANNA, Sieradz',
+            'ANNA PTAK, Rzgów',
+            'ANPOL, Koluszki',
+            'ANWO, Wolbórz',
+            'BARTOSZ MAJEWSKI, Błaszki',
+            'BARTYZEL, Rzgów',
+            'BEATA, Zgierz',
+            'BEEATA, Łódź',
+            'BEZAT, Łódź',
+            'BIBELO, Łódź',
+            'BIMAR, Gomunice',
+            'BOX Caban Anna, Będków',
+            'BRATEK, Pabianice',
+            'BUŁAKOWSKI, Koło',
+            'CEBULA, Aleksandrów Łódzki',
+            'CIESIELSKA, Ozorków',
+            'CONTRNTEO BORSA, Łódź',
+            'CUDA WIANKI, Łódź',
+            'CYBULSKI, Zduńska Wola',
+            'CZAREK, Bełchatów',
+            'DAF, Moszczenica',
+            'DANIEL, Muszyna',
+            'DANIEL DYMEK, Czerwionka- Leszczyny',
+            'DARIUSZ, Łask',
+            'DARIUSZ 1, Smardzewice',
+            'DAWID KARLA, Sieradz',
+            'DEKOMAR, Szadek',
+            'DEKOR, Zduńska Wola',
+            'DMUCHAWCE, Płock',
+            'DORIS, Łódź',
+            'DOROTA, Aleksandrów Łódzki',
+            'DUET, Witkowice',
+            'DW WALCZAK, Grabów',
+            'DYMEK, Czerwionka-Leszczyny',
+            'DZIOMDZIORA, Łódź',
+            'EL-JOT, Zgierz',
+            'ELA, Łódź',
+            'EMILKA ŁOWICZ KRYSTYNA ŚNIEGUŁA, Łowicz',
+            'EPSILON, Lutomiersk',
+            'FENIX, Poraj',
+            'FIMEX, Pińczyce',
+            'FLORES, Łęczyca',
+            'FUKSJA, Brójce',
+            'GERG, Łódź',
+            'GIELDA KRAKOWIAK, Gorzkowice',
+            'GLINKA VIODAR, Przeźmierowo',
+            'GÓRKA, Łódź',
+            'GRANIT, Łódź',
+            'GROSIK, Rusiec',
+            'GRZEGORZ TULIPAN, Łódź',
+            'GRZELAK, Ldzań',
+            'HALINKA, Łódź',
+            'HOFMAN, Łódź',
+            'IKEBANA, Tomaszów Mazowiecki',
+            'IRYS, Drużbice',
+            'IZABELA, Sulejów',
+            'JAGIELSKI, Brzeziny',
+            'JAKUB, Wilkszyce',
+            'JANIC, Daleszyce',
+            'JANIC 2, Daleszyce',
+            'JANINA KAZUSEK, Łódź',
+            'JANTEX KUNA, Zadzim',
+            'JERUZAL PYŁKA, Kowiesy',
+            'JOLA, Przykona',
+            'JÓŹWIAK, Grzegorzew',
+            'JUCA, Pabianice',
+            'K&K, Łódź',
+            'K&K KATARZYNA, Łódź',
+            'KA-JA, Łaznowska Wola',
+            'KACAŁA, Zelów',
+            'KACPRZAK, Aleksandrów Łódzki',
+            'KAJETAN, Bieliny',
+            'KALIA, Gałków Mały',
+            'KAMOCKA, Tomaszów Mazowiecki',
+            'KAMRUT, Łowicz',
+            'KAPRYS, Sieradz',
+            'KARLIŃSKA, Ujazd',
+            'KARLIŃSKI, Ujazd',
+            'KAROLAK, Krężelewice',
+            'KAROLAK ANNA, Daszyna',
+            'KIR, Aleksandrów Łódzki',
+            'KŁOS, Dobroń',
+            'KOCH, Łódź',
+            'KOCH1 JOANNA KOCH-SZUBERT, Łódź',
+            'KONIECZKO, Łódź',
+            'KORNELIA STĘPIEŃ, Łódź',
+            'KORONA MARIOLA PRUŚ, Michałów',
+            'KOZŁOWSKI, Andrespol',
+            'KRAWCZYK, Radom',
+            'KRAWĘCKA, Ujazd',
+            'KRUPA, Koło',
+            'KRZYŻANIAK, Krzyżanów',
+            'KUBIAK, Sieradz',
+            'KUBUŚ, Piotrków Trybunalski',
+            'KUCHARSKA, Olkusz',
+            'KUPIS, Żarnów',
+            'KUROWSKI, Zduńska Wola',
+            'KURZYK, Popławy-Kolonia',
+            'KWIACIARNIA DUBRAWSKA, Łódź',
+            'KWIACIARNIA Górecka, Andrespol',
+            'KWIATY Kurzyk, Paradyż',
+            'KWIATY U BEATY STĘPIEŃ, Końskie',
+            'LAMPION, Zduńska Wola',
+            'LEMA, Prudnik',
+            'LESIŃSKI, Bielsko-Biała',
+            'LIDER, Maciejów',
+            'LISICKA, Zgierz',
+            'LOTOS MITTURA, Nowy Dwór Mazowiecki',
+            'ŁOWICZ ANDRZEJEWSKA, Łowicz',
+            'MACIEJ-KA Wioletta Dolna, Bodzanów',
+            'MAĆKIEWICZ, Łódź',
+            'MAGDZIAK, Zadzim',
+            'MAJA, Przeworsk',
+            'MAŁA GALERIA, Kutno',
+            'MARCIN ANDRZEJEWSKI RÓŻA, Głowno',
+            'MAREK, Warta',
+            'MARIOLA KRYSIAK, Stryków',
+            'MARTA KOWALCZYK, Skierniewice',
+            'MARWIS, Łask',
+            'MATYSZKIEWICZ, Łódź',
+            'MIĘDZY KWIATAMI, Kazimierz',
+            'MIREX, Koluszki',
+            'MITURA 1, Ostrołęka',
+            'MITURA BEATA, Wola Okrzejska',
+            'MITURA ROSSI, Maciejowice',
+            'MOKADI, Moszczenica',
+            'MORAWICA KRUK, Morawica',
+            'MUCHA, Skierniewice',
+            'NAPIÓRKOWSKA, Włocławek',
+            'NATALIA, Moskwa',
+            'NIEMIRSKA, Odrzywół',
+            'NIŻNIK, Łódź',
+            'NOVA FLORA, Brzeziny',
+            'NOWA, Sosnowiec',
+            'NOWACKA, Sieradz',
+            'NOWY SĄCZ, Nowy Sącz',
+            'OMYŁA, Sędziejowice',
+            'ORCHIDEA, Sieradz',
+            'OSTROWIECKA, Pińczów',
+            'OZORKÓW, Ozorków',
+            'PABIN, Łódź',
+            'PACH, Brójce',
+            'PAJS, Łódź',
+            'PARDYŻ, Paradyż',
+            'PIĄTKOWSKI, Łódź',
+            'PIŁAT, Kielce',
+            'PIOTR MAX, Koluszki',
+            'PIOTR SIENKIEWICZ, Przemyśl',
+            'PLUCIŃSKA, Poddębice',
+            'PŁOMYCZEK, Końskie',
+            'PODARUNEK, Łask',
+            'PORLOS, Rzgów',
+            'PRASNOWSKA, Ozorków',
+            'PREKOP, Kowal',
+            'PRIMOT, Warszawa',
+            'Prudnik, Prudnik',
+            'PRUDNIK2 FULBISZEWSKI, Prudnik',
+            'PRZEDSZKOLE, Radzymin',
+            'PRZEDSZKOLE PABIANICE, Pabianice',
+            'PYŁKA, Kowiesy',
+            'PYTKA, Łódź',
+            'RABIEGA, Łódź',
+            'RENATA WÓJCIK, Zduny',
+            'RISTOK, Łódź',
+            'ROGOWSKA, Łódź',
+            'ROJEWSKA, Krośniewice',
+            'ROSIŃSCY, Sieradz',
+            'ROZUMEK, Łódź',
+            'RÓŻA CHWAŁCZYŃSKA, Bełchatów',
+            'RÓŻA WIŚNIEWSKA, Andrespol',
+            'RUTA, Koluszki',
+            'RYBNIK, Czerwionka-Leszczyny',
+            'RYŻEWSKA, Rozprza',
+            'SAFFRON Modzelewski, Łódź',
+            'SARNIAK, Skierniewice',
+            'SAVARES, Bełchatów',
+            'SERENISSIMA, Łódź',
+            'SKOWROŃSKA, Łódź',
+            'SKROBOT, Gryfice',
+            'SOWIŃSKA, Łódź',
+            'SOWIŃSKI, Łódź',
+            'STAL, Koziegłowy',
+            'STAN MAX, Radziwiłłów',
+            'Stelmasiak, Szadkowice-Ogrodzim',
+            'STĘPIEŃ, Wola Krzysztoporska',
+            'STORCZYK Urbański, Gostynin',
+            'SUCHODAJ, Szydłów',
+            'SWIGOŃ, Przedecz',
+            'SYLWIA FULBISZEWSKA, Prudnik',
+            'ŚWIAT BARW, Konin',
+            'ŚWINICE WARCKIE, Świnice Warckie',
+            'TEODEZJA TEODOR, Gomunice',
+            'TĘCZA, Łódź',
+            'TOMA KONIECZKO, Łódź',
+            'TORNIEWSKA PIOTROWSKA, Płock',
+            'TUŹNIK, Łódź',
+            'U ALI WŁODARCZYK, Sławno',
+            'UPOMINEK Piesiak, Mniszków',
+            'UPOMINKI KAZUSEK, Łódź',
+            'URBAŃSKA, Budziszewice',
+            'WARSZAWA, Warszawa',
+            'WASIAK, Kutno',
+            'WIDAWSKA, Bielawy',
+            'WIECZNOŚĆ NATORSKA, Gielniów',
+            'WIELICHNOWSKA, Krośniewice',
+            'WIELICHNOWSKI, Krośniewice',
+            'WIKI, Gałkówek-Parcela',
+            'WIMAX CHWAŁCZYŃSKI, Bełchatów',
+            'WINDA PAWŁOWSKA, Częstochowa',
+            'WINIARSKI, -',
+            'WOJPOL, Łowicz',
+            'WÓJT, Skierniewice',
+            'ZABOST, Łowicz',
+            'ZAKŁAD UNIWERSUM, Iwaniska',
+            'ZAŁOGA, Łask',
+            'ZĄBKOWSKA, Łódź',
+            'ZOJA, Łódź',
+            'ZOJA WALĘCIK ASTRA, Ozorków',
+            'ZOSIA, Bogoria'
+        ];
+
+        // Pobierz repozytorium użytkowników
+
+$i=1;
+        foreach ($dataSet as $data) {
+            echo $i.'<br/>';
+            // Podziel dane na nazwę użytkownika i miasto
+            [$shortName, $city] = explode(', ', $data);
+
+            // Szukaj użytkownika po short_name
+            $user = $this->entityManager->getRepository(User::class)->findOneBy(['short_name' => $shortName]);
+
+            if ($user) {
+                // Zaktualizuj miasto dla użytkownika
+                $user->setCity($city);
+
+                // Zapisz zmiany do bazy danych
+                $manager->persist($user);
+                $manager->flush();
+            }
+            $i++;
+        }
+    }
+
+
+        public function load3(ObjectManager $manager)
     {
         // XML jako ciąg danych (przykładowy XML)
         $xmlData = '<dokumenty>

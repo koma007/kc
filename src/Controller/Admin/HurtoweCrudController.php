@@ -50,9 +50,13 @@ class HurtoweCrudController extends AbstractCrudController
 
 
         return [
+            AssociationField::new('kontrahent')
+                ->autocomplete()
+                ->setLabel('Klient')
+                ->setRequired(false),
             TextField::new('nazwa')
-                ->setRequired(true)
-                ->setLabel('Klient'),
+                ->setLabel('Krótka nazwa')
+                ->setRequired(false),
             AssociationField::new('kompozycja1')
                 ->autocomplete()
                 ->setLabel('Kompozycja')

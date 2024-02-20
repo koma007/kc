@@ -65,9 +65,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 45, nullable: true)]
     private ?string $bank_account_number = null;
 
+    #[ORM\OneToMany(mappedBy: 'kontrahent', targetEntity: Hurtowe::class)]
+    private Collection $hurtowes;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $city = null;
+
     public function __construct()
     {
         $this->pracownik = new ArrayCollection();
+        $this->hurtowes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -215,7 +222,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     public function __toString(){
-        return $this->getName();
+
+        $nazwa = $this->name ?? '';
+        $krotka_nazwa = $this->getShortName();
+
+        if ($krotka_nazwa !== null) {
+            return $nazwa . '-' . $krotka_nazwa;
+        }
+
+        return $nazwa;
     }
 
     public function getShortName(): ?string
@@ -298,6 +313,48 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setBankAccountNumber(?string $bank_account_number): static
     {
         $this->bank_account_number = $bank_account_number;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Hurtowe>
+     */
+    public function getHurtowes(): Collection
+    {
+        return $this->hurtowes;
+    }
+
+    public function addHurtowe(Hurtowe $hurtowe): static
+    {
+        if (!$this->hurtowes->contains($hurtowe)) {
+            $this->hurtowes->add($hurtowe);
+            $hurtowe->setKontrahent($this);
+        }
+
+        return $this;
+    }
+
+    public function removeHurtowe(Hurtowe $hurtowe): static
+    {
+        if ($this->hurtowes->removeElement($hurtowe)) {
+            // set the owning side to null (unless already changed)
+            if ($hurtowe->getKontrahent() === $this) {
+                $hurtowe->setKontrahent(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getCity(): ?string
+    {
+        return $this->city;
+    }
+
+    public function setCity(?string $city): static
+    {
+        $this->city = $city;
 
         return $this;
     }
