@@ -38,6 +38,15 @@
                 sztukiInput.val(Math.ceil(sztukiValue * 2));
             }
         });
+
+// Obsługa checkboxa "Wybierz wszystkie" w jQuery
+        $('#selectAll').change(function () {
+            $('input[name="wiersz[]"]').prop('checked', $(this).prop('checked'));
+
+            var isChecked = $(this).prop('checked');
+            $('input[name="wiersz[]"]').prop('checked', isChecked).trigger('change');
+        });
+
     });
 
 </script>
@@ -131,7 +140,7 @@
                                     <thead>
                                     <tr class="more-gray">
                                         <th>Lp</th>
-                                        <th>Wybierz</th>
+                                        <th><input type="checkbox" id="selectAll">Wybierz</th>
                                         <th>Nazwa</th>
                                         <th>1/2</th>
                                         <th class="text-center">Sztuk</th>

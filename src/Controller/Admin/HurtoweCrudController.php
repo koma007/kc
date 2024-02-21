@@ -1710,7 +1710,7 @@ class HurtoweCrudController extends AbstractCrudController
             ->setIcon('fa fa-money')
             ->setLabel('FV')
             ->displayIf(static function ($hurtowe) use ($security) {
-                return $hurtowe->isFv() == true && ($security->getUser()->getUserIdentifier() == 'j@j.pl' || $security->getUser()->getUserIdentifier() == 'admin@admin.pl'); });
+                return $hurtowe->isFv() == true && ($security->getUser()->getUserIdentifier() == 'malwina.kordiaka@gmail.com' || $security->getUser()->getUserIdentifier() == 'admin@admin.pl'); });
 
         return $actions->add(Crud::PAGE_INDEX, $fvAction);
     }
