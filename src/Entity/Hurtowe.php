@@ -14,6 +14,9 @@ class Hurtowe
     #[ORM\Column]
     private ?int $id = null;
 
+    #[Version, Column(type: 'integer')]
+    private int $version;
+
     public function __construct()
     {
         $this->rodzaj1 = 'kpl';
@@ -4345,5 +4348,9 @@ class Hurtowe
         return $this;
     }
 
+    public function getVersion(): ?int
+    {
+        return $this->version;
+    }
 
 }

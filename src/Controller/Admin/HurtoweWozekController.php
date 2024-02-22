@@ -736,12 +736,10 @@ class HurtoweWozekController extends AbstractDashboardController
 
 
         // Dane otrzymane z żądania
-        $ceny = $request->request->all()['ceny'] ?? [];
-        $nazwy = $request->request->all()['nazwa'] ?? [];
-
         $nazwy = $request->request->all()['nazwa'] ?? [];
         $sztuki = $request->request->all()['sztuki'] ?? [];
         $ceny = $request->request->all()['ceny'] ?? [];
+        $kwota_oplacona = $request->request->all()['kwota_oplacona'] ?? [];
         $vat = $request->request->get('vat');
         $rodzaj_platnosci = $request->request->get('rodzaj_platnosci');
         $today = date('Y-m-d');
@@ -767,8 +765,8 @@ class HurtoweWozekController extends AbstractDashboardController
   <data_wystawienia>{$today}</data_wystawienia>
   <data_sprzedazy>{$today}</data_sprzedazy>
   <termin_platnosci_data>{$paymentDueDate}</termin_platnosci_data>
-  <data_oplacenia></data_oplacenia>
-  <kwota_oplacona>0</kwota_oplacona>
+  <data_oplacenia>" . (!empty($kwota_oplacona) ? $today : '') . "</data_oplacenia>
+  <kwota_oplacona>{$kwota_oplacona}</kwota_oplacona>
   <uwagi></uwagi>
   <waluta>PLN</waluta>
   <kurs></kurs>
@@ -830,7 +828,7 @@ class HurtoweWozekController extends AbstractDashboardController
 </dokument>";
 
 
-//dd($input_xml);
+dd($input_xml);
         // Wysyłamy żądanie POST do API fakturaxl
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, 'https://program.fakturaxl.pl/api/dokument_dodaj.php');

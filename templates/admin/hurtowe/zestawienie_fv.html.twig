@@ -8,6 +8,18 @@
 
 <script>
     $(document).ready(function() {
+        // Funkcja dla checkboxa "Wybierz"
+        $('#selectAll').change(function() {
+            $('input[name="wiersz[]"]').prop('checked', $(this).prop('checked'));
+            var isChecked = $(this).prop('checked');
+            $('input[name="wiersz[]"]').prop('checked', isChecked).trigger('change');
+        });
+
+        // Funkcja dla checkboxa "1/2"
+        $('#selectHalf').change(function() {
+            $('input[name="polowa[]"]:not(:disabled)').prop('checked', $(this).prop('checked')).trigger('change');
+        });
+
         $('input[name="wiersz[]"]').change(function() {
             var sztukiInput = $(this).closest('tr').find('input[name="sztuki[]"]');
             var cenyInput = $(this).closest('tr').find('input[name="ceny[]"]');
@@ -25,29 +37,56 @@
                 cenyInput.prop('disabled', true);
                 nazwaInput.prop('disabled', true);
             }
+
+            // Obliczanie i wyświetlanie sumy
+            updateSum();
         });
 
         $('input[name="polowa[]"]').change(function() {
             var sztukiInput = $(this).closest('tr').find('input[name="sztuki[]"]');
             var sztukiValue = parseInt(sztukiInput.val());
 
-
             if ($(this).prop('checked')) {
                 sztukiInput.val(Math.ceil(sztukiValue / 2));
             } else {
                 sztukiInput.val(Math.ceil(sztukiValue * 2));
             }
+
+            // Obliczanie i wyświetlanie sumy
+            updateSum();
         });
 
-// Obsługa checkboxa "Wybierz wszystkie" w jQuery
-        $('#selectAll').change(function () {
-            $('input[name="wiersz[]"]').prop('checked', $(this).prop('checked'));
+        // Funkcja do obliczania i aktualizowania sumy
+        function updateSum() {
+            var suma = 0;
+            $('input[name="wiersz[]"]:checked').each(function() {
+                var sztukiInput = $(this).closest('tr').find('input[name="sztuki[]"]');
+                var cenyInput = $(this).closest('tr').find('input[name="ceny[]"]');
+                var sztukiValue = parseInt(sztukiInput.val());
+                var cenaValue = parseFloat(cenyInput.val());
+                suma += sztukiValue * cenaValue;
+            });
+            $('#pierwsza_suma strong').text(suma.toFixed(2));
+        }
 
-            var isChecked = $(this).prop('checked');
-            $('input[name="wiersz[]"]').prop('checked', isChecked).trigger('change');
+        // Funkcja do obliczania i aktualizowania sumy po zmianie wartości w kolumnie "Sztuk" lub "Cena"
+        $('input[name="sztuki[]"], input[name="ceny[]"]').change(function() {
+            updateSum();
         });
 
+        // Funkcja do obsługi zmiany wyboru rodzaju płatności
+        $('#rodzaj_platnosci').change(function() {
+            var selectedOption = $(this).val();
+            if (selectedOption === 'Gotówka') {
+                $('#kontener_oplacona_kwota').show();
+            } else {
+                $('#kontener_oplacona_kwota').hide();
+            }
+        });
     });
+
+
+
 
 </script>
 {% endblock %}
@@ -142,7 +181,7 @@
                                         <th>Lp</th>
                                         <th><input type="checkbox" id="selectAll">Wybierz</th>
                                         <th>Nazwa</th>
-                                        <th>1/2</th>
+                                        <th><input type="checkbox" id="selectHalf">1/2</th>
                                         <th class="text-center">Sztuk</th>
                                         <th class="text-right">Cena</th>
                                     </tr>
@@ -181,7 +220,11 @@
                                             {% set lp = lp + 1 %}
                                         {% endfor %}
                                     {% endfor %}
-
+                                    <tr class="text-right">
+                                        <td colspan="4"></td>
+                                        <td><strong>SUMA:</strong></td>
+                                        <td id="pierwsza_suma"><strong>0</strong> zł</td>
+                                    </tr>
 
                                     </tbody>
                                 </table>
@@ -233,6 +276,12 @@
                             <option value="Bon">Bon</option>
                             <option value="Kredyt">Kredyt</option>
                         </select>
+                    </div>
+                </div>
+                <div class="col-12" id="kontener_oplacona_kwota" style="display: none;">
+                    <div class="form-group">
+                        <label for="kwota_oplacona" class="form-label">Kwota opłacona</label>
+                        <input type="text" id="kwota_oplacona" name="kwota_oplacona" class="form-control" value="">
                     </div>
                 </div>
 

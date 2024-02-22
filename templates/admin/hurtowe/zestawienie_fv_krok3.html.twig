@@ -1,6 +1,32 @@
 {# templates/admin/business_stats/index.html.twig #}
 {% extends '@EasyAdmin/page/content.html.twig' %}
 
+{% block configured_javascripts %}
+    {{ parent() }}
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+
+    <script>
+        $(document).ready(function() {
+            function obliczSumeBrutto() {
+                var sumaBrutto = 0;
+
+                $('input[name="pokaz_brutto[]"]').each(function() {
+                    var value = parseFloat($(this).val().replace(',', '.')); // Pobranie wartości i zamiana przecinka na kropkę, a następnie konwersja na liczbę zmiennoprzecinkową
+                    if (!isNaN(value)) { // Sprawdzenie czy wartość jest liczbą
+                        sumaBrutto += value; // Dodanie wartości do sumy
+                    }
+                });
+
+                $('#suma_brutto').val(sumaBrutto.toFixed(2).replace('.', ','));
+            }
+
+            obliczSumeBrutto();
+
+            $('input[name="pokaz_brutto[]"]').on('input', obliczSumeBrutto);
+        });
+
+    </script>
+{% endblock %}
 
 {% block content_title 'KROK 3: podgląd FV' %}
 {% block main %}
@@ -110,7 +136,19 @@
                     <input type="" id="rodzaj_platnosci" name="rodzaj_platnosci" class="form-control" value="{{ inputBag.get('rodzaj_platnosci') }}" disabled>
                     <input type="hidden" id="rodzaj_platnosci" name="rodzaj_platnosci" class="form-control" value="{{ inputBag.get('rodzaj_platnosci') }}">
                 </div>
-                <div class="col-7">
+                <div class="col-2">
+                    {% if inputBag.get('kwota_oplacona') is defined %}
+                        <label for="cena" class="form-label">Kwota opłacona</label>
+                        <input type="" id="kwota_oplacona" name="kwota_oplacona" class="form-control" value="{{ inputBag.get('kwota_oplacona') }}" disabled>
+                        <input type="hidden" id="kwota_oplacona" name="kwota_oplacona" class="form-control" value="{{ inputBag.get('kwota_oplacona') }}">
+                    {% endif %}
+                </div>
+                <div class="col-5">
+                </div>
+                <div class="col-2 text-end">
+                    <label for="cena" class="form-label">SUMA BRUTTO:</label>
+                    <input type="" id="suma_brutto" name="suma_brutto" class="form-control" value="" disabled>
+                </div>
             </div>
 
             <div class="row justify-content-center">
