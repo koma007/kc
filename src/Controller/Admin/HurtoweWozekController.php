@@ -828,7 +828,7 @@ class HurtoweWozekController extends AbstractDashboardController
 </dokument>";
 
 
-dd($input_xml);
+//dd($input_xml);
         // Wysyłamy żądanie POST do API fakturaxl
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, 'https://program.fakturaxl.pl/api/dokument_dodaj.php');
