@@ -97,6 +97,24 @@
     <div class="container">
 
         <form action="{{ path('fv_krok_2', {'id': zamowienie_id}) }}" method="post">
+            {% if kontrahent == '---' %}
+                <div class="alert alert-danger font-weight-bold border border-danger px-4 py-3 rounded shadow" style="background-color: #f8d7da; color: #721c24; animation: blinker 1s linear infinite;">
+                    <span class="fas fa-exclamation-triangle mr-2"></span>
+                    Aby wystawić fakturę - wróć i wybierz klienta!
+                </div>
+            {% endif %}
+
+            <style>
+                @keyframes blinker {
+                    50% {
+                        opacity: 0;
+                    }
+                }
+            </style>
+
+            {% if uwagi is defined and uwagi is not empty %}
+                <div class="alert alert-secondary">{{ uwagi }}</div>
+            {% endif %}
 
             <div class="accordion mb-0" id="accordionZeszyt">
                 <div class="accordion-item">
@@ -288,7 +306,9 @@
             </div>
             <div class="row justify-content-center">
                 <div class="col-md-6 text-center">
+                    {% if kontrahent != '---' %}
                     <button type="submit" class="btn btn-success btn-block btn-wider">DALEJ</button>
+                    {% endif %}
                 </div>
             </div>
         </form>

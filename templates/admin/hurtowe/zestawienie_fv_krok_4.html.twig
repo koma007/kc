@@ -9,7 +9,9 @@
 
         {% if dokument.kod == '1' %}
             <div class="alert alert-success" role="alert">
-                <strong>Brawo!</strong> FV została zapisana pomyślnie pod numerem <strong>{{ dokument.dokument_nr }}</strong>
+                <a href="https://program.fakturaxl.pl/?page=drukowanie&faktura_id={{ dokument.dokument_id }}" target="_blank">
+                    <strong>Brawo!</strong> FV została zapisana pomyślnie pod numerem <strong>{{ dokument.dokument_nr }}</strong>.
+                </a>
             </div>
         {% else %}
             <div class="alert alert-danger" role="alert">

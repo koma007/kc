@@ -21,8 +21,10 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Contracts\Cache\ItemInterface;
 
 class HurtoweCrudController extends AbstractCrudController
 {
@@ -1676,6 +1678,10 @@ class HurtoweCrudController extends AbstractCrudController
                     $wozki[] = $nr;
                 }
             }
+
+            //wyczyscmy cache dla krokow w FV
+            $cache = new FilesystemAdapter();
+            $cache->delete($entityId);
 
         }
         if (isset($wozki)) {

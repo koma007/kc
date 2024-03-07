@@ -24,11 +24,13 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Contracts\Cache\ItemInterface;
 use Twig\Environment;
 
 class HurtoweWozekController extends AbstractDashboardController
@@ -380,14 +382,23 @@ class HurtoweWozekController extends AbstractDashboardController
     #[Route('/fv_krok1/{id}', name: 'fv_krok_1')]
     public function getHurtoweZamowienieFvKrok1(int $id, AdminUrlGenerator $adminUrlGenerator)
     {
-        $queryBuilder = $this->entityManager->createQueryBuilder();
-        $queryBuilder->select('h')
-            ->from(Hurtowe::class, 'h')
-            ->where('h.id = :id')
-            ->setParameter('id', $id)
-            ->orderBy('h.id', 'ASC');
 
-        $hurtoweEntity = $queryBuilder->getQuery()->getResult();
+        $cache = new FilesystemAdapter();
+        //jesli nie ma w cache - zaciagnij z callback
+        $hurtoweEntity = $cache->get($id, function(ItemInterface $item) use ($id){
+
+            $queryBuilder = $this->entityManager->createQueryBuilder();
+            $queryBuilder->select('h')
+                ->from(Hurtowe::class, 'h')
+                ->where('h.id = :id')
+                ->setParameter('id', $id)
+                ->orderBy('h.id', 'ASC');
+
+            $hurtoweEntity = $queryBuilder->getQuery()->getResult();
+            return $hurtoweEntity;
+        });
+
+        $kompozycja = '';
 
         $wozki = [];
         for ($i = 1; $i<=40; $i++){
@@ -454,7 +465,7 @@ class HurtoweWozekController extends AbstractDashboardController
                 }
             }
         }
-
+//dd($hurtoweEntity[0]->getKontrahent());
         //wstecz
         $link = $this->generateUrl(
             'index',
@@ -465,6 +476,10 @@ class HurtoweWozekController extends AbstractDashboardController
             ]
         );
 
+        $kontrahent = $hurtoweEntity[0]?->getKontrahent() ?? '---';
+
+
+
         return $this->render('admin/hurtowe/zestawienie_fv.html.twig', [
             'id' => $id,
             'wozki' => $wozki,
@@ -472,7 +487,9 @@ class HurtoweWozekController extends AbstractDashboardController
             'klient' => $hurtoweEntity[0]->getNazwa(),
             'zamowienie_id' => $id,
             'wstecz' => $link,
-            'nazwa' => $kompozycja
+            'nazwa' => $kompozycja,
+            'uwagi' => $hurtoweEntity[0]->getUwagi(),
+            'kontrahent' => $kontrahent
         ]);
     }
 
@@ -483,14 +500,20 @@ class HurtoweWozekController extends AbstractDashboardController
         $cena = $request->request->get('cena');
         $ilePozycji = $request->request->get('ile_pozycji');
 
-        $queryBuilder = $this->entityManager->createQueryBuilder();
-        $queryBuilder->select('h')
-            ->from(Hurtowe::class, 'h')
-            ->where('h.id = :id')
-            ->setParameter('id', $id)
-            ->orderBy('h.id', 'ASC');
+        $cache = new FilesystemAdapter();
+        //jesli nie ma w cache - zaciagnij z callback
+        $hurtoweEntity = $cache->get($id, function(ItemInterface $item) use ($id){
 
-        $hurtoweEntity = $queryBuilder->getQuery()->getResult();
+            $queryBuilder = $this->entityManager->createQueryBuilder();
+            $queryBuilder->select('h')
+                ->from(Hurtowe::class, 'h')
+                ->where('h.id = :id')
+                ->setParameter('id', $id)
+                ->orderBy('h.id', 'ASC');
+
+            $hurtoweEntity = $queryBuilder->getQuery()->getResult();
+            return $hurtoweEntity;
+        });
 
         $wozki = [];
         for ($i = 1; $i<=40; $i++){
@@ -613,16 +636,20 @@ class HurtoweWozekController extends AbstractDashboardController
             }
         }
 
+        $cache = new FilesystemAdapter();
+        //jesli nie ma w cache - zaciagnij z callback
+        $hurtoweEntity = $cache->get($id, function(ItemInterface $item) use ($id){
 
+            $queryBuilder = $this->entityManager->createQueryBuilder();
+            $queryBuilder->select('h')
+                ->from(Hurtowe::class, 'h')
+                ->where('h.id = :id')
+                ->setParameter('id', $id)
+                ->orderBy('h.id', 'ASC');
 
-        $queryBuilder = $this->entityManager->createQueryBuilder();
-        $queryBuilder->select('h')
-            ->from(Hurtowe::class, 'h')
-            ->where('h.id = :id')
-            ->setParameter('id', $id)
-            ->orderBy('h.id', 'ASC');
-
-        $hurtoweEntity = $queryBuilder->getQuery()->getResult();
+            $hurtoweEntity = $queryBuilder->getQuery()->getResult();
+            return $hurtoweEntity;
+        });
 
         $wozki = [];
         for ($i = 1; $i<=40; $i++){
