@@ -1,0 +1,35 @@
+{# templates/admin/business_stats/index.html.twig #}
+{% extends '@EasyAdmin/page/content.html.twig' %}
+
+{% block content_title 'Podgląd wózka' %}
+{% block main %}
+    <div class="container">
+        <div class="flex-container">
+            <h1 class="my-4">Wózek nr {{ wozekNr }}</h1>
+            <span class="klient">{{ klient }}</span>
+        </div>
+
+        <table class="table table-striped wozek-druk">
+            <thead>
+            <tr>
+                <th>Nazwa</th>
+                <th>Typ</th>
+                <th>Sztuk</th>
+                <th>Cena</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for element in wozki %}
+                <tr>
+                    <td>{{ element.nazwa }}</td>
+                    <td>{{ element.rodzaj }}</td>
+                    <td>{{ element.sztuk }}</td>
+                    <td>{{ element.cena }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <a href="admin{{ wstecz }}"><< wstecz</a>
+    </div>
+{% endblock %}
+

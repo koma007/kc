@@ -1,0 +1,72 @@
+{# templates/admin/business_stats/index.html.twig #}
+{% extends '@EasyAdmin/page/content.html.twig' %}
+
+{% block content_title 'Podgląd przyszłego zamówienia' %}
+{% block main %}
+    <div class="container">
+        <div class="flex-container">
+            <h1 class="my-4">{{ klient }}</h1>
+        </div>
+
+        <table class="table wozek-druk">
+            <thead>
+            <tr class="more-gray">
+                <th>Lp</th>
+                <th>Nazwa</th>
+                <th>Typ</th>
+                <th class="text-center">Sztuk</th>
+                <th class="text-right">Cena</th>
+                <th class="text-right">Wartość</th>
+                <th class="text-center">Wózek nr</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% set lp = 1 %}
+            {% set previous_key = -1 %}
+            {% set row_color = 'gray' %} {# Rozpoczynamy od szarego tła #}
+            {% for key, innerArray in wozki %}
+                {% for item in innerArray %}
+                    {% if key != previous_key %}
+                        {% if row_color == 'gray' %}
+                            {% set row_color = 'white' %} {# Jeśli poprzedni wiersz był szary, to ustawiamy białe tło #}
+                        {% else %}
+                            {% set row_color = 'gray' %} {# W przeciwnym razie ustawiamy szare tło #}
+                        {% endif %}
+                        {% set previous_key = key %}
+                    {% endif %}
+                    {% if row_color == 'gray' %}
+                        <tr class="gray">
+                    {% else %}
+                        <tr>
+                    {% endif %}
+                    <td>{{ lp }}</td>
+                    <td>{{ item.nazwa }}</td>
+                    <td>{{ item.rodzaj }}</td>
+                    <td class="text-center">{{ item.sztuk }}</td>
+                    <td class="text-right">{{ item.cena }} zł</td>
+                    <td class="text-right">{{ item.wartosc }} zł</td>
+                    <td class="text-center">{{ key }}</td>
+                    </tr>
+                    {% set lp = lp + 1 %}
+                {% endfor %}
+            {% endfor %}
+            {% if wozki|length > 0 %}
+                {% if row_color == 'gray' %}
+                    <tr class="gray">
+                {% else %}
+                    <tr>
+                {% endif %}
+                <td colspan="5" class="text-right more-gray"><strong>SUMA:</strong></td>
+                <td class="more-gray text-right"><strong>{{ kwota }} zł</strong></td>
+                </tr>
+            {% endif %}
+            </tbody>
+        </table>
+
+
+        <p class="text-right">Po zrealizowaniu niniejszego zamówienia faktura zostanie wysłana pocztą.</p>
+        <a href="admin{{ wstecz }}"><< wstecz</a>
+        <hr>
+    </div>
+{% endblock %}
+

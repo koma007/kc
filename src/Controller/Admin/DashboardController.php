@@ -9,6 +9,7 @@ use App\Entity\Dostawcy;
 use App\Entity\FvKody;
 use App\Entity\Grupy;
 use App\Entity\Hurtowe;
+use App\Entity\HurtoweZamowienia;
 use App\Entity\Polprodukty;
 use App\Entity\User;
 use App\Entity\Wyceny;
@@ -92,7 +93,8 @@ class DashboardController extends AbstractDashboardController
             ]);
 
             yield MenuItem::section('ZAMÓWIENIA');
-            yield MenuItem::linkToCrud('Hurtowe', 'fa fa-shop', Hurtowe::class);
+            yield MenuItem::linkToCrud('(Z)realizowane', 'fa fa-truck', Hurtowe::class);
+            yield MenuItem::linkToCrud('Przyszłe', 'fa fa-book', HurtoweZamowienia::class);
 //            yield MenuItem::linkToCrud('Detal', 'fa fa-receipt', Zamowienie::class);
 
             yield MenuItem::section('FV');

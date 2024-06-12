@@ -1,0 +1,24 @@
+{# templates/admin/business_stats/index.html.twig #}
+{% extends '@EasyAdmin/page/content.html.twig' %}
+
+
+{% block content_title 'Odpowiedź z FakturaXL:' %}
+{% block main %}
+    <div class="container">
+
+
+        {% if dokument.kod == '1' %}
+            <div class="alert alert-success" role="alert">
+                <a href="https://program.fakturaxl.pl/?page=drukowanie&faktura_id={{ dokument.dokument_id }}" target="_blank">
+                    <strong>Brawo!</strong> FV została zapisana pomyślnie pod numerem <strong>{{ dokument.dokument_nr }}</strong>.
+                </a>
+            </div>
+        {% else %}
+            <div class="alert alert-danger" role="alert">
+                Błąd! {{wiadomosc}} FV nie została zapisana.
+            </div>
+        {% endif %}
+
+    </div>
+{% endblock %}
+

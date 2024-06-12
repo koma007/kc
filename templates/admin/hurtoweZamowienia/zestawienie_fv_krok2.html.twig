@@ -1,0 +1,284 @@
+{# templates/admin/business_stats/index.html.twig #}
+{% extends '@EasyAdmin/page/content.html.twig' %}
+
+{% block configured_javascripts %}
+    {{ parent() }}
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+
+
+    <script>
+
+        function obliczSume(cenaBrutto, sztuki) {
+            if (!isNaN(sztuki) && !isNaN(cenaBrutto)) {
+                return sztuki * cenaBrutto;
+            } else {
+                return '';
+            }
+        }
+
+        $(document).ready(function() {
+            // Funkcja przeliczająca wartość brutto na podstawie ceny netto, stawki VAT i ilości sztuk
+
+            $('input[name^="ceny"], input[name^="sztuki"]').change(function() {
+                var sumaBrutto = 0;
+
+                // Iteracja przez wszystkie wiersze formularza
+                $('.row').each(function(index) {
+                    var cenaBrutto = $(this).find('input[name="ceny[]"]').val();
+                    var vat = $('input[name="vat"]').val();
+                    var sztuki = $(this).find('input[name="sztuki[]"]').val();
+
+                    // Jeśli cenaBrutto jest undefined lub pusta, przypisz mu wartość zero
+                    cenaBrutto = cenaBrutto ? parseFloat(cenaBrutto.replace(',', '.')) : 0;
+                    // Jeśli sztuki są undefined lub puste, przypisz im wartość zero
+                    sztuki = sztuki ? parseFloat(sztuki.replace(',', '.')) : 0;
+
+                    // Sprawdź czy wartości są zdefiniowane i niepuste
+                    if (!isNaN(cenaBrutto) && !isNaN(sztuki) && vat !== undefined && vat !== '') {
+                        vat = parseFloat(vat.replace(',', '.'));
+
+                        var brutto = obliczSume(cenaBrutto, sztuki);
+                        $(this).find('input[name="brutto[]"]').val(brutto === '' ? '' : brutto.toFixed(2).replace('.', ','));
+                        sumaBrutto += parseFloat(brutto);
+                    }
+                });
+
+                // Ustawienie sumy brutto
+                $('#suma_brutto').val(sumaBrutto.toFixed(2).replace('.', ','));
+            }).trigger('change');
+
+
+
+
+
+
+
+        }); //on ready
+
+
+    </script>
+{% endblock %}
+
+
+{% block content_title 'KROK 2: generowanie FV' %}
+{% block main %}
+    <div class="container">
+
+        <div class="accordion mb-0" id="accordionZeszyt">
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingOne">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                            {{ klient }} - ORYGINAŁ ZAMÓWIENIA
+                        </button>
+                    </h2>
+                    <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordion">
+                        <div class="accordion-body">
+                            <table class="table wozek-druk">
+                                <thead>
+                                <tr class="more-gray">
+                                    <th>Lp</th>
+                                    <th>Nazwa</th>
+                                    <th>Typ</th>
+                                    <th class="text-center">Sztuk</th>
+                                    <th class="text-right">Cena</th>
+                                    <th class="text-right">Wartość</th>
+                                    <th class="text-center">Wózek nr</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% set lp = 1 %}
+                                {% set previous_key = -1 %}
+                                {% set row_color = 'gray' %}
+                                {% for key, innerArray in wozki %}
+                                    {% for item in innerArray %}
+                                        {% if key != previous_key %}
+                                            {% if row_color == 'gray' %}
+                                                {% set row_color = 'white' %}
+                                            {% else %}
+                                                {% set row_color = 'gray' %}
+                                            {% endif %}
+                                            {% set previous_key = key %}
+                                        {% endif %}
+                                        {% if row_color == 'gray' %}
+                                            <tr class="gray">
+                                        {% else %}
+                                            <tr>
+                                        {% endif %}
+                                        <td>{{ lp }}</td>
+                                        <td>{{ item.nazwa }}</td>
+                                        <td>{{ item.rodzaj }}</td>
+                                        <td class="text-center">{{ item.sztuk }}</td>
+                                        <td class="text-right">{{ item.cena }} zł</td>
+                                        <td class="text-right">{{ item.wartosc }} zł</td>
+                                        <td class="text-center">{{ key }}</td>
+                                        </tr>
+                                        {% set lp = lp + 1 %}
+                                    {% endfor %}
+                                {% endfor %}
+                                {% if wozki|length > 0 %}
+                                    {% if row_color == 'gray' %}
+                                        <tr class="gray">
+                                    {% else %}
+                                        <tr>
+                                    {% endif %}
+                                    <td colspan="5" class="text-right more-gray"><strong>SUMA:</strong></td>
+                                    <td class="more-gray text-right"><strong>{{ kwota }} zł</strong></td>
+                                    </tr>
+                                {% endif %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% set inputBag = app.request.request %}
+        {% set maxArrayLength = 0 %}
+
+        {# Znajdź maksymalną długość tablicy w inputBag #}
+        {% for key, array in inputBag %}
+            {% if array is iterable and array|length > maxArrayLength %}
+                {% set maxArrayLength = array|length %}
+            {% endif %}
+        {% endfor %}
+
+
+
+
+        <form action="{{ path('fv_krok_3', {'id': zamowienie_id}) }}" method="post">
+
+            {% for i in 0..(maxArrayLength - 1) %}
+                <div class="row">
+                    {% for key, array in inputBag %}
+                        {% if array[i] is defined and key == 'wiersz' %}
+                            <div class="col-1">
+                                <div class="form-group">
+                                    {% if i == 0 %}
+                                    <label for="{{ key }}_{{ i }}" class="form-label">Pozycja</label>
+                                    {% endif %}
+                                    <input type="text" id="{{ key }}_{{ i }}" name="{{ key }}[]" class="form-control" value="{{ i+1 }}" disabled>
+                                </div>
+                            </div>
+
+                        {% elseif array[i] is defined and key == 'nazwa' %}
+                            <div class="col-3">
+                                <div class="form-group">
+                                    {% if i == 0 %}
+                                    <label for="{{ key }}_{{ i }}" class="form-label">Nazwa</label>
+                                    {% endif %}
+                                    <input type="text" id="nazwa_pokaz_{{ i }}" name="nazwa_pokaz_[]" class="form-control" value="{{ array[i] }}" disabled>
+                                    <input type="hidden" id="{{ key }}_{{ i }}" name="{{ key }}[]" class="form-control" value="{{ array[i] }}">
+                                </div>
+                            </div>
+
+                        {% elseif array[i] is defined and key != 'wiersz' and key != 'polowa' %}
+                            <div class="col-3">
+                                <div class="form-group">
+                            {% if i == 0 %}
+                                    <label for="{{ key }}_{{ i }}" class="form-label">{{ key|title }}</label>
+                            {% endif %}
+                                    <input type="text" id="{{ key }}_{{ i }}" name="{{ key }}[]" class="form-control" value="{{ array[i] }}">
+                                </div>
+                            </div>
+                        {% endif %}
+
+                    {% endfor %}
+                    {% if maxArrayLength >0 %}
+                        <div class="col-2">
+                            <div class="form-group">
+                                {% if i == 0 %}
+                                <label for="" class="form-label">Brutto</label>
+                                {% endif %}
+                                <input type="text" id="brutto_{{ maxArrayLength+i }}" name="brutto[]" class="form-control" value="{{ i }}" placeholder="brutto">
+                            </div>
+                        </div>
+                    {% endif %}
+
+                </div>
+
+            {% endfor %}
+
+
+            {% if app.request.get('ile_pozycji') is defined%}
+                {% set dodatkowePozycje = app.request.get('ile_pozycji') %}
+                {% if dodatkowePozycje > 0 %}
+                    {% for i in 1..dodatkowePozycje %}
+                        <div class="row">
+                            <div class="col-1">
+                                <div class="form-group">
+                                    <input type="text" id="wiersz_{{ maxArrayLength+i }}" name="wiersz[]" class="form-control" value="{{ maxArrayLength+i }}" disabled>
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div class="form-group">
+                                    <input type="text" id="nazwa_pokaz{{ maxArrayLength+i }}" name="nazwa_pokaz[]" class="form-control" value="" placeholder="nazwa" disabled>
+                                    <input type="hidden" id="nazwa_{{ maxArrayLength+i }}" name="nazwa[]" class="form-control" value="" placeholder="nazwa">
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div class="form-group">
+                                    <input type="text" id="sztuki_{{ maxArrayLength+i }}" name="sztuki[]" class="form-control" value="" placeholder="sztuk">
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div class="form-group">
+                                    <input type="text" id="ceny_{{ maxArrayLength+i }}" name="ceny[]" class="form-control" value="" placeholder="cena">
+                                </div>
+                            </div>
+
+                            <div class="col-2">
+                                <div class="form-group">
+                                    {% if i == 0 %}
+                                        <label for="" class="form-label">Brutto</label>
+                                    {% endif %}
+                                    <input type="text" id="brutto_{{ maxArrayLength+i }}" name="brutto[]" class="form-control" value="" placeholder="brutto">
+                                </div>
+                            </div>
+
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endif %}
+
+            <div class="row mb-3">
+                <div class="col-1">
+                    <label for="cena" class="form-label">VAT %</label>
+                    <input type="" id="vat" name="vat" class="form-control" value="{{ inputBag.get('vat') }}" disabled>
+                    <input type="hidden" id="vat" name="vat" class="form-control" value="{{ inputBag.get('vat') }}">
+                </div>
+                <div class="col-2">
+                    <label for="cena" class="form-label">Rodzaj płatności</label>
+                    <input type="" id="rodzaj_platnosci" name="rodzaj_platnosci" class="form-control" value="{{ inputBag.get('rodzaj_platnosci') }}" disabled>
+                    <input type="hidden" id="rodzaj_platnosci" name="rodzaj_platnosci" class="form-control" value="{{ inputBag.get('rodzaj_platnosci') }}">
+                </div>
+                <div class="col-2">
+                    {% if inputBag.get('kwota_oplacona') is defined %}
+                    <label for="cena" class="form-label">Kwota opłacona</label>
+                    <input type="" id="kwota_oplacona" name="kwota_oplacona" class="form-control" value="{{ inputBag.get('kwota_oplacona') }}" disabled>
+                    <input type="hidden" id="kwota_oplacona" name="kwota_oplacona" class="form-control" value="{{ inputBag.get('kwota_oplacona') }}">
+                    {% endif %}
+                </div>
+                <div class="col-5">
+                </div>
+                <div class="col-2 text-end">
+                    <label for="cena" class="form-label">SUMA BRUTTO:</label>
+                    <input type="" id="suma_brutto" name="suma_brutto" class="form-control" value="" disabled>
+                </div>
+            </div>
+
+
+
+
+
+            <div class="row justify-content-center">
+                <div class="col-md-6 text-center">
+                    <button type="submit" class="btn btn-success btn-block btn-wider">DALEJ</button>
+                </div>
+            </div>
+
+        </form>
+
+        <p class="mt-3">Aby przejść wstecz użyj <-- przeglądarki, ale cześć zmian może nie być zapisanych.</p>
+
+    </div>
+{% endblock %}
+

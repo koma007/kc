@@ -8,6 +8,7 @@ use App\Entity\Dostawcy;
 use App\Entity\FvKody;
 use App\Entity\Grupy;
 use App\Entity\Hurtowe;
+use App\Entity\HurtoweZamowienia;
 use App\Entity\Polprodukty;
 use App\Entity\User;
 use App\Entity\Wyceny;
@@ -358,6 +359,212 @@ class HurtoweWozekController extends AbstractDashboardController
         );
 
         $html = $this->renderView('admin/hurtowe/zestawienie-pdf.html.twig', [
+            'id' => $id,
+            'wozki' => $wozki,
+            'kwota' =>  $suma = str_replace('.', ',', $hurtoweEntity[0]->getSuma()),
+            'klient' => $hurtoweEntity[0]->getNazwa(),
+            'wstecz' => $link
+        ]);
+
+        $mpdf = new \Mpdf\Mpdf();
+        $mpdf->WriteHTML($html);
+
+        // Opcjonalnie możesz ustawić nagłówek Content-Disposition, aby przeglądarka odebrała odpowiedź jako plik do pobrania
+        header('Content-Disposition: attachment; filename="zestawienie.pdf"');
+
+        return new Response($mpdf->Output(), 200, [
+            'Content-Type' => 'application/pdf',
+        ]);
+
+
+    }
+
+    //całe zamówienie - wszystkie wózki -przyszłe
+    #[Route('/hurtowe/{id}', name: 'app_get_przyszle_zamowienie')]
+    public function getPrzyszleZamowienie(?int $id, AdminUrlGenerator $adminUrlGenerator)
+    {
+
+        $queryBuilder = $this->entityManager->createQueryBuilder();
+        $queryBuilder->select('h')
+            ->from(HurtoweZamowienia::class, 'h')
+            ->where('h.id = :id')
+            ->setParameter('id', $id)
+            ->orderBy('h.id', 'ASC');
+
+        $hurtoweEntity = $queryBuilder->getQuery()->getResult();
+
+
+        $wozki = [];
+        for ($i = 1; $i<=40; $i++){
+            if($nr = $hurtoweEntity[0]->{"getWozek" . $i}()){
+
+                $kompozycjaId = $hurtoweEntity[0]->{"getKompozycja" . $i}();
+
+                //gdy nie ma wybranej nazwy
+                if(null != $hurtoweEntity[0]->{"getKompozycja" . $i}()) {
+                    $kompozycjaId = $hurtoweEntity[0]->{"getKompozycja" . $i}();
+
+                    $kompozycja = $this->entityManager->getRepository(Wyceny::class)->find($kompozycjaId);
+                    $kompozycja = $kompozycja->getNazwa();
+                }else{
+                    //własna nazwa
+                    if(null == $hurtoweEntity[0]->{"getNazwa" . $i}()) {
+                        $kompozycja = '-';
+                    }else {
+                        $kompozycja = $hurtoweEntity[0]->{"getNazwa" . $i}();
+                    }
+                }
+
+                $wozki[$nr][] = array('nazwa'=> $kompozycja,
+                    'rodzaj'=> $hurtoweEntity[0]->{"getRodzaj" . $i}(),
+                    'sztuk'=> $hurtoweEntity[0]->{"getSztuk" . $i}(),
+                    'cena'=> str_replace('.', ',', $hurtoweEntity[0]->{"getCena" . $i}()),
+                    'wartosc'=> str_replace('.', ',', $hurtoweEntity[0]->{"getWartosc" . $i}()),
+                );
+            }
+        }
+        ksort($wozki);
+
+        //bez numerów wózków
+        for ($i = 1; $i<=40; $i++) {
+            if (!$hurtoweEntity[0]->{"getWozek" . $i}()) {
+
+                if ($hurtoweEntity[0]->{"getWartosc" . $i}()) { //gdy jst wartosc jakakolwiek w wierszu
+                    $kompozycjaId = $hurtoweEntity[0]->{"getKompozycja" . $i}();
+
+                    //gdy nie ma wybranej nazwy
+                    if (null != $hurtoweEntity[0]->{"getKompozycja" . $i}()) {
+                        $kompozycjaId = $hurtoweEntity[0]->{"getKompozycja" . $i}();
+
+                        $kompozycja = $this->entityManager->getRepository(Wyceny::class)->find($kompozycjaId);
+                        $kompozycja = $kompozycja->getNazwa();
+                    } else {
+                        //własna nazwa
+                        if (null == $hurtoweEntity[0]->{"getNazwa" . $i}()) {
+                            $kompozycja = '-';
+                        } else {
+                            $kompozycja = $hurtoweEntity[0]->{"getNazwa" . $i}();
+                        }
+                    }
+
+                    $wozki['-'][] = array('nazwa' => $kompozycja,
+                        'rodzaj' => $hurtoweEntity[0]->{"getRodzaj" . $i}(),
+                        'sztuk' => $hurtoweEntity[0]->{"getSztuk" . $i}(),
+                        'cena' => str_replace('.', ',', $hurtoweEntity[0]->{"getCena" . $i}()),
+                        'wartosc' => str_replace('.', ',', $hurtoweEntity[0]->{"getWartosc" . $i}()),
+                    );
+                }
+            }
+        }
+
+        //wstecz
+        $link = $this->generateUrl(
+            'index',
+            [
+                'crudAction' => Action::EDIT,
+                'crudControllerFqcn' => HurtoweZamowieniaCrudController::class,
+                'entityId' => $id,
+            ]
+        );
+
+        return $this->render('admin/hurtoweZamowienia/zestawienie.html.twig', [
+            'id' => $id,
+            'wozki' => $wozki,
+            'kwota' =>  $suma = str_replace('.', ',', $hurtoweEntity[0]->getSuma()),
+            'klient' => $hurtoweEntity[0]->getNazwa(),
+            'wstecz' => $link
+        ]);
+    }
+
+    //całe zamówienie - wszystkie wózki - do pdf - przyszłe
+    #[Route('/hurtowe/{id}', name: 'app_get_przyszle_zamowienie_pdf')]
+    public function getPrzyszleZamowieniePdf(?int $id, AdminUrlGenerator $adminUrlGenerator)
+    {
+
+        $queryBuilder = $this->entityManager->createQueryBuilder();
+        $queryBuilder->select('h')
+            ->from(HurtoweZamowienia::class, 'h')
+            ->where('h.id = :id')
+            ->setParameter('id', $id)
+            ->orderBy('h.id', 'ASC');
+
+        $hurtoweEntity = $queryBuilder->getQuery()->getResult();
+
+
+        $wozki = [];
+        for ($i = 1; $i<=40; $i++){
+            if($nr = $hurtoweEntity[0]->{"getWozek" . $i}()){
+
+                $kompozycjaId = $hurtoweEntity[0]->{"getKompozycja" . $i}();
+
+                //gdy nie ma wybranej nazwy
+                if(null != $hurtoweEntity[0]->{"getKompozycja" . $i}()) {
+                    $kompozycjaId = $hurtoweEntity[0]->{"getKompozycja" . $i}();
+
+                    $kompozycja = $this->entityManager->getRepository(Wyceny::class)->find($kompozycjaId);
+                    $kompozycja = $kompozycja->getNazwa();
+                }else{
+                    //własna nazwa
+                    if(null == $hurtoweEntity[0]->{"getNazwa" . $i}()) {
+                        $kompozycja = '-';
+                    }else {
+                        $kompozycja = $hurtoweEntity[0]->{"getNazwa" . $i}();
+                    }
+                }
+
+                $wozki[$nr][] = array('nazwa'=> $kompozycja,
+                    'rodzaj'=> $hurtoweEntity[0]->{"getRodzaj" . $i}(),
+                    'sztuk'=> $hurtoweEntity[0]->{"getSztuk" . $i}(),
+                    'cena'=> str_replace('.', ',', $hurtoweEntity[0]->{"getCena" . $i}()),
+                    'wartosc'=> str_replace('.', ',', $hurtoweEntity[0]->{"getWartosc" . $i}()),
+                );
+            }
+        }
+        ksort($wozki);
+
+        //bez numerów wózków
+        for ($i = 1; $i<=40; $i++) {
+            if (!$hurtoweEntity[0]->{"getWozek" . $i}()) {
+
+                if ($hurtoweEntity[0]->{"getWartosc" . $i}()) { //gdy jst wartosc jakakolwiek w wierszu
+                    $kompozycjaId = $hurtoweEntity[0]->{"getKompozycja" . $i}();
+
+                    //gdy nie ma wybranej nazwy
+                    if (null != $hurtoweEntity[0]->{"getKompozycja" . $i}()) {
+                        $kompozycjaId = $hurtoweEntity[0]->{"getKompozycja" . $i}();
+
+                        $kompozycja = $this->entityManager->getRepository(Wyceny::class)->find($kompozycjaId);
+                        $kompozycja = $kompozycja->getNazwa();
+                    } else {
+                        //własna nazwa
+                        if (null == $hurtoweEntity[0]->{"getNazwa" . $i}()) {
+                            $kompozycja = '-';
+                        } else {
+                            $kompozycja = $hurtoweEntity[0]->{"getNazwa" . $i}();
+                        }
+                    }
+
+                    $wozki['-'][] = array('nazwa' => $kompozycja,
+                        'rodzaj' => $hurtoweEntity[0]->{"getRodzaj" . $i}(),
+                        'sztuk' => $hurtoweEntity[0]->{"getSztuk" . $i}(),
+                        'cena' => str_replace('.', ',', $hurtoweEntity[0]->{"getCena" . $i}()),
+                        'wartosc' => str_replace('.', ',', $hurtoweEntity[0]->{"getWartosc" . $i}()),
+                    );
+                }
+            }
+        }
+
+        //wstecz
+        $link = $this->generateUrl(
+            'index',
+            [
+                'crudAction' => Action::EDIT,
+                'crudControllerFqcn' => HurtoweZamowieniaCrudController::class,
+                'entityId' => $id,
+            ]
+        );
+
+        $html = $this->renderView('admin/hurtoweZamowienia/zestawienie-pdf.html.twig', [
             'id' => $id,
             'wozki' => $wozki,
             'kwota' =>  $suma = str_replace('.', ',', $hurtoweEntity[0]->getSuma()),
@@ -1003,7 +1210,8 @@ class HurtoweWozekController extends AbstractDashboardController
             ]);
 
             yield MenuItem::section('ZAMÓWIENIA');
-            yield MenuItem::linkToCrud('Hurtowe', 'fa fa-shop', Hurtowe::class);
+            yield MenuItem::linkToCrud('(Z)realizowane', 'fa fa-truck', Hurtowe::class);
+            yield MenuItem::linkToCrud('Przyszłe', 'fa fa-book', HurtoweZamowienia::class);
 //            yield MenuItem::linkToCrud('Detal', 'fa fa-receipt', Zamowienie::class);
 
             yield MenuItem::section('FV');

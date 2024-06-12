@@ -1,0 +1,374 @@
+{# @var ea \EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext #}
+{# @var entity \EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto #}
+{% extends ea.templatePath('layout') %}
+{% form_theme new_form with ea.crud.formThemes only %}
+
+{% trans_default_domain ea.i18n.translationDomain %}
+
+{% block body_id 'ea-new-' ~ entity.name %}
+{% block body_class 'ea-new ea-new-' ~ entity.name %}
+
+{% set ea_field_assets = ea.crud.fieldAssets(constant('EasyCorp\\Bundle\\EasyAdminBundle\\Config\\Crud::PAGE_NEW')) %}
+
+{% block head_javascript %}
+    {{ parent() }}
+    <script src="{{ asset('form.js', ea.assets.defaultAssetPackageName) }}"></script>
+{% endblock head_javascript %}
+
+{% block configured_head_contents %}
+    {{ parent() }}
+    {% for htmlContent in ea_field_assets.headContents %}
+        {{ htmlContent|raw }}
+    {% endfor %}
+{% endblock %}
+
+{% block configured_body_contents %}
+    {{ parent() }}
+    {% for htmlContent in ea_field_assets.bodyContents %}
+        {{ htmlContent|raw }}
+    {% endfor %}
+{% endblock %}
+
+{% block configured_stylesheets %}
+    {{ parent() }}
+    {{ include('@EasyAdmin/includes/_css_assets.html.twig', { assets: ea_field_assets.cssAssets }, with_context = false) }}
+    {{ include('@EasyAdmin/includes/_encore_link_tags.html.twig', { assets: ea_field_assets.webpackEncoreAssets }, with_context = false) }}
+{% endblock %}
+
+{% block configured_javascripts %}
+    {{ parent() }}
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+
+    {{ include('@EasyAdmin/includes/_js_assets.html.twig', { assets: ea_field_assets.jsAssets }, with_context = false) }}
+    {{ include('@EasyAdmin/includes/_encore_script_tags.html.twig', { assets: ea_field_assets.webpackEncoreAssets }, with_context = false) }}
+
+    <script>
+        function calculateSum() {
+            var suma = 0;
+            for (var i = 1; i <= 40; i++) {
+                var inputId = 'HurtoweZamowienia_wartosc' + i;
+                var inputValue = $('#' + inputId).val();
+                if (inputValue) {
+                    var value = parseFloat(inputValue.replace('.', '').replace(',', '.'));
+                    if (!isNaN(value)) {
+                        suma += value;
+                    }
+                }
+            }
+            setTimeout(function() {
+                //suma - góra
+                var total = suma;
+                $('#calkowita_wartosc').text(total.toLocaleString('pl-PL') + ' zł');
+
+                //wazon -dół
+                var formattedTotal = total.toLocaleString('pl-PL', { minimumFractionDigits: 2 });
+                // Usunięcie ewentualnych spacji
+                formattedTotal = formattedTotal.replace(/\s/g, '');
+                $('#HurtoweZamowienia_suma').val(formattedTotal);
+            }, 700);
+
+        }
+
+        $(document).ready(function() {
+            let selectedOption = '';
+            calculateSum();
+
+            $('input[id^="HurtoweZamowienia_wartosc"]').on('input', function() {
+                calculateSum();
+            });
+
+            //zmiana ceny w solo
+            $('input[id^="HurtoweZamowienia_cena"]').on('input', function() {
+
+            });
+
+            $('#HurtoweZamowienia_kontrahent_autocomplete').change(function() {
+                var selectedOption = $(this).find('option:selected');
+                if (selectedOption.length > 0) {
+                    var selectedValue = selectedOption.val();
+                    var selectedText = selectedOption.text();
+                    var lastIndex = selectedText.lastIndexOf('-');
+
+                    if (lastIndex !== -1) {
+                        var trimmedValue = selectedText.substr(lastIndex + 1).trim();
+
+                        $('#HurtoweZamowienia_nazwa').val(trimmedValue);
+                        $('#tytul_klient').text(trimmedValue);
+                    }
+                }
+            });
+
+            document.getElementById('HurtoweZamowienia_nazwa').addEventListener('input', function() {
+                var inputValue = this.value;
+                document.getElementById('tytul_klient').textContent = inputValue;
+            });
+
+
+            //rodzaj
+            //id całego elementu
+            var idCalegoElementu;
+            $('td.rodzaje_kompozycji input[type="radio"]').on('change', function() {
+                var elementId = $(this).closest('td').find('div[id^="HurtoweZamowienia_rodzaj"]').attr('id');
+                idCalegoElementu = elementId.match(/\d+/);
+
+                        var selectedValue = $(this).val();
+                        var selectedId = $(this).attr('id');
+                        var id = selectedId.substring(selectedId.lastIndexOf('_') + 1);
+                        var selectedOption = $('#HurtoweZamowienia_kompozycja'+idCalegoElementu+'_autocomplete').val();
+                fetchCenaAfterRadioChange(selectedOption,selectedValue,idCalegoElementu);
+            });
+
+            $('input[name^="HurtoweZamowienia[wozek"]').change(function(){
+                if($(this).val() > 10){
+                    alert("Max numer wózków to 10");
+                    $(this).val('');
+                }
+            });
+
+        }); //on ready
+
+        const sztukFields = document.querySelectorAll('[id^="HurtoweZamowienia_sztuk"]');
+        const cenaFields = document.querySelectorAll('[id^="HurtoweZamowienia_cena"]');
+        const wartoscFields = document.querySelectorAll('[id^="HurtoweZamowienia_wartosc"]');
+
+        sztukFields.forEach((sztukField) => {
+            const where = sztukField.id.slice(-1);
+            const cenaField = document.getElementById(`HurtoweZamowienia_cena${where}`);
+            const wartoscField = document.getElementById(`HurtoweZamowienia_wartosc${where}`);
+
+            sztukField.addEventListener('input', () => {
+                const sztuk = parseInt(sztukField.value);
+                const cena = parseFloat(cenaField.value);
+                const wartosc = sztuk * cena;
+                wartoscField.value = wartosc.toFixed(2);
+            });
+
+            cenaField.addEventListener('input', () => {
+                const sztuk = parseInt(sztukField.value);
+                const cena = parseFloat(cenaField.value);
+                const wartosc = sztuk * cena;
+                wartoscField.value = wartosc.toFixed(2);
+            });
+        });
+
+        function fetchCena(element, where) {
+            const selectedOption = element.value;
+            var selectedRodzaj = $('#HurtoweZamowienia_rodzaj' + where + ' input[type="radio"]:checked').val();
+            const specificPriceUrl = '{{ path('app_get_cena_kompozycja', {'id': '__kompozycja1__', 'cena': '__cena__'}) }}'.replace('__kompozycja1__', selectedOption).replace('__cena__', selectedRodzaj);
+            const cenaKplFieldId = `HurtoweZamowienia_cena${where}`;
+            const sztukFieldId = `HurtoweZamowienia_sztuk${where}`;
+            const wartoscFieldId = `HurtoweZamowienia_wartosc${where}`;
+
+
+            $.ajax({
+                url: specificPriceUrl,
+                type: 'POST',
+                success: (data) => {
+
+                    $('#' + cenaKplFieldId).val(data.cena.toString().replace('.', ','));
+
+                    var cena = parseFloat(data.cena.toString().replace(',', '.'));
+                    var sztuk = parseFloat($('#' + sztukFieldId).val());
+
+                    if (!isNaN(cena) && !isNaN(sztuk)) {
+                        var wynik = cena*sztuk
+                        $('#' + wartoscFieldId).val(wynik.toString().replace('.', ','));
+                    } else {
+                        $('#' + wartoscFieldId).val('');
+                    }
+                    calculateSum();
+                }
+            });
+        };
+
+
+        function fetchCenaAfterRadioChange(selectedOption, selectedValue,idCalegoElementu) {
+            const specificPriceUrl = '{{ path('app_get_cena_kompozycja', {'id': '__kompozycja1__', 'cena': '__cena__'}) }}'.replace('__kompozycja1__', selectedOption).replace('__cena__', selectedValue);
+            const cenaKplFieldId = `HurtoweZamowienia_cena${idCalegoElementu}`;
+            const sztukFieldId = `HurtoweZamowienia_sztuk${idCalegoElementu}`;
+            const wartoscFieldId = `HurtoweZamowienia_wartosc${idCalegoElementu}`;
+
+            $.ajax({
+                url: specificPriceUrl,
+                type: 'POST',
+                success: (data) => {
+
+                    //nowa cena
+                    $('#' + cenaKplFieldId).val(data.cena.toString().replace('.', ','));
+
+                    //przeliczenie ze sztukami po nowej cenie
+                    var cena = parseFloat(data.cena.toString().replace(',', '.'));
+                    var sztuk = parseFloat($('#' + sztukFieldId).val());
+
+                    if (!isNaN(cena) && !isNaN(sztuk)) {
+                        var wynik = cena*sztuk
+                        $('#' + wartoscFieldId).val(wynik.toString().replace('.', ','));
+                    } else {
+                        $('#' + wartoscFieldId).val('');
+                    }
+
+                    setTimeout(function() {
+                        calculateSum();
+                    }, 700);
+                }
+            });
+        }
+
+        function calculateWartosc(value, where) {
+            const sztuk = document.getElementById('HurtoweZamowienia_sztuk' + where).value;
+            const cena = document.getElementById('HurtoweZamowienia_cena' + where).value.replace(',', '.');
+            const wartosc = (sztuk * cena).toFixed(2);
+
+            document.getElementById('HurtoweZamowienia_wartosc' + where).value = wartosc.toString().replace(/\./g, ',');
+            calculateSum();
+        }
+    </script>
+{% endblock %}
+
+{% block content_title %}
+    <div id="tytul_klient" class="d-inline-block">
+    {%- apply spaceless -%}
+        {% set custom_page_title = ea.crud.customPageTitle('new', null, ea.i18n.translationParameters) %}
+        {{ custom_page_title is null
+        ? ea.crud.defaultPageTitle('new', null, ea.i18n.translationParameters)|trans|raw
+        : custom_page_title|trans|raw }}
+    {%- endapply -%}
+    </div>
+    <div class="d-inline-block" style="float: right;">
+        <div class="d-inline-block">SUMA:</div>
+        <div id="calkowita_wartosc" class="d-inline-block">0 zł</div>
+    </div>
+    <div style="clear: both;"></div>
+
+{% endblock %}
+
+{% block page_actions %}
+    {% for action in entity.actions %}
+        {% if action.name == 'saveAndReturn'%}
+        {{ include(action.templatePath, { action: action }, with_context = false) }}
+        {% endif %}
+    {% endfor %}
+{% endblock %}
+
+{% block main %}
+
+    {% block new_form %}
+        {{ form_start(new_form) }}
+        <div class="my-custom-class-for-errors">
+            {{ form_errors(new_form) }}
+        </div>
+        <div class="row">
+            <div class="col-md-9"> <!-- Kolumna po lewej stronie o szerokości 75% -->
+                <div class="row mb-3">
+                    <div class="col-8" style="height:46px;">
+                        <strong>{{ form_label(new_form.kontrahent) }}</strong>
+                        {{ form_widget(new_form.kontrahent) }}
+                        <small>{{ form_help(new_form.kontrahent) }}</small>
+                        <div class="form-error">
+                            {{ form_errors(new_form.kontrahent) }}
+                        </div>
+                    </div>
+                    <div class="col-4 mt-3">
+                            {{ form_label(new_form.nazwa) }}
+                            {{ form_widget(new_form.nazwa) }}
+                            <small>{{ form_help(new_form.nazwa) }}</small>
+                            <div class="form-error">
+                                {{ form_errors(new_form.nazwa) }}
+                            </div>
+                    </div>
+                </div>
+                <div id="hurtowe-table" class="table-responsive table-hurtowe">
+                    <table class="table table" id="hurtowe">
+                        <thead>
+                        <tr>
+                            <th scope="col">Kompozycja</th>
+                            <th scope="col">Sztuk</th>
+                            <th scope="col">Cena</th>
+                            <th scope="col">Wartość</th>
+                            <th scope="col">Ile wózków</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for i in 1..40 %}
+                            <tr>
+                                <td style="width: 100%;" colspan="5">
+                                    Pozycja {{ i }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="width: 50%;">
+                                    <div class="form-group">
+                                        {{ form_widget(attribute(new_form, 'kompozycja' ~ i), {attr: {'onchange': 'fetchCena(this, ' ~ i ~ ')'}}) }}
+                                        <small class="form-text text-muted">{{ form_help(attribute(new_form, 'kompozycja' ~ i)) }}</small>
+                                        <div class="invalid-feedback">{{ form_errors(attribute(new_form, 'kompozycja' ~ i)) }}</div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="form-group">
+                                        {{ form_widget(attribute(new_form, 'sztuk' ~ i), {attr:{'onchange': 'calculateWartosc(this, ' ~ i ~ ')', 'min': 0}}) }}
+                                        <small class="form-text text-muted">{{ form_help(attribute(new_form, 'sztuk' ~ i)) }}</small>
+                                        <div class="invalid-feedback">{{ form_errors(attribute(new_form, 'sztuk' ~ i)) }}</div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="form-group">
+                                        {{ form_widget(attribute(new_form, 'cena' ~ i), {attr:{'onchange': 'calculateWartosc(this, ' ~ i ~ ')'}}) }}
+                                        <small class="form-text text-muted">{{ form_help(attribute(new_form, 'cena' ~ i)) }}</small>
+                                        <div class="invalid-feedback">{{ form_errors(attribute(new_form, 'cena' ~ i)) }}</div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="form-group">
+                                        {{ form_widget(attribute(new_form, 'wartosc' ~ i), {'attr': {'class': 'form-control'}}) }}
+                                        <small class="form-text text-muted">{{ form_help(attribute(new_form, 'wartosc' ~ i)) }}</small>
+                                        <div class="invalid-feedback">{{ form_errors(attribute(new_form, 'wartosc' ~ i)) }}</div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="form-group">
+                                        {{ form_widget(attribute(new_form, 'wozek' ~ i), {'attr': {'class': 'form-control'}}) }}
+                                        <small class="form-text text-muted">{{ form_help(attribute(new_form, 'wozek' ~ i)) }}</small>
+                                        <div class="invalid-feedback">{{ form_errors(attribute(new_form, 'wozek' ~ i)) }}</div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="width: 50%">
+                                    <div class="form-group">
+                                        {{ form_widget(attribute(new_form, 'nazwa' ~ i)) }}
+                                        <small>{{ form_help(attribute(new_form, 'nazwa' ~ i)) }}</small>
+                                        <div class="form-error">
+                                            {{ form_errors(attribute(new_form, 'nazwa' ~ i)) }}
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="rodzaje_kompozycji" style="width: 50%" colspan="4">
+                                    <div class="form-group rodzaje_kompozycji">
+                                        {{ form_widget(attribute(new_form, 'rodzaj' ~ i), {'attr': {'class': 'form-control form-check-inline'}}) }}
+                                        <small class="form-text text-muted">{{ form_help(attribute(new_form, 'rodzaj' ~ i)) }}</small>
+                                        <div class="invalid-feedback">{{ form_errors(attribute(new_form, 'rodzaj' ~ i)) }}</div>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+
+                        <tr class="bg-custom-green"><td colspan="3" class="text-right" id="suma-label">SUMA:</td><td id="suma" colspan="2" class="text-right">
+                                <div class="form-group">
+                                    {{ form_widget(new_form.suma, {'attr': {'class': 'form-control text-right'}}) }}
+                                    <small class="form-text text-muted">{{ form_help(new_form.suma) }}</small>
+                                    <div class="invalid-feedback">{{ form_errors(new_form.suma) }}</div>
+                                </div>
+                            </td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+
+        {{ form_end(new_form) }}
+    {% endblock new_form %}
+{% endblock %}
+
+
+
