@@ -73,13 +73,8 @@ class HurtoweZamowienia
     #[ORM\Column(nullable: true)]
     private ?float $wartosc1 = null;
 
-    #[ORM\Column(nullable: true)]
-    #[Assert\Range(
-        min: 1,
-        max: 10,
-        notInRangeMessage: 'Wprowadź wartość między 1 a 10.',
-    )]
-    private ?int $wozek1 = null;
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $wozek1 = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $nazwa = null;
@@ -139,12 +134,12 @@ class HurtoweZamowienia
         return $this;
     }
 
-    public function getWozek1(): ?int
+    public function getWozek1(): ?string
     {
         return $this->wozek1;
     }
 
-    public function setWozek1(?int $wozek1): static
+    public function setWozek1(?string $wozek1): static
     {
         $this->wozek1 = $wozek1;
 
@@ -187,7 +182,7 @@ class HurtoweZamowienia
     private ?float $wartosc2 = null;
 
     #[ORM\Column(nullable: true)]
-    private ?int $wozek2 = null;
+    private ?string $wozek2 = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $nazwa2 = null;
@@ -240,12 +235,12 @@ class HurtoweZamowienia
         return $this;
     }
 
-    public function getWozek2(): ?int
+    public function getWozek2(): ?string
     {
         return $this->wozek2;
     }
 
-    public function setWozek2(?int $wozek2): static
+    public function setWozek2(?string $wozek2): static
     {
         $this->wozek2 = $wozek2;
 
@@ -278,7 +273,7 @@ class HurtoweZamowienia
     private ?float $wartosc3 = null;
 
     #[ORM\Column(nullable: true)]
-    private ?int $wozek3 = null;
+    private ?string $wozek3 = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $nazwa3 = null;
@@ -331,12 +326,12 @@ class HurtoweZamowienia
         return $this;
     }
 
-    public function getWozek3(): ?int
+    public function getWozek3(): ?string
     {
         return $this->wozek3;
     }
 
-    public function setWozek3(?int $wozek3): static
+    public function setWozek3(?string $wozek3): static
     {
         $this->wozek3 = $wozek3;
 
@@ -368,7 +363,7 @@ class HurtoweZamowienia
     private ?float $wartosc4 = null;
 
     #[ORM\Column(nullable: true)]
-    private ?int $wozek4 = null;
+    private ?string $wozek4 = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $nazwa4 = null;
@@ -421,12 +416,12 @@ class HurtoweZamowienia
         return $this;
     }
 
-    public function getWozek4(): ?int
+    public function getWozek4(): ?string
     {
         return $this->wozek4;
     }
 
-    public function setWozek4(?int $wozek4): static
+    public function setWozek4(?string $wozek4): static
     {
         $this->wozek4 = $wozek4;
 
@@ -459,7 +454,7 @@ class HurtoweZamowienia
     private ?float $wartosc5 = null;
 
     #[ORM\Column(nullable: true)]
-    private ?int $wozek5 = null;
+    private ?string $wozek5 = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $nazwa5 = null;
@@ -512,12 +507,12 @@ class HurtoweZamowienia
         return $this;
     }
 
-    public function getWozek5(): ?int
+    public function getWozek5(): ?string
     {
         return $this->wozek5;
     }
 
-    public function setWozek5(?int $wozek5): static
+    public function setWozek5(?string $wozek5): static
     {
         $this->wozek5 = $wozek5;
 
@@ -549,7 +544,7 @@ class HurtoweZamowienia
     private ?float $wartosc6 = null;
 
     #[ORM\Column(nullable: true)]
-    private ?int $wozek6 = null;
+    private ?string $wozek6 = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $nazwa6 = null;
@@ -602,12 +597,12 @@ class HurtoweZamowienia
         return $this;
     }
 
-    public function getWozek6(): ?int
+    public function getWozek6(): ?string
     {
         return $this->wozek6;
     }
 
-    public function setWozek6(?int $wozek6): static
+    public function setWozek6(?string $wozek6): static
     {
         $this->wozek6 = $wozek6;
 
@@ -640,7 +635,7 @@ class HurtoweZamowienia
     private ?float $wartosc7 = null;
 
     #[ORM\Column(nullable: true)]
-    private ?int $wozek7 = null;
+    private ?string $wozek7 = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $nazwa7 = null;
@@ -693,12 +688,12 @@ class HurtoweZamowienia
         return $this;
     }
 
-    public function getWozek7(): ?int
+    public function getWozek7(): ?string
     {
         return $this->wozek7;
     }
 
-    public function setWozek7(?int $wozek7): static
+    public function setWozek7(?string $wozek7): static
     {
         $this->wozek7 = $wozek7;
 
@@ -730,7 +725,7 @@ class HurtoweZamowienia
     private ?float $wartosc8 = null;
 
     #[ORM\Column(nullable: true)]
-    private ?int $wozek8 = null;
+    private ?string $wozek8 = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $nazwa8 = null;
@@ -783,12 +778,12 @@ class HurtoweZamowienia
         return $this;
     }
 
-    public function getWozek8(): ?int
+    public function getWozek8(): ?string
     {
         return $this->wozek8;
     }
 
-    public function setWozek8(?int $wozek8): static
+    public function setWozek8(?string $wozek8): static
     {
         $this->wozek8 = $wozek8;
 
@@ -820,7 +815,7 @@ class HurtoweZamowienia
     private ?float $wartosc9 = null;
 
     #[ORM\Column(nullable: true)]
-    private ?int $wozek9 = null;
+    private ?string $wozek9 = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $nazwa9 = null;
@@ -873,12 +868,12 @@ class HurtoweZamowienia
         return $this;
     }
 
-    public function getWozek9(): ?int
+    public function getWozek9(): ?string
     {
         return $this->wozek9;
     }
 
-    public function setWozek9(?int $wozek9): static
+    public function setWozek9(?string $wozek9): static
     {
         $this->wozek9 = $wozek9;
 
@@ -911,7 +906,7 @@ class HurtoweZamowienia
     private ?float $wartosc10 = null;
 
     #[ORM\Column(nullable: true)]
-    private ?int $wozek10 = null;
+    private ?string $wozek10 = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $nazwa10 = null;
@@ -964,12 +959,12 @@ class HurtoweZamowienia
         return $this;
     }
 
-    public function getWozek10(): ?int
+    public function getWozek10(): ?string
     {
         return $this->wozek10;
     }
 
-    public function setWozek10(?int $wozek10): static
+    public function setWozek10(?string $wozek10): static
     {
         $this->wozek10 = $wozek10;
 
@@ -1002,7 +997,7 @@ class HurtoweZamowienia
     private ?float $wartosc11 = null;
 
     #[ORM\Column(nullable: true)]
-    private ?int $wozek11 = null;
+    private ?string $wozek11 = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $nazwa11 = null;
@@ -1055,12 +1050,12 @@ class HurtoweZamowienia
         return $this;
     }
 
-    public function getWozek11(): ?int
+    public function getWozek11(): ?string
     {
         return $this->wozek11;
     }
 
-    public function setWozek11(?int $wozek11): static
+    public function setWozek11(?string $wozek11): static
     {
         $this->wozek11 = $wozek11;
 
@@ -1093,7 +1088,7 @@ class HurtoweZamowienia
     private ?float $wartosc12 = null;
 
     #[ORM\Column(nullable: true)]
-    private ?int $wozek12 = null;
+    private ?string $wozek12 = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $nazwa12 = null;
@@ -1146,12 +1141,12 @@ class HurtoweZamowienia
         return $this;
     }
 
-    public function getWozek12(): ?int
+    public function getWozek12(): ?string
     {
         return $this->wozek12;
     }
 
-    public function setWozek12(?int $wozek12): static
+    public function setWozek12(?string $wozek12): static
     {
         $this->wozek12 = $wozek12;
 
@@ -1184,7 +1179,7 @@ class HurtoweZamowienia
     private ?float $wartosc13 = null;
 
     #[ORM\Column(nullable: true)]
-    private ?int $wozek13 = null;
+    private ?string $wozek13 = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $nazwa13 = null;
@@ -1237,12 +1232,12 @@ class HurtoweZamowienia
         return $this;
     }
 
-    public function getWozek13(): ?int
+    public function getWozek13(): ?string
     {
         return $this->wozek13;
     }
 
-    public function setWozek13(?int $wozek13): static
+    public function setWozek13(?string $wozek13): static
     {
         $this->wozek13 = $wozek13;
 
@@ -1274,7 +1269,7 @@ class HurtoweZamowienia
     private ?float $wartosc14 = null;
 
     #[ORM\Column(nullable: true)]
-    private ?int $wozek14 = null;
+    private ?string $wozek14 = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $nazwa14 = null;
@@ -1327,12 +1322,12 @@ class HurtoweZamowienia
         return $this;
     }
 
-    public function getWozek14(): ?int
+    public function getWozek14(): ?string
     {
         return $this->wozek14;
     }
 
-    public function setWozek14(?int $wozek14): static
+    public function setWozek14(?string $wozek14): static
     {
         $this->wozek14 = $wozek14;
 
@@ -1365,7 +1360,7 @@ class HurtoweZamowienia
     private ?float $wartosc15 = null;
 
     #[ORM\Column(nullable: true)]
-    private ?int $wozek15 = null;
+    private ?string $wozek15 = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $nazwa15 = null;
@@ -1418,12 +1413,12 @@ class HurtoweZamowienia
         return $this;
     }
 
-    public function getWozek15(): ?int
+    public function getWozek15(): ?string
     {
         return $this->wozek15;
     }
 
-    public function setWozek15(?int $wozek15): static
+    public function setWozek15(?string $wozek15): static
     {
         $this->wozek15 = $wozek15;
 
@@ -1456,7 +1451,7 @@ class HurtoweZamowienia
     private ?float $wartosc16 = null;
 
     #[ORM\Column(nullable: true)]
-    private ?int $wozek16 = null;
+    private ?string $wozek16 = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $nazwa16 = null;
@@ -1509,12 +1504,12 @@ class HurtoweZamowienia
         return $this;
     }
 
-    public function getWozek16(): ?int
+    public function getWozek16(): ?string
     {
         return $this->wozek16;
     }
 
-    public function setWozek16(?int $wozek16): static
+    public function setWozek16(?string $wozek16): static
     {
         $this->wozek16 = $wozek16;
 
@@ -1547,7 +1542,7 @@ class HurtoweZamowienia
     private ?float $wartosc17 = null;
 
     #[ORM\Column(nullable: true)]
-    private ?int $wozek17 = null;
+    private ?string $wozek17 = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $nazwa17 = null;
@@ -1600,12 +1595,12 @@ class HurtoweZamowienia
         return $this;
     }
 
-    public function getWozek17(): ?int
+    public function getWozek17(): ?string
     {
         return $this->wozek17;
     }
 
-    public function setWozek17(?int $wozek17): static
+    public function setWozek17(?string $wozek17): static
     {
         $this->wozek17 = $wozek17;
 
@@ -1637,7 +1632,7 @@ class HurtoweZamowienia
     private ?float $wartosc18 = null;
 
     #[ORM\Column(nullable: true)]
-    private ?int $wozek18 = null;
+    private ?string $wozek18 = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $nazwa18 = null;
@@ -1690,12 +1685,12 @@ class HurtoweZamowienia
         return $this;
     }
 
-    public function getWozek18(): ?int
+    public function getWozek18(): ?string
     {
         return $this->wozek18;
     }
 
-    public function setWozek18(?int $wozek18): static
+    public function setWozek18(?string $wozek18): static
     {
         $this->wozek18 = $wozek18;
 
@@ -1728,7 +1723,7 @@ class HurtoweZamowienia
     private ?float $wartosc19 = null;
 
     #[ORM\Column(nullable: true)]
-    private ?int $wozek19 = null;
+    private ?string $wozek19 = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $nazwa19 = null;
@@ -1781,12 +1776,12 @@ class HurtoweZamowienia
         return $this;
     }
 
-    public function getWozek19(): ?int
+    public function getWozek19(): ?string
     {
         return $this->wozek19;
     }
 
-    public function setWozek19(?int $wozek19): static
+    public function setWozek19(?string $wozek19): static
     {
         $this->wozek19 = $wozek19;
 
@@ -1819,7 +1814,7 @@ class HurtoweZamowienia
     private ?float $wartosc20 = null;
 
     #[ORM\Column(nullable: true)]
-    private ?int $wozek20 = null;
+    private ?string $wozek20 = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $nazwa20 = null;
@@ -1872,12 +1867,12 @@ class HurtoweZamowienia
         return $this;
     }
 
-    public function getWozek20(): ?int
+    public function getWozek20(): ?string
     {
         return $this->wozek20;
     }
 
-    public function setWozek20(?int $wozek20): static
+    public function setWozek20(?string $wozek20): static
     {
         $this->wozek20 = $wozek20;
 
@@ -1910,7 +1905,7 @@ class HurtoweZamowienia
     private ?float $wartosc21 = null;
 
     #[ORM\Column(nullable: true)]
-    private ?int $wozek21 = null;
+    private ?string $wozek21 = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $nazwa21 = null;
@@ -1963,12 +1958,12 @@ class HurtoweZamowienia
         return $this;
     }
 
-    public function getWozek21(): ?int
+    public function getWozek21(): ?string
     {
         return $this->wozek21;
     }
 
-    public function setWozek21(?int $wozek21): static
+    public function setWozek21(?string $wozek21): static
     {
         $this->wozek21 = $wozek21;
 
@@ -2001,7 +1996,7 @@ class HurtoweZamowienia
     private ?float $wartosc22 = null;
 
     #[ORM\Column(nullable: true)]
-    private ?int $wozek22 = null;
+    private ?string $wozek22 = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $nazwa22 = null;
@@ -2054,12 +2049,12 @@ class HurtoweZamowienia
         return $this;
     }
 
-    public function getWozek22(): ?int
+    public function getWozek22(): ?string
     {
         return $this->wozek22;
     }
 
-    public function setWozek22(?int $wozek22): static
+    public function setWozek22(?string $wozek22): static
     {
         $this->wozek22 = $wozek22;
 
@@ -2092,7 +2087,7 @@ class HurtoweZamowienia
     private ?float $wartosc23 = null;
 
     #[ORM\Column(nullable: true)]
-    private ?int $wozek23 = null;
+    private ?string $wozek23 = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $nazwa23 = null;
@@ -2145,12 +2140,12 @@ class HurtoweZamowienia
         return $this;
     }
 
-    public function getWozek23(): ?int
+    public function getWozek23(): ?string
     {
         return $this->wozek23;
     }
 
-    public function setWozek23(?int $wozek23): static
+    public function setWozek23(?string $wozek23): static
     {
         $this->wozek23 = $wozek23;
 
@@ -2183,7 +2178,7 @@ class HurtoweZamowienia
     private ?float $wartosc24 = null;
 
     #[ORM\Column(nullable: true)]
-    private ?int $wozek24 = null;
+    private ?string $wozek24 = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $nazwa24 = null;
@@ -2236,12 +2231,12 @@ class HurtoweZamowienia
         return $this;
     }
 
-    public function getWozek24(): ?int
+    public function getWozek24(): ?string
     {
         return $this->wozek24;
     }
 
-    public function setWozek24(?int $wozek24): static
+    public function setWozek24(?string $wozek24): static
     {
         $this->wozek24 = $wozek24;
 
@@ -2274,7 +2269,7 @@ class HurtoweZamowienia
     private ?float $wartosc25 = null;
 
     #[ORM\Column(nullable: true)]
-    private ?int $wozek25 = null;
+    private ?string $wozek25 = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $nazwa25 = null;
@@ -2327,12 +2322,12 @@ class HurtoweZamowienia
         return $this;
     }
 
-    public function getWozek25(): ?int
+    public function getWozek25(): ?string
     {
         return $this->wozek25;
     }
 
-    public function setWozek25(?int $wozek25): static
+    public function setWozek25(?string $wozek25): static
     {
         $this->wozek25 = $wozek25;
 
@@ -2365,7 +2360,7 @@ class HurtoweZamowienia
     private ?float $wartosc26 = null;
 
     #[ORM\Column(nullable: true)]
-    private ?int $wozek26 = null;
+    private ?string $wozek26 = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $nazwa26 = null;
@@ -2418,12 +2413,12 @@ class HurtoweZamowienia
         return $this;
     }
 
-    public function getWozek26(): ?int
+    public function getWozek26(): ?string
     {
         return $this->wozek26;
     }
 
-    public function setWozek26(?int $wozek26): static
+    public function setWozek26(?string $wozek26): static
     {
         $this->wozek26 = $wozek26;
 
@@ -2456,7 +2451,7 @@ class HurtoweZamowienia
     private ?float $wartosc27 = null;
 
     #[ORM\Column(nullable: true)]
-    private ?int $wozek27 = null;
+    private ?string $wozek27 = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $nazwa27 = null;
@@ -2509,12 +2504,12 @@ class HurtoweZamowienia
         return $this;
     }
 
-    public function getWozek27(): ?int
+    public function getWozek27(): ?string
     {
         return $this->wozek27;
     }
 
-    public function setWozek27(?int $wozek27): static
+    public function setWozek27(?string $wozek27): static
     {
         $this->wozek27 = $wozek27;
 
@@ -2547,7 +2542,7 @@ class HurtoweZamowienia
     private ?float $wartosc28 = null;
 
     #[ORM\Column(nullable: true)]
-    private ?int $wozek28 = null;
+    private ?string $wozek28 = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $nazwa28 = null;
@@ -2600,12 +2595,12 @@ class HurtoweZamowienia
         return $this;
     }
 
-    public function getWozek28(): ?int
+    public function getWozek28(): ?string
     {
         return $this->wozek28;
     }
 
-    public function setWozek28(?int $wozek28): static
+    public function setWozek28(?string $wozek28): static
     {
         $this->wozek28 = $wozek28;
 
@@ -2637,7 +2632,7 @@ class HurtoweZamowienia
     private ?float $wartosc29 = null;
 
     #[ORM\Column(nullable: true)]
-    private ?int $wozek29 = null;
+    private ?string $wozek29 = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $nazwa29 = null;
@@ -2690,12 +2685,12 @@ class HurtoweZamowienia
         return $this;
     }
 
-    public function getWozek29(): ?int
+    public function getWozek29(): ?string
     {
         return $this->wozek29;
     }
 
-    public function setWozek29(?int $wozek29): static
+    public function setWozek29(?string $wozek29): static
     {
         $this->wozek29 = $wozek29;
 
@@ -2727,7 +2722,7 @@ class HurtoweZamowienia
     private ?float $wartosc30 = null;
 
     #[ORM\Column(nullable: true)]
-    private ?int $wozek30 = null;
+    private ?string $wozek30 = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $nazwa30 = null;
@@ -2780,12 +2775,12 @@ class HurtoweZamowienia
         return $this;
     }
 
-    public function getWozek30(): ?int
+    public function getWozek30(): ?string
     {
         return $this->wozek30;
     }
 
-    public function setWozek30(?int $wozek30): static
+    public function setWozek30(?string $wozek30): static
     {
         $this->wozek30 = $wozek30;
 
@@ -2817,7 +2812,7 @@ class HurtoweZamowienia
     private ?float $wartosc31 = null;
 
     #[ORM\Column(nullable: true)]
-    private ?int $wozek31 = null;
+    private ?string $wozek31 = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $nazwa31 = null;
@@ -2870,12 +2865,12 @@ class HurtoweZamowienia
         return $this;
     }
 
-    public function getWozek31(): ?int
+    public function getWozek31(): ?string
     {
         return $this->wozek31;
     }
 
-    public function setWozek31(?int $wozek31): static
+    public function setWozek31(?string $wozek31): static
     {
         $this->wozek31 = $wozek31;
 
@@ -2908,7 +2903,7 @@ class HurtoweZamowienia
     private ?float $wartosc32 = null;
 
     #[ORM\Column(nullable: true)]
-    private ?int $wozek32 = null;
+    private ?string $wozek32 = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $nazwa32 = null;
@@ -2961,12 +2956,12 @@ class HurtoweZamowienia
         return $this;
     }
 
-    public function getWozek32(): ?int
+    public function getWozek32(): ?string
     {
         return $this->wozek32;
     }
 
-    public function setWozek32(?int $wozek32): static
+    public function setWozek32(?string $wozek32): static
     {
         $this->wozek32 = $wozek32;
 
@@ -2999,7 +2994,7 @@ class HurtoweZamowienia
     private ?float $wartosc33 = null;
 
     #[ORM\Column(nullable: true)]
-    private ?int $wozek33 = null;
+    private ?string $wozek33 = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $nazwa33 = null;
@@ -3052,12 +3047,12 @@ class HurtoweZamowienia
         return $this;
     }
 
-    public function getWozek33(): ?int
+    public function getWozek33(): ?string
     {
         return $this->wozek33;
     }
 
-    public function setWozek33(?int $wozek33): static
+    public function setWozek33(?string $wozek33): static
     {
         $this->wozek33 = $wozek33;
 
@@ -3090,7 +3085,7 @@ class HurtoweZamowienia
     private ?float $wartosc34 = null;
 
     #[ORM\Column(nullable: true)]
-    private ?int $wozek34 = null;
+    private ?string $wozek34 = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $nazwa34 = null;
@@ -3143,12 +3138,12 @@ class HurtoweZamowienia
         return $this;
     }
 
-    public function getWozek34(): ?int
+    public function getWozek34(): ?string
     {
         return $this->wozek34;
     }
 
-    public function setWozek34(?int $wozek34): static
+    public function setWozek34(?string $wozek34): static
     {
         $this->wozek34 = $wozek34;
 
@@ -3181,7 +3176,7 @@ class HurtoweZamowienia
     private ?float $wartosc35 = null;
 
     #[ORM\Column(nullable: true)]
-    private ?int $wozek35 = null;
+    private ?string $wozek35 = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $nazwa35 = null;
@@ -3234,12 +3229,12 @@ class HurtoweZamowienia
         return $this;
     }
 
-    public function getWozek35(): ?int
+    public function getWozek35(): ?string
     {
         return $this->wozek35;
     }
 
-    public function setWozek35(?int $wozek35): static
+    public function setWozek35(?string $wozek35): static
     {
         $this->wozek35 = $wozek35;
 
@@ -3272,7 +3267,7 @@ class HurtoweZamowienia
     private ?float $wartosc36 = null;
 
     #[ORM\Column(nullable: true)]
-    private ?int $wozek36 = null;
+    private ?string $wozek36 = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $nazwa36 = null;
@@ -3325,12 +3320,12 @@ class HurtoweZamowienia
         return $this;
     }
 
-    public function getWozek36(): ?int
+    public function getWozek36(): ?string
     {
         return $this->wozek36;
     }
 
-    public function setWozek36(?int $wozek36): static
+    public function setWozek36(?string $wozek36): static
     {
         $this->wozek36 = $wozek36;
 
@@ -3363,7 +3358,7 @@ class HurtoweZamowienia
     private ?float $wartosc37 = null;
 
     #[ORM\Column(nullable: true)]
-    private ?int $wozek37 = null;
+    private ?string $wozek37 = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $nazwa37 = null;
@@ -3416,12 +3411,12 @@ class HurtoweZamowienia
         return $this;
     }
 
-    public function getWozek37(): ?int
+    public function getWozek37(): ?string
     {
         return $this->wozek37;
     }
 
-    public function setWozek37(?int $wozek37): static
+    public function setWozek37(?string $wozek37): static
     {
         $this->wozek37 = $wozek37;
 
@@ -3454,7 +3449,7 @@ class HurtoweZamowienia
     private ?float $wartosc38 = null;
 
     #[ORM\Column(nullable: true)]
-    private ?int $wozek38 = null;
+    private ?string $wozek38 = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $nazwa38 = null;
@@ -3507,12 +3502,12 @@ class HurtoweZamowienia
         return $this;
     }
 
-    public function getWozek38(): ?int
+    public function getWozek38(): ?string
     {
         return $this->wozek38;
     }
 
-    public function setWozek38(?int $wozek38): static
+    public function setWozek38(?string $wozek38): static
     {
         $this->wozek38 = $wozek38;
 
@@ -3545,7 +3540,7 @@ class HurtoweZamowienia
     private ?float $wartosc39 = null;
 
     #[ORM\Column(nullable: true)]
-    private ?int $wozek39 = null;
+    private ?string $wozek39 = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $nazwa39 = null;
@@ -3598,12 +3593,12 @@ class HurtoweZamowienia
         return $this;
     }
 
-    public function getWozek39(): ?int
+    public function getWozek39(): ?string
     {
         return $this->wozek39;
     }
 
-    public function setWozek39(?int $wozek39): static
+    public function setWozek39(?string $wozek39): static
     {
         $this->wozek39 = $wozek39;
 
@@ -3636,7 +3631,7 @@ class HurtoweZamowienia
     private ?float $wartosc40 = null;
 
     #[ORM\Column(nullable: true)]
-    private ?int $wozek40 = null;
+    private ?string $wozek40 = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $nazwa40 = null;
@@ -3692,12 +3687,12 @@ class HurtoweZamowienia
         return $this;
     }
 
-    public function getWozek40(): ?int
+    public function getWozek40(): ?string
     {
         return $this->wozek40;
     }
 
-    public function setWozek40(?int $wozek40): static
+    public function setWozek40(?string $wozek40): static
     {
         $this->wozek40 = $wozek40;
 

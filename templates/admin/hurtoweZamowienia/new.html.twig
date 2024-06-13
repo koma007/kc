@@ -118,13 +118,6 @@
                 fetchCenaAfterRadioChange(selectedOption,selectedValue,idCalegoElementu);
             });
 
-            $('input[name^="HurtoweZamowienia[wozek"]').change(function(){
-                if($(this).val() > 10){
-                    alert("Max numer wózków to 10");
-                    $(this).val('');
-                }
-            });
-
         }); //on ready
 
         const sztukFields = document.querySelectorAll('[id^="HurtoweZamowienia_sztuk"]');
